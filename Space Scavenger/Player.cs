@@ -15,6 +15,7 @@ namespace Space_Scavenger
         public float Radius { get; set; }
         public Vector2 Speed { get; set; }
         public float Rotation { get; set; }
+        public bool Accelerating { get; set; }
 
         private Texture2D playerTexture;
 
@@ -32,7 +33,26 @@ namespace Space_Scavenger
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(playerTexture, Position, Color.White);
+            spriteBatch.Draw(playerTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(playerTexture.Width / 2, playerTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            Position += Speed;
+            base.Update(gameTime);
+        }
+
+        
+
+        public void Accelerate()
+        {
+            Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.08f;
+
+            if (Speed.LengthSquared() > 100)
+                Speed = Vector2.Normalize(Speed) * 10;
+
+
         }
     }
 }

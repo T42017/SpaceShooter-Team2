@@ -12,6 +12,7 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player player;
+        private KeyboardState previousKbState;
 
         public Game1()
         {
@@ -66,11 +67,23 @@ namespace Space_Scavenger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            KeyboardState state = Keyboard.GetState();
 
+            if (state.IsKeyDown(Keys.Up))
+            {
+                player.Accelerate();
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                player.Rotation -= 0.05f;
+            }
+            else if (state.IsKeyDown(Keys.Right))
+            {
+                player.Rotation += 0.05f;
+            }
 
             player.Update(gameTime);
-            // TODO: Add your update logic here
-
+            previousKbState = state;
             base.Update(gameTime);
         }
 
