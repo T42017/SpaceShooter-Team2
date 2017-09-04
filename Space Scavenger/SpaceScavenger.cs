@@ -94,7 +94,7 @@ namespace Space_Scavenger
                 }
             }
 
-          
+            spriteBatch.Draw(healthbarTexture, Vector2.Zero,Color.White);
             
             spriteBatch.End();
         }
