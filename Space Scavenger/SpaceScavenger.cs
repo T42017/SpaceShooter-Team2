@@ -96,16 +96,15 @@ namespace Space_Scavenger
             }
 
             
-            int barWidth = 0;
+            int healthBarX = 0;
             for (int i = 0; i < 10; i++)
             {
-                spriteBatch.Draw(healthbarTexture, new Vector2(barWidth, 0), Color.White);
-                barWidth += healthbarTexture.Width;
-                
+                spriteBatch.Draw(healthbarTexture, new Vector2(healthBarX, 0), Color.White);
+                healthBarX += healthbarTexture.Width;
+
             }
-
-
-            spriteBatch.End();
+            
+               spriteBatch.End();
         }
     }
 }
