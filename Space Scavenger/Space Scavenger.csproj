@@ -41,6 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IGameObject.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="SpaceScavenger.cs" />
     <Compile Include="Program.cs" />
