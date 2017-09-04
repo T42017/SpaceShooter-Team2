@@ -11,6 +11,7 @@ namespace Space_Scavenger
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Player player;
 
         public Game1()
         {
@@ -26,6 +27,9 @@ namespace Space_Scavenger
         /// </summary>
         protected override void Initialize()
         {
+            player = new Player(this);
+            Components.Add(player);
+
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -62,6 +66,9 @@ namespace Space_Scavenger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+
+            player.Update(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -75,6 +82,10 @@ namespace Space_Scavenger
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+            spriteBatch.Begin();
+            player.Draw(spriteBatch);
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
