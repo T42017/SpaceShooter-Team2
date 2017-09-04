@@ -7,14 +7,17 @@ namespace Space_Scavenger
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class SpaceScavenger : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D backgroundTexture;
 
-        public Game1()
+        public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = Globals.ScreenHeight;
+            graphics.PreferredBackBufferWidth = Globals.ScreenWidth;
             Content.RootDirectory = "Content";
         }
 
@@ -40,7 +43,9 @@ namespace Space_Scavenger
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            backgroundTexture = Content.Load<Texture2D>("purple");
+
+           
         }
 
         /// <summary>
@@ -69,7 +74,7 @@ namespace Space_Scavenger
 
         /// <summary>
         /// This is called when the game should draw itself.
-        /// </summary>
+        /// </summary>s
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
@@ -78,6 +83,15 @@ namespace Space_Scavenger
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+            spriteBatch.Begin();
+            for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
+            {
+                for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
+                {
+                    spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                }
+            }
+            spriteBatch.End();
         }
     }
 }
