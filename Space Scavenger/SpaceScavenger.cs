@@ -12,6 +12,8 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
+        Texture2D healthbarTexture;
+        
 
         public SpaceScavenger()
         {
@@ -44,8 +46,8 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
+            healthbarTexture = Content.Load<Texture2D>("powerupRed");
 
-           
         }
 
         /// <summary>
@@ -91,6 +93,9 @@ namespace Space_Scavenger
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
                 }
             }
+
+          
+            
             spriteBatch.End();
         }
     }
