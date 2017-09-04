@@ -12,6 +12,8 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
+        Player player;
+        private KeyboardState previousKbState;
 
         public SpaceScavenger()
         {
@@ -29,6 +31,9 @@ namespace Space_Scavenger
         /// </summary>
         protected override void Initialize()
         {
+
+            player = new Player(this);
+            Components.Add(player);
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -67,7 +72,23 @@ namespace Space_Scavenger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.Up))
+            {
+                player.Accelerate();
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                player.Rotation -= 0.05f;
+            }
+            else if (state.IsKeyDown(Keys.Right))
+            {
+                player.Rotation += 0.05f;
+            }
+
+            player.Update(gameTime);
+            previousKbState = state;
 
             base.Update(gameTime);
         }
@@ -91,6 +112,8 @@ namespace Space_Scavenger
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
                 }
             }
+
+            player.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
