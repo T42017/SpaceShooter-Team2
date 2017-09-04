@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -94,8 +95,16 @@ namespace Space_Scavenger
                 }
             }
 
-            spriteBatch.Draw(healthbarTexture, Vector2.Zero,Color.White);
-            
+            List<int> barsInHealthBar = new List<int>();
+            int barWidth = 5;
+            for (int i = 0; i < 10; i++)
+            {
+                spriteBatch.Draw(healthbarTexture, new Vector2(barWidth, 0), Color.White);
+                barWidth += healthbarTexture.Width;
+                
+            }
+
+
             spriteBatch.End();
         }
     }
