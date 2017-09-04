@@ -95,8 +95,8 @@ namespace Space_Scavenger
                 }
             }
 
-            List<int> barsInHealthBar = new List<int>();
-            int barWidth = 5;
+            
+            int barWidth = 0;
             for (int i = 0; i < 10; i++)
             {
                 spriteBatch.Draw(healthbarTexture, new Vector2(barWidth, 0), Color.White);
