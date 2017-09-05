@@ -13,8 +13,9 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
-        
-        
+
+        AsteroidComponent asteroid;
+
         Player player;
         private KeyboardState previousKbState;
         private Camera camera;
@@ -38,6 +39,7 @@ namespace Space_Scavenger
 
             player = new Player(this);
             camera = new Camera(GraphicsDevice.Viewport);
+            Components.Add(asteroid);
             Components.Add(player);
             // TODO: Add your initialization logic here
 
@@ -112,14 +114,16 @@ namespace Space_Scavenger
 
             base.Draw(gameTime);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+            
             for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
             {
                 for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    
                 }
             }
-
+            asteroid.Draw(spriteBatch);
             player.Draw(spriteBatch);
                spriteBatch.End();
         }
