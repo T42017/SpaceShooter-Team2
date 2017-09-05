@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,6 +13,9 @@ namespace Space_Scavenger
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Texture2D Asteroidgfx;
+
+
 
         public Game1()
         {
@@ -28,6 +33,8 @@ namespace Space_Scavenger
         {
             // TODO: Add your initialization logic here
 
+
+
             base.Initialize();
         }
 
@@ -39,6 +46,8 @@ namespace Space_Scavenger
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Asteroidgfx = Content.Load<Texture2D>("Tempass");
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -62,6 +71,8 @@ namespace Space_Scavenger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -73,10 +84,13 @@ namespace Space_Scavenger
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+
 
             // TODO: Add your drawing code here
-
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
