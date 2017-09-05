@@ -121,3 +121,9 @@
 /processorParam:TextureFormat=Color
 /build:Meteor4.png
 
+#begin Pew.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Pew.mp3
+

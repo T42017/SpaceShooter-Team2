@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Space_Scavenger
 {
@@ -15,11 +17,10 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
 
         AsteroidComponent asteroid;
-
         Player player;
         private KeyboardState previousKbState;
         private Camera camera;
-
+        private SoundEffect sound;
         public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -39,6 +40,7 @@ namespace Space_Scavenger
 
             player = new Player(this);
             camera = new Camera(GraphicsDevice.Viewport);
+            asteroid = new AsteroidComponent(this, player);
             Components.Add(asteroid);
             Components.Add(player);
             // TODO: Add your initialization logic here
@@ -56,7 +58,7 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
-            
+            sound = Content.Load<SoundEffect>("Pew");
 
         }
 
@@ -80,10 +82,16 @@ namespace Space_Scavenger
                 Exit();
 
             KeyboardState state = Keyboard.GetState();
+            if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
+            {
+                sound.Play();
+            }
 
+                
             if (state.IsKeyDown(Keys.Up))
             {
                 player.Accelerate();
+
             }
             if (state.IsKeyDown(Keys.Left))
             {
