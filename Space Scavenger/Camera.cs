@@ -22,7 +22,7 @@ namespace Space_Scavenger
 
         public void Update(GameTime gameTIme, Player player)
         {
-            centre = new Vector2(player.Position.X  - 640, player.Position.Y  - 360);
+            centre = new Vector2(player.Position.X  - Globals.ScreenWidth / 2, player.Position.Y- Globals.ScreenHeight / 2);
             transformn = Matrix.CreateScale(new Vector3(1, 1, 0)) * 
                                                     Matrix.CreateTranslation(new Vector3(-centre.X, -centre.Y, 0));
         }
