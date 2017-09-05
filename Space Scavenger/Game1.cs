@@ -106,7 +106,7 @@ namespace Space_Scavenger
 
             spriteBatch.Begin();
             player.Draw(spriteBatch);
-
+            asteroid.draw(spriteBatch);
             // TODO: Add your drawing code here
 
             spriteBatch.End();

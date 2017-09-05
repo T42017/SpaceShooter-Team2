@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,10 @@ namespace Space_Scavenger
     class Asteroid
     {
         public Vector2 position { get; set; }
-        public float speed { get; set; }
+        public Vector2 speed { get; set; }
         int hpAsteroid;
+        public float RotationCounter;
+        public float addCounter;
 
     }
 
@@ -21,53 +24,54 @@ namespace Space_Scavenger
     {
         public Random rand = new Random();
         private Texture2D asterTexture2D;
+
+        public float Rotation { get; set; }
+
         private List<Asteroid> _nrofAsteroids = new List<Asteroid>();
-        SpriteBatch _spriteBatch;
-        public AsteroidComponent(Game game) : base(game)
+        public AsteroidComponent(Game game, Player player) : base(game)
 
         {
             for (int i = 0; i < 20; i++)
             {
                 _nrofAsteroids.Add(new Asteroid()
                 {
-                    position = new Vector2(rand.Next(-300, 300 ), rand.Next(-350, 300 )),
-                    speed = 0.1f + rand.Next(20) / 10f
-                });
+                   addCounter = rand.Next(-677,677) / 10000f,
+                    position = new Vector2(player.Position.X + rand.Next(-100, 100), player.Position.Y + rand.Next(-100,100)),
+                    speed = new Vector2((float)Math.Cos(rand.Next(-5,5)), (float)Math.Sin(rand.Next(-5,5)))
+            });
             }
         }
 
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            asterTexture2D = Game.Content.Load<Texture2D>("Tempass");
+            asterTexture2D = Game.Content.Load<Texture2D>("Meteor1");
+            base.LoadContent();
         }
+        public void Draw(SpriteBatch spriteBatch)
+        {
 
+            
+            for (int i = 0; i < _nrofAsteroids.Count; i++)
+            {
+                spriteBatch.Draw(asterTexture2D, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D.Width /2, asterTexture2D.Height /2), 1f, SpriteEffects.None, 0f);
+                 _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+            }
+
+            // TODO: Add your drawing code here
+
+        }
         public override void Update(GameTime gameTime)
         {
             foreach (var asteroid in _nrofAsteroids)
             {
-                asteroid.position += new Vector2(asteroid.speed, 0);
+                asteroid.position += asteroid.speed;
             }
 
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-            foreach (var asteroid in _nrofAsteroids)
-            {
-                _spriteBatch.Draw(asterTexture2D, asteroid.position, Color.White);
-            }
-
-            // TODO: Add your drawing code here
-            _spriteBatch.End();
-            base.Draw(gameTime);
         }
     }
 }
