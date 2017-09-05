@@ -14,7 +14,7 @@ namespace Space_Scavenger
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new SpaceScavenger())
                 game.Run();
         }
     }
