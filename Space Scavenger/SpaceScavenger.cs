@@ -17,6 +17,7 @@ namespace Space_Scavenger
         
         Player player;
         private KeyboardState previousKbState;
+        private Camera camera;
 
         public SpaceScavenger()
         {
@@ -36,6 +37,7 @@ namespace Space_Scavenger
         {
 
             player = new Player(this);
+            camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(player);
             // TODO: Add your initialization logic here
 
@@ -93,6 +95,8 @@ namespace Space_Scavenger
             player.Update(gameTime);
             previousKbState = state;
 
+            camera.Update(gameTime, player);
+
             base.Update(gameTime);
         }
 
@@ -107,7 +111,7 @@ namespace Space_Scavenger
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
             for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
             {
                 for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
