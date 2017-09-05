@@ -17,7 +17,7 @@ namespace Space_Scavenger
         public float Rotation { get; set; }
         public bool Accelerating { get; set; }
 
-        private Texture2D playerTexture;
+        public Texture2D playerTexture;
 
         public Player(Game game) : base(game)
         {
