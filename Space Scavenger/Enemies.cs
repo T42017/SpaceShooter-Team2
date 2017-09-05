@@ -38,10 +38,28 @@ namespace Space_Scavenger
 
         public override void Update(GameTime gameTime)
         {
+            var followDistance = 1000;
             Vector2 direction = MyGame.Player.Position - Position;
             direction.Normalize();
-            Speed = direction * 3;
-            Position += Speed;
+            Speed += direction * 0.08f;
+
+            if (Speed.LengthSquared() > 25)
+                Speed = Vector2.Normalize(Speed) * 5;
+
+            var xDiff = Math.Abs(Position.X - MyGame.Player.Position.X);
+            var yDiff = Math.Abs(Position.Y - MyGame.Player.Position.Y);
+
+            if (xDiff < followDistance &&  yDiff < followDistance)
+                if (xDiff > 400 || yDiff > 400)
+                    Position += Speed;
+                else
+                    Speed -= Speed;
+
+
+            //if (xDiff > followDistance && Position.Y - MyGame.Player.Position.Y > followDistance)
+            //        if (Position.X - MyGame.Player.Position.X < 200 || Position.Y - MyGame.Player.Position.Y < 200)
+            //            Position += Speed;
+
             float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
             
             if (targetrotation < 360)
