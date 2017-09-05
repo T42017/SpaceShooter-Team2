@@ -14,6 +14,7 @@ namespace Space_Scavenger
         float Radius { get; set; }
         Vector2 Speed { get; set; }
         float Rotation { get; set; }
+        int Health { get; set; }
 
     }
 }

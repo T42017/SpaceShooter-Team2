@@ -15,7 +15,8 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         
         
-        Player player;
+        public Player Player { get; private set; }
+        Enemies enemies;
         private KeyboardState previousKbState;
         private Camera camera;
 
@@ -36,9 +37,11 @@ namespace Space_Scavenger
         protected override void Initialize()
         {
 
-            player = new Player(this);
+            Player = new Player(this);
+            enemies = new Enemies(this);
             camera = new Camera(GraphicsDevice.Viewport);
-            Components.Add(player);
+            Components.Add(Player);
+            Components.Add(enemies);
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -81,21 +84,21 @@ namespace Space_Scavenger
 
             if (state.IsKeyDown(Keys.Up))
             {
-                player.Accelerate();
+                Player.Accelerate();
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                player.Rotation -= 0.05f;
+                Player.Rotation -= 0.05f;
             }
             else if (state.IsKeyDown(Keys.Right))
             {
-                player.Rotation += 0.05f;
+                Player.Rotation += 0.05f;
             }
 
-            player.Update(gameTime);
+            Player.Update(gameTime);
             previousKbState = state;
 
-            camera.Update(gameTime, player);
+            camera.Update(gameTime, Player);
 
             base.Update(gameTime);
         }
@@ -120,8 +123,10 @@ namespace Space_Scavenger
                 }
             }
 
-            player.Draw(spriteBatch);
-               spriteBatch.End();
+            Player.Draw(spriteBatch);
+            enemies.Draw(spriteBatch);
+            spriteBatch.End();
+            
         }
     }
 }

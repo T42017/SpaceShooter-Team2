@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
 {
-    class Player : DrawableGameComponent, IGameObject
+    public class Player : DrawableGameComponent, IGameObject
     {
         public bool isDead { get; set; }
         public Vector2 Position { get; set; }
