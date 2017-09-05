@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,6 +13,8 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
+        Texture2D healthTexture;
+        
         Player player;
         private KeyboardState previousKbState;
 
@@ -49,8 +52,8 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
+            healthTexture = Content.Load<Texture2D>("powerupRed");
 
-           
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace Space_Scavenger
             }
 
             player.Draw(spriteBatch);
-            spriteBatch.End();
+               spriteBatch.End();
         }
     }
 }
