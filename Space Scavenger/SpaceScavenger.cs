@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,18 +17,20 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
-
+        Random rand = new Random();
         AsteroidComponent asteroid;
         public Player player;
         private KeyboardState previousKbState;
         public Camera camera;
-        private SoundEffect sound;
+        public SoundEffect sound;
+        public SoundEffect song;
         public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = Globals.ScreenHeight;
             graphics.PreferredBackBufferWidth = Globals.ScreenWidth;
             Content.RootDirectory = "Content";
+            
         }
 
         /// <summary>
@@ -37,14 +41,14 @@ namespace Space_Scavenger
         /// </summary>
         protected override void Initialize()
         {
-
+            
             player = new Player(this);
             camera = new Camera(GraphicsDevice.Viewport);
             asteroid = new AsteroidComponent(this, player);
             Components.Add(asteroid);
             Components.Add(player);
             // TODO: Add your initialization logic here
-
+            
             base.Initialize();
         }
 
@@ -58,7 +62,9 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
-            sound = Content.Load<SoundEffect>("Pew");
+
+            sound = Content.Load<SoundEffect>("MCH");
+            song = Content.Load<SoundEffect>("The Llama Song");
 
         }
 
@@ -84,8 +90,7 @@ namespace Space_Scavenger
             KeyboardState state = Keyboard.GetState();
             if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
             {
-                sound.Play();
-                  asteroid._nrofAsteroids.RemoveRange(0,asteroid.wantedAsteroids);
+                song.Play();
             }
 
                 
@@ -97,10 +102,12 @@ namespace Space_Scavenger
             if (state.IsKeyDown(Keys.Left))
             {
                 player.Rotation -= 0.05f;
+
             }
             else if (state.IsKeyDown(Keys.Right))
             {
                 player.Rotation += 0.05f;
+
             }
             else if (state.IsKeyDown(Keys.B))
             {
