@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -58,10 +59,22 @@ namespace Space_Scavenger
         {
             Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.08f;
 
-            if (Speed.LengthSquared() > 100)
-                Speed = Vector2.Normalize(Speed) * 10;
+            if (Speed.LengthSquared() > 25)
+                Speed = Vector2.Normalize(Speed) * 5;
 
 
+        }
+
+        public Shot Shoot()
+        {
+            return new Shot()
+            {
+                Position = Position,
+                Rotation = Rotation,
+                Speed = Speed + 10f * new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation))
+            };
+
+            
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
 {
-    class Enemies : DrawableGameComponent, IGameObject
+    public class Enemy :  GameObject
 
     {
         private SpaceScavenger MyGame;
@@ -16,29 +16,33 @@ namespace Space_Scavenger
         
         private Texture2D enemyTexture;
 
-        public Enemies(Game game) : base(game)
+
+        public Enemy enemySpawn()
         {
-            Position = new Vector2(Globals.ScreenWidth, Globals.ScreenHeight / 2);
-            Health = 10;
-            MyGame = (SpaceScavenger) game;
-            
+            return new Enemy()
+            {
+                Position = new Vector2(Globals.ScreenWidth, Globals.ScreenHeight / 2),
+                Rotation = Rotation,
+                Health = 10,
+                Radius = 20
+            };
         }
 
-        protected override void LoadContent()
-        {
-            enemyTexture = Game.Content.Load<Texture2D>("EnemyShip");
-            base.LoadContent();
-
-        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(enemyTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
 
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Game game)
         {
+            MyGame = (SpaceScavenger)game;
             var followDistance = 1000;
+            var aimDistance = 100;
+            int i = 0;
+            float xDiff = 0;
+            float yDiff = 0;
+            Vector2 left = new Vector2(-1,0);
             Vector2 direction = MyGame.Player.Position - Position;
             direction.Normalize();
             Speed += direction * 0.08f;
@@ -46,17 +50,40 @@ namespace Space_Scavenger
             if (Speed.LengthSquared() > 25)
                 Speed = Vector2.Normalize(Speed) * 5;
 
-            var xDiff = Math.Abs(Position.X - MyGame.Player.Position.X);
-            var yDiff = Math.Abs(Position.Y - MyGame.Player.Position.Y);
+            var xDiffPlayer = Math.Abs(Position.X - MyGame.Player.Position.X);
+            var yDiffPlayer = Math.Abs(Position.Y - MyGame.Player.Position.Y);
 
-            if (xDiff < followDistance &&  yDiff < followDistance)
+            if (xDiffPlayer < followDistance &&  yDiffPlayer < followDistance)
             {
-                var aimDistance = 300;
-                if (xDiff > aimDistance || yDiff > aimDistance)
+                
+                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)
                     Position += Speed;
                 else
                     Speed -= Speed;
             }
+
+
+
+
+            foreach (Shot shot in MyGame.shots)
+            {
+                i++;
+            }
+
+            for (int j = 0; j < i; j++)
+            {
+                xDiff = Math.Abs(Position.X - MyGame.shots[j].Position.X);
+                yDiff = Math.Abs(Position.Y - MyGame.shots[j].Position.Y);
+
+                if (xDiff < 100 && yDiff < 100)
+                {
+                    Position += left;
+                }
+
+            }
+
+
+
 
 
             float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
@@ -71,17 +98,7 @@ namespace Space_Scavenger
             }
 
             Rotation = -targetrotation;
-            base.Update(gameTime);
             
         }
-
-        public float targetrotation { get; set; }
-        public Vector2 playerPosition { get; set; }
-        public bool isDead { get; set; }
-        public Vector2 Position { get; set; }
-        public float Radius { get; set; }
-        public Vector2 Speed { get; set; }
-        public float Rotation { get; set; }
-        public int Health { get; set; }
     }
 }

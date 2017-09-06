@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Space_Scavenger
 {
-    interface IGameObject
+    public interface IGameObject
     {
         bool isDead { get; set; }
         Vector2 Position { get; set; }
@@ -15,6 +15,5 @@ namespace Space_Scavenger
         Vector2 Speed { get; set; }
         float Rotation { get; set; }
         int Health { get; set; }
-
     }
 }

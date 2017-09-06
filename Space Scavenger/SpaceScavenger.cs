@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,18 +16,24 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
-        
-        
+        private Texture2D laserTexture;
+        private Texture2D enemyTexture;
+
         public Player Player { get; private set; }
-        Enemies enemies;
+        public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
         private Camera camera;
+        public List<Shot> shots = new List<Shot>();
+        List<Enemy> enemies = new List<Enemy>();
+
 
         public SpaceScavenger()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferHeight = Globals.ScreenHeight;
-            graphics.PreferredBackBufferWidth = Globals.ScreenWidth;
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = Globals.ScreenHeight,
+                PreferredBackBufferWidth = Globals.ScreenWidth
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -38,10 +47,9 @@ namespace Space_Scavenger
         {
 
             Player = new Player(this);
-            enemies = new Enemies(this);
+            Enemy = new Enemy();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
-            Components.Add(enemies);
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -57,7 +65,8 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
-            
+            laserTexture = Content.Load<Texture2D>("laserBlue");
+            enemyTexture = Content.Load<Texture2D>("EnemyShip");
 
         }
 
@@ -94,6 +103,42 @@ namespace Space_Scavenger
             {
                 Player.Rotation += 0.05f;
             }
+            if (state.IsKeyDown(Keys.Space))
+            {
+                Shot s = Player.Shoot();
+                if(s != null)
+                    shots.Add(s);
+            }
+            if (state.IsKeyDown(Keys.B))
+            {
+                Player.Speed = new Vector2(0,0);
+            }
+            if (state.IsKeyDown(Keys.S) && previousKbState.IsKeyDown(Keys.S) != state.IsKeyDown(Keys.S))
+            {
+                Enemy e = Enemy.enemySpawn();
+                if (e != null)
+                    enemies.Add(e);
+            }
+
+
+
+            foreach (Shot shot in shots)
+            {
+                shot.Update(gameTime);
+                Enemy enemy = enemies.FirstOrDefault(e => e.CollidesWith(shot));
+
+                if (enemy != null)
+                {
+                    enemies.Remove(enemy);
+                    shot.isDead = true;
+                }
+            }
+            foreach (Enemy e in enemies)
+            {
+                e.Update(gameTime, this);
+            }
+
+            shots.RemoveAll(s => s.isDead);
 
             Player.Update(gameTime);
             previousKbState = state;
@@ -115,16 +160,27 @@ namespace Space_Scavenger
 
             base.Draw(gameTime);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
-            for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
+            for (int y = -10000; y < 10000; y += backgroundTexture.Width)
             {
-                for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
+                for (int x = -10000; x < 10000; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
                 }
             }
 
+            
+
+            foreach (Shot s in shots)
+            {
+                spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height/2), 1.0f, SpriteEffects.None, 0f);
+            }
+
+            foreach (Enemy e in enemies)
+            {
+                spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
+            }
+
             Player.Draw(spriteBatch);
-            enemies.Draw(spriteBatch);
             spriteBatch.End();
             
         }
