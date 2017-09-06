@@ -32,7 +32,7 @@ namespace Space_Scavenger
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(enemyTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
 
         }
 
@@ -50,15 +50,14 @@ namespace Space_Scavenger
             var yDiff = Math.Abs(Position.Y - MyGame.Player.Position.Y);
 
             if (xDiff < followDistance &&  yDiff < followDistance)
-                if (xDiff > 400 || yDiff > 400)
+            {
+                var aimDistance = 300;
+                if (xDiff > aimDistance || yDiff > aimDistance)
                     Position += Speed;
                 else
                     Speed -= Speed;
+            }
 
-
-            //if (xDiff > followDistance && Position.Y - MyGame.Player.Position.Y > followDistance)
-            //        if (Position.X - MyGame.Player.Position.X < 200 || Position.Y - MyGame.Player.Position.Y < 200)
-            //            Position += Speed;
 
             float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
             
