@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
 {
-    class Camera
+    public class Camera
     {
         public Matrix transformn;
         private Viewport view;

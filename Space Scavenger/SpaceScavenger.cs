@@ -17,9 +17,9 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
 
         AsteroidComponent asteroid;
-        Player player;
+        public Player player;
         private KeyboardState previousKbState;
-        private Camera camera;
+        public Camera camera;
         private SoundEffect sound;
         public SpaceScavenger()
         {
@@ -85,6 +85,7 @@ namespace Space_Scavenger
             if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
             {
                 sound.Play();
+                  asteroid._nrofAsteroids.RemoveRange(0,asteroid.wantedAsteroids);
             }
 
                 
@@ -101,7 +102,10 @@ namespace Space_Scavenger
             {
                 player.Rotation += 0.05f;
             }
-
+            else if (state.IsKeyDown(Keys.B))
+            {
+                player.Speed = new Vector2(0,0);
+            }
             player.Update(gameTime);
             previousKbState = state;
 
@@ -123,9 +127,9 @@ namespace Space_Scavenger
             base.Draw(gameTime);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
             
-            for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
+            for (int y = -20000; y < 20000; y += backgroundTexture.Width)
             {
-                for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
+                for (int x = -20000; x < 20000; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
                     

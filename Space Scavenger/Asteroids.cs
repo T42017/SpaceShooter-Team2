@@ -18,7 +18,7 @@ namespace Space_Scavenger
         int hpAsteroid;
         public float RotationCounter;
         public float addCounter;
-
+        public int chosenTexture;
     }
 
     class AsteroidComponent : DrawableGameComponent
@@ -26,27 +26,21 @@ namespace Space_Scavenger
         public Random randomTexture = new Random();
         public Random rand = new Random();
         private  List<Texture2D> meteorTexture2Ds = new List<Texture2D>();
-        
+        private SpaceScavenger mygame;
         private Texture2D asterTexture2D1;
         private Texture2D asterTexture2D2;
         private Texture2D asterTexture2D3;
         private Texture2D asterTexture2D4;
         public float Rotation { get; set; }
+        public int wantedAsteroids = 300;
 
-        private List<Asteroid> _nrofAsteroids = new List<Asteroid>();
+        public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
         public AsteroidComponent(Game game, Player player) : base(game)
 
         {
-            for (int i = 0; i < 20; i++)
-            {
-                _nrofAsteroids.Add(new Asteroid()
-                {
-                    
-                    addCounter = rand.Next(-677,677) / 10000f,
-                    position = new Vector2(player.Position.X + rand.Next(-100, 100), player.Position.Y + rand.Next(-100,100)),
-                    speed = new Vector2((float)Math.Cos(rand.Next(-5,5)), (float)Math.Sin(rand.Next(-5,5)))
-            });
-            }
+            mygame = (SpaceScavenger)game;
+            AsteroidSpawner();
+            
         }
 
         protected override void LoadContent()
@@ -65,9 +59,26 @@ namespace Space_Scavenger
             
             for (int i = 0; i < _nrofAsteroids.Count; i++)
             {
-
-                spriteBatch.Draw(asterTexture2D1, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D1.Width /2f, asterTexture2D1.Height /2f), 1f, SpriteEffects.None, 0f);
-                 _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+                switch (_nrofAsteroids[i].chosenTexture)
+                {
+                    case 1:
+                        spriteBatch.Draw(asterTexture2D1, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D1.Width / 2f, asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+                        break;
+                    case 2:
+                        spriteBatch.Draw(asterTexture2D2, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D2.Width / 2f, asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+                        break;
+                    case 3:
+                        spriteBatch.Draw(asterTexture2D3, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D3.Width / 2f, asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+                        break;
+                    case 4:
+                        spriteBatch.Draw(asterTexture2D4, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D4.Width / 2f, asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
+                        break;
+                }
+                
               /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
                 {                                                   anti integer overflow system. Activate if it happens
                     _nrofAsteroids[i].RotationCounter = 0;
@@ -79,15 +90,90 @@ namespace Space_Scavenger
         }
         public override void Update(GameTime gameTime)
         {
+
+
+            if (_nrofAsteroids.Count < wantedAsteroids)
+            {
+ 
+                AsteroidSpawner();
+            }
+
             foreach (var asteroid in _nrofAsteroids)
             {
                 asteroid.position += asteroid.speed;
             }
-
-
+           // Debug.WriteLine(mygame.Window.ClientBounds.Bottom);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+        }
+
+        public void AsteroidSpawner()
+        {
+            var xDiff = Math.Abs(mygame.player.Position.X - 500);
+
+
+            var number = (rand.Next(4));
+
+
+            switch (number)
+            {
+                case 1:
+                    for (int i = 0; i < wantedAsteroids; i++)
+                    {
+                        _nrofAsteroids.Add(new Asteroid()
+                        {
+                            chosenTexture = randomTexture.Next(0, 5),
+
+                        addCounter = rand.Next(-677, 677) / 10000f,
+                            position = new Vector2(mygame.player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
+                            speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
+                        });
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < wantedAsteroids; i++)
+                    {
+                        _nrofAsteroids.Add(new Asteroid()
+                        {
+
+                            chosenTexture = randomTexture.Next(0, 5),
+                            addCounter = rand.Next(-677, 677) / 10000f,
+                            position = new Vector2(mygame.player.Position.X - rand.Next(0, 500) - Game.Window.ClientBounds.X, mygame.player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
+                            speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
+                        });
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < wantedAsteroids; i++)
+                    {
+                        _nrofAsteroids.Add(new Asteroid()
+                        {
+
+                            chosenTexture = randomTexture.Next(0, 5),
+                            addCounter = rand.Next(-677, 677) / 10000f,
+                            position = new Vector2(mygame.player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
+                            speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 50)))
+                        });
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < wantedAsteroids; i++)
+                    {
+                        _nrofAsteroids.Add(new Asteroid()
+                        {
+
+                            chosenTexture = randomTexture.Next(0, 5),
+                            addCounter = rand.Next(-677, 677) / 10000f,
+                            position = new Vector2(mygame.player.Position.X - rand.Next(0, 500) - Game.Window.ClientBounds.X - 1000, mygame.player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
+                            speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(5, 5)))
+                        });
+                    }
+                    break;
+
+
+            }
+
         }
     }
 }
