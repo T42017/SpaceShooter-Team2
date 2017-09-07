@@ -43,6 +43,7 @@ namespace Space_Scavenger
             for (int i = 0; i < Health; i++)
             {
                 spriteBatch.Draw(healthTexture, new Vector2(5 + i*35, 10), Color.White);
+                DrawOrder = 76;
             }
             
         }

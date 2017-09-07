@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Media;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Space_Scavenger
 {
@@ -17,6 +18,8 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
+        Random rand = new Random();
+        AsteroidComponent asteroid;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
@@ -25,6 +28,7 @@ namespace Space_Scavenger
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
+        public SoundEffect sound;
         private Camera camera;
         public List<Shot> shots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
@@ -38,6 +42,7 @@ namespace Space_Scavenger
                 PreferredBackBufferWidth = Globals.ScreenWidth
             };
             Content.RootDirectory = "Content";
+            
         }
 
         /// <summary>
@@ -53,8 +58,10 @@ namespace Space_Scavenger
             Enemy = new Enemy();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
+            asteroid = new AsteroidComponent(this, player);
+            Components.Add(asteroid);
             // TODO: Add your initialization logic here
-
+            
             base.Initialize();
         }
 
@@ -71,6 +78,8 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
+
+            sound = Content.Load<SoundEffect>("MCH");
 
         }
 
@@ -94,7 +103,11 @@ namespace Space_Scavenger
                 Exit();
 
             KeyboardState state = Keyboard.GetState();
+            if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
+            {
+            }
 
+                
             if (state.IsKeyDown(Keys.Up))
             {
                 Player.Accelerate();
@@ -180,6 +193,7 @@ namespace Space_Scavenger
                 for (int x = -10000; x < 10000; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    
                 }
             }
 
@@ -196,8 +210,9 @@ namespace Space_Scavenger
             }
 
             Player.Draw(spriteBatch);
-            spriteBatch.End();
             
+            asteroid.Draw(spriteBatch);
+            spriteBatch.End();
         }
     }
 }

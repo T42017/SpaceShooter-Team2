@@ -13,9 +13,14 @@ namespace Space_Scavenger
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+<<<<<<< HEAD
         private Texture2D Asteroidgfx;
 
 
+=======
+        Player player;
+        private KeyboardState previousKbState;
+>>>>>>> Asteroid-develop_merge
 
         public Game1()
         {
@@ -74,6 +79,11 @@ namespace Space_Scavenger
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+<<<<<<< HEAD
+
+
+            // TODO: Add your update logic here
+=======
             KeyboardState state = Keyboard.GetState();
 
             if (state.IsKeyDown(Keys.Up))
@@ -88,6 +98,7 @@ namespace Space_Scavenger
             {
                 player.Rotation += 0.05f;
             }
+>>>>>>> Asteroid-develop_merge
 
             player.Update(gameTime);
             previousKbState = state;
@@ -102,13 +113,18 @@ namespace Space_Scavenger
         {
             
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
 
+<<<<<<< HEAD
+=======
 
             spriteBatch.Begin();
             player.Draw(spriteBatch);
-            asteroid.draw(spriteBatch);
+            spriteBatch.End();
             // TODO: Add your drawing code here
+>>>>>>> Asteroid-develop_merge
 
+            // TODO: Add your drawing code here
             spriteBatch.End();
             base.Draw(gameTime);
         }

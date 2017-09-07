@@ -41,15 +41,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
-    <Compile Include="Enemy.cs" />
-    <Compile Include="GameObject.cs" />
-    <Compile Include="IGameObject.cs" />
+<<<<<<< HEAD
     <Compile Include="Asteroids.cs" />
+    <Compile Include="Game1.cs" />
+=======
+    <Compile Include="IGameObject.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Shot.cs" />
     <Compile Include="SpaceScavenger.cs" />
+>>>>>>> Asteroid-develop_merge
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

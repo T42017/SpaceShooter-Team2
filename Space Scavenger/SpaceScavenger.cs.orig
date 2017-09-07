@@ -13,13 +13,12 @@ namespace Space_Scavenger
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
-<<<<<<< HEAD
+
+        AsteroidComponent asteroid;
+
         Player player;
         private KeyboardState previousKbState;
-=======
-        Texture2D healthTexture;
-        
->>>>>>> feature-UserInterface
+        private Camera camera;
 
         public SpaceScavenger()
         {
@@ -39,6 +38,12 @@ namespace Space_Scavenger
         {
 
             player = new Player(this);
+<<<<<<< HEAD
+            camera = new Camera(GraphicsDevice.Viewport);
+=======
+            asteroid = new AsteroidComponent(this, player);
+            Components.Add(asteroid);
+>>>>>>> Asteroids
             Components.Add(player);
             // TODO: Add your initialization logic here
 
@@ -55,7 +60,7 @@ namespace Space_Scavenger
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("purple");
-            healthTexture = Content.Load<Texture2D>("powerupRed");
+            
 
         }
 
@@ -96,6 +101,8 @@ namespace Space_Scavenger
             player.Update(gameTime);
             previousKbState = state;
 
+            camera.Update(gameTime, player);
+
             base.Update(gameTime);
         }
 
@@ -110,21 +117,23 @@ namespace Space_Scavenger
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+<<<<<<< HEAD
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+=======
             spriteBatch.Begin();
+            
+>>>>>>> Asteroids
             for (int y = 0; y < Globals.ScreenWidth; y += backgroundTexture.Width)
             {
                 for (int x = 0; x < Globals.ScreenWidth; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    
                 }
             }
-
-<<<<<<< HEAD
+            asteroid.Draw(spriteBatch);
             player.Draw(spriteBatch);
-            spriteBatch.End();
-=======
                spriteBatch.End();
->>>>>>> feature-UserInterface
         }
     }
 }
