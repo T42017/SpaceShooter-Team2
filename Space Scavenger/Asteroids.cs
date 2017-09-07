@@ -37,7 +37,7 @@ namespace Space_Scavenger
 
 
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
-        public AsteroidComponent(Game game, Player player) : base(game)
+        public AsteroidComponent(Game game, Player Player) : base(game)
 
         {
             mygame = (SpaceScavenger)game;
@@ -120,7 +120,7 @@ namespace Space_Scavenger
 
         public void AsteroidSpawner()
         {
-            var xDiff = Math.Abs(mygame.player.Position.X - 500);
+            var xDiff = Math.Abs(mygame.Player.Position.X - 500);
 
         var number = (rand.Next(4));
 
@@ -137,7 +137,7 @@ namespace Space_Scavenger
                         chosenTexture = randomTexture.Next(0, 5),
                             hpAsteroid = 10,
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            position = new Vector2(mygame.player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
+                            position = new Vector2(mygame.Player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.Player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
                             speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     }
@@ -150,7 +150,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                         chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            position = new Vector2(mygame.player.Position.X - rand.Next(0,500) - Game.Window.ClientBounds.X, mygame.player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
+                            position = new Vector2(mygame.Player.Position.X - rand.Next(0,500) - Game.Window.ClientBounds.X, mygame.Player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
                             speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     }
@@ -163,7 +163,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            position = new Vector2(mygame.player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
+                            position = new Vector2(mygame.Player.Position.X + rand.Next(0, 500) + Game.Window.ClientBounds.X, mygame.Player.Position.Y - Game.Window.ClientBounds.Height - rand.Next(0, 500)),
                             speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 50)))
                         });
                     }
@@ -176,7 +176,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            position = new Vector2(mygame.player.Position.X - rand.Next(0, 500) - Game.Window.ClientBounds.X, mygame.player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
+                            position = new Vector2(mygame.Player.Position.X - rand.Next(0, 500) - Game.Window.ClientBounds.X, mygame.Player.Position.Y + Game.Window.ClientBounds.Height + rand.Next(0, 500)),
                             speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(5, 5)))
                         });
                     }

@@ -13,7 +13,8 @@ namespace Space_Scavenger
     {
         private SpaceScavenger MyGame;
 
-        
+        int reloadTime = 0;
+        Random rnd = new Random();
         private Texture2D enemyTexture;
 
 
@@ -28,9 +29,17 @@ namespace Space_Scavenger
             };
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public Shot EnemyShoot()
         {
-            spriteBatch.Draw(enemyTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
+            if (reloadTime <= 0)
+                return new Shot()
+                {
+                    Position = Position - new Vector2(rnd.Next(-10,10),rnd.Next(-10,10)),
+                    Rotation = Rotation,
+                    Speed = Speed + 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2), (float) Math.Sin(Rotation - MathHelper.PiOver2))
+                };
+
+                return null;
 
         }
 
@@ -42,6 +51,7 @@ namespace Space_Scavenger
             int i = 0;
             float xDiff = 0;
             float yDiff = 0;
+            
             Vector2 left = new Vector2(-1,0);
             Vector2 direction = MyGame.Player.Position - Position;
             direction.Normalize();
@@ -56,16 +66,33 @@ namespace Space_Scavenger
             if (xDiffPlayer < followDistance &&  yDiffPlayer < followDistance)
             {
                 
-                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)
+                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)    
+                {
                     Position += Speed;
+                    if(reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        reloadTime += 20;
+                    }
+                    
+                }
                 else
                     Speed -= Speed;
+                if (reloadTime <= 0)
+                {
+                    Shot s = EnemyShoot();
+                    if (s != null)
+                        MyGame.enemyshots.Add(s);
+                    reloadTime += 20;
+                }
             }
 
+            
 
 
-
-            foreach (Shot shot in MyGame.shots)
+            /*foreach (Shot shot in MyGame.shots)
             {
                 i++;
             }
@@ -77,10 +104,10 @@ namespace Space_Scavenger
 
                 if (xDiff < 100 && yDiff < 100)
                 {
-                    Position += left;
+                    Position += 
                 }
 
-            }
+            }*/
 
 
 
@@ -98,6 +125,12 @@ namespace Space_Scavenger
             }
 
             Rotation = -targetrotation;
+
+            if (reloadTime > 0)
+            {
+                reloadTime--;
+            }
+            
             
         }
     }

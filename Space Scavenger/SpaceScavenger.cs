@@ -2,6 +2,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Media;
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +32,7 @@ namespace Space_Scavenger
         public SoundEffect sound;
         private Camera camera;
         public List<Shot> shots = new List<Shot>();
+        public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
 
 
@@ -58,7 +60,7 @@ namespace Space_Scavenger
             Enemy = new Enemy();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
-            asteroid = new AsteroidComponent(this, player);
+            asteroid = new AsteroidComponent(this, Player);
             Components.Add(asteroid);
             // TODO: Add your initialization logic here
             
@@ -78,8 +80,6 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
-
-            sound = Content.Load<SoundEffect>("MCH");
 
         }
 
@@ -143,7 +143,7 @@ namespace Space_Scavenger
             }
 
 
-
+            
             foreach (Shot shot in shots)
             {
                 shot.Update(gameTime);
@@ -154,6 +154,10 @@ namespace Space_Scavenger
                     enemies.Remove(enemy);
                     shot.isDead = true;
                 }
+            }
+            foreach (Shot shot in enemyshots)
+            {
+                shot.Update(gameTime);
             }
             foreach (Enemy e in enemies)
             {
@@ -202,6 +206,11 @@ namespace Space_Scavenger
             foreach (Shot s in shots)
             {
                 spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height/2), 1.0f, SpriteEffects.None, 0f);
+            }
+
+            foreach (Shot s in enemyshots)
+            {
+                spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
             }
 
             foreach (Enemy e in enemies)
