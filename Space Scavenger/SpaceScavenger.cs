@@ -2,6 +2,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Media;
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,7 +26,7 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
-
+        public GameObject gameObject;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
@@ -58,10 +60,11 @@ namespace Space_Scavenger
             Enemy = new Enemy();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
-            asteroid = new AsteroidComponent(this, player);
-            Components.Add(asteroid);
+            asteroid = new AsteroidComponent(this, Player, gameObject);
+       //     Components.Add(asteroid);
+            gameObject = (GameObject)gameObject;
             // TODO: Add your initialization logic here
-            
+
             base.Initialize();
         }
 
@@ -78,8 +81,10 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
-
-            sound = Content.Load<SoundEffect>("MCH");
+            asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1");
+            asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2");
+            asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
+            asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
 
         }
 
@@ -128,7 +133,7 @@ namespace Space_Scavenger
                     Shot s = Player.Shoot();
                     if (s != null)
                         shots.Add(s);
-                    reloadTime = 20;
+                    reloadTime = 0;
                 }
             }
             if (state.IsKeyDown(Keys.B))
@@ -142,16 +147,22 @@ namespace Space_Scavenger
                     enemies.Add(e);
             }
 
-
+            asteroid.Update(gameTime);
 
             foreach (Shot shot in shots)
             {
                 shot.Update(gameTime);
-                Enemy enemy = enemies.FirstOrDefault(e => e.CollidesWith(shot));
+                Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
+                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
                 if (enemy != null)
                 {
                     enemies.Remove(enemy);
+                    shot.isDead = true;
+                }
+                if (hitasteroid != null)
+                {
+                    asteroid._nrofAsteroids.Remove(hitasteroid);
                     shot.isDead = true;
                 }
             }
@@ -193,9 +204,37 @@ namespace Space_Scavenger
                 for (int x = -10000; x < 10000; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
-                    
+
                 }
             }
+            for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
+            {
+                switch (asteroid._nrofAsteroids[i].chosenTexture)
+                {
+                    case 1:
+                        spriteBatch.Draw(asteroid.asterTexture2D1, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D1.Width / 2f, asteroid.asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                        break;
+                    case 2:
+                        spriteBatch.Draw(asteroid.asterTexture2D2, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D2.Width / 2f, asteroid.asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                        break;
+                    case 3:
+                        spriteBatch.Draw(asteroid.asterTexture2D3, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D3.Width / 2f, asteroid.asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                        break;
+                    case 4:
+                        spriteBatch.Draw(asteroid.asterTexture2D4, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D4.Width / 2f, asteroid.asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                        break;
+                }
+
+                /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
+                  {                                                   anti integer overflow system. Activate if it happens
+                      _nrofAsteroids[i].RotationCounter = 0;
+                  }*/
+            }
+
 
             
 
@@ -211,7 +250,6 @@ namespace Space_Scavenger
 
             Player.Draw(spriteBatch);
             
-            asteroid.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
