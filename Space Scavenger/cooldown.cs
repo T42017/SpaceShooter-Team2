@@ -10,7 +10,14 @@ namespace Space_Scavenger
     class cooldown
     {
         float cooldowntime = 0;
+
+        public float Cooldowntime
+        {
+            get => cooldowntime; set => cooldowntime = value;
+        }
+
         Update(GameTime gameTime)
+
         {
             GamePadState controller = GamePad.GetState(PlayerIndex.One);
 
@@ -19,28 +26,38 @@ namespace Space_Scavenger
             if (cooldowntime >= 5000 && controller.Buttons.A == ButtonState.Pressed)
             {
                 UseAbility(Shield);
-                cooldowntime = 0;
+                cooldowntime = 30;
             }
 
 
             else (cooldowntime >= 5000 && controller.Buttons.B == ButtonState.Pressed)
                 {
                 UseAbility(shot);
-                cooldowntime = 0;
-            }
+                cooldowntime = 2;
+            } 
                   
 
-                    else (cooldowntime >= 5000 && controller.Buttons.C == ButtonState.Pressed)
+                    else (cooldowntime >= 5000 && controller.Buttons.X == ButtonState.Pressed)
                     {
                 UseAbility(Special);
-                cooldowntime = 0;
+                cooldowntime = 20;
             }
         }
 
 
         private void Cooldown(GameTime gameTime)
         {
-            cooldowntime += GetTotalMilliseconds(gameTime);
+            NewMethod1(gameTime);
+        }
+
+        private void NewMethod1(GameTime gameTime)
+        {
+            cooldowntime += NewMethod(gameTime);
+        }
+
+        private static double NewMethod(GameTime gameTime)
+        {
+            return GetTotalMilliseconds(gameTime);
         }
 
         private static double GetTotalMilliseconds(GameTime gameTime)
