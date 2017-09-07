@@ -31,12 +31,14 @@ namespace Space_Scavenger
         public Texture2D asterTexture2D2;
         public Texture2D asterTexture2D3;
         public Texture2D asterTexture2D4;
+        public Texture2D MinitETexture2D1;
+
         public bool isDead { get; set; }
         public float Rotation { get; set; }
         public int Health { get; set; }
         public int wantedAsteroids = 200;
 
-
+        public List<Asteroid> _MiniStroids = new List<Asteroid>();
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
 
         public AsteroidComponent(Game game, Player Player, GameObject gameObject) 
@@ -56,7 +58,10 @@ namespace Space_Scavenger
 
                 AsteroidSpawner();
             }
-
+            for (int i = 0; _MiniStroids.Count > i; i++)
+            {
+                _MiniStroids[i].Position += _MiniStroids[i].Speed;
+            }
             foreach (var asteroid in _nrofAsteroids)
             {
                 asteroid.Position += asteroid.Speed;
@@ -73,6 +78,22 @@ namespace Space_Scavenger
             // TODO: Add your update logic here
         }
 
+        public void miniStroid(Vector2 aspos)
+        {
+            
+            _MiniStroids.Add(new Asteroid()
+            {
+
+                //vänster
+                hpAsteroid = 10,
+                chosenTexture = randomTexture.Next(0, 5),
+                addCounter = rand.Next(-677, 677) / 10000f,
+                Position = new Vector2(aspos.X + rand.Next(-20,20), aspos.Y + rand.Next(-20, 20)),
+                Speed = new Vector2((float)Math.Cos(rand.Next(-7, 7)), (float)Math.Sin(rand.Next(-7, 7))),
+                Radius = 38
+            });
+
+        }
         public void AsteroidSpawner()
         {
             var xDiff = Math.Abs(mygame.Player.Position.X - 500);
