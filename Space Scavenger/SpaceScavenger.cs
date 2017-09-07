@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -18,6 +19,8 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
+        private SoundEffect laserEffect;
+        private int reloadTime = 0;
 
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
@@ -67,6 +70,7 @@ namespace Space_Scavenger
             backgroundTexture = Content.Load<Texture2D>("purple");
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
+            laserEffect = Content.Load<SoundEffect>("laserShoot");
 
         }
 
@@ -105,9 +109,14 @@ namespace Space_Scavenger
             }
             if (state.IsKeyDown(Keys.Space))
             {
-                Shot s = Player.Shoot();
-                if(s != null)
-                    shots.Add(s);
+                if (reloadTime < 0)
+                {
+                    laserEffect.Play();
+                    Shot s = Player.Shoot();
+                    if (s != null)
+                        shots.Add(s);
+                    reloadTime = 20;
+                }
             }
             if (state.IsKeyDown(Keys.B))
             {
@@ -144,6 +153,12 @@ namespace Space_Scavenger
             previousKbState = state;
 
             camera.Update(gameTime, Player);
+
+            if (reloadTime >= 0)
+            {
+                reloadTime--;
+            }
+
 
             base.Update(gameTime);
         }
