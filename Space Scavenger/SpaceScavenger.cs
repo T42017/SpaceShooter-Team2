@@ -23,7 +23,6 @@ namespace Space_Scavenger
         private KeyboardState previousKbState;
         public Camera camera;
         public SoundEffect sound;
-        public SoundEffect song;
         public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -64,7 +63,6 @@ namespace Space_Scavenger
             backgroundTexture = Content.Load<Texture2D>("purple");
 
             sound = Content.Load<SoundEffect>("MCH");
-            song = Content.Load<SoundEffect>("The Llama Song");
 
         }
 
@@ -90,7 +88,6 @@ namespace Space_Scavenger
             KeyboardState state = Keyboard.GetState();
             if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
             {
-                song.Play();
             }
 
                 

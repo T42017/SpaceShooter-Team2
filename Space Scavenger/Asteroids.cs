@@ -49,10 +49,10 @@ namespace Space_Scavenger
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             
-            asterTexture2D1 = Game.Content.Load<Texture2D>("llama");
-            asterTexture2D2 = Game.Content.Load<Texture2D>("llama2");
-            asterTexture2D3 = Game.Content.Load<Texture2D>("llama3");
-            asterTexture2D4 = Game.Content.Load<Texture2D>("llama4");
+            asterTexture2D1 = Game.Content.Load<Texture2D>("Meteor1");
+            asterTexture2D2 = Game.Content.Load<Texture2D>("Meteor2");
+            asterTexture2D3 = Game.Content.Load<Texture2D>("Meteor3");
+            asterTexture2D4 = Game.Content.Load<Texture2D>("Meteor4");
             base.LoadContent();
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -64,19 +64,19 @@ namespace Space_Scavenger
                 switch (_nrofAsteroids[i].chosenTexture)
                 {
                     case 1:
-                        spriteBatch.Draw(asterTexture2D1, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D1.Width / 2f, asterTexture2D1.Height / 2f), .6f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(asterTexture2D1, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D1.Width / 2f, asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
                         _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
                         break;
                     case 2:
-                        spriteBatch.Draw(asterTexture2D2, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D2.Width / 2f, asterTexture2D2.Height / 2f), .3f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(asterTexture2D2, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D2.Width / 2f, asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
                         _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
                         break;
                     case 3:
-                        spriteBatch.Draw(asterTexture2D3, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D3.Width / 2f, asterTexture2D3.Height / 2f), .5f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(asterTexture2D3, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D3.Width / 2f, asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
                         _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
                         break;
                     case 4:
-                        spriteBatch.Draw(asterTexture2D4, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D4.Width / 2f, asterTexture2D4.Height / 2f), .1f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(asterTexture2D4, _nrofAsteroids[i].position, null, Color.White, Rotation + _nrofAsteroids[i].RotationCounter, new Vector2(asterTexture2D4.Width / 2f, asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
                         _nrofAsteroids[i].RotationCounter += _nrofAsteroids[i].addCounter;
                         break;
                 }
