@@ -36,7 +36,7 @@ namespace Space_Scavenger
         public bool isDead { get; set; }
         public float Rotation { get; set; }
         public int Health { get; set; }
-        public int wantedAsteroids = 200;
+        public int wantedAsteroids = 400;
 
         public List<Asteroid> _MiniStroids = new List<Asteroid>();
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
@@ -99,7 +99,7 @@ namespace Space_Scavenger
             var xDiff = Math.Abs(mygame.Player.Position.X - 500);
 
        int Spawnside = (rand.Next(0, 5));
-        //    int Spawnside = 4;
+       //     int Spawnside = 1;
 
             switch (Spawnside)
             {
@@ -112,7 +112,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-1500, -1200) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-1000, 1000)),
+                            Position = new Vector2(mygame.Player.Position.X  - mygame.Window.ClientBounds.X - rand.Next(1000, Globals.ScreenWidth *3), mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),                          
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5))),
                             Radius = 38
                         });
@@ -126,7 +126,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(1200,1500) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height - rand.Next(-1500, -1000)),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     
@@ -139,7 +139,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-1000, 1000) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - (mygame.Window.ClientBounds.Height + rand.Next(-750, -500))),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1050, 0)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 50)))
                         });
                     
@@ -152,7 +152,7 @@ namespace Space_Scavenger
                             hpAsteroid = 10,
                             chosenTexture = randomTexture.Next(0, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-1000, 1000) - mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(500, 750)),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(1200, 1750)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     

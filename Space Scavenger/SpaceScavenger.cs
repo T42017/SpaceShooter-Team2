@@ -86,7 +86,7 @@ namespace Space_Scavenger
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
-            asteroid.MinitETexture2D1 = Content.Load<Texture2D>("llama");
+            asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
 
         }
 
@@ -148,6 +148,8 @@ namespace Space_Scavenger
                 if (e != null)
                     enemies.Add(e);
             }
+            Debug.WriteLine(Window.ClientBounds.X);
+            Debug.WriteLine(Player.Position);
 
             asteroid.Update(gameTime);
 
