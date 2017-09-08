@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
@@ -13,8 +14,11 @@ namespace Space_Scavenger
     {
         private SpaceScavenger MyGame;
 
-        
+        int reloadTime = 0;
+        Random rnd = new Random();
         private Texture2D enemyTexture;
+
+        
 
 
         public Enemy enemySpawn()
@@ -28,9 +32,19 @@ namespace Space_Scavenger
             };
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public Shot EnemyShoot()
         {
-            spriteBatch.Draw(enemyTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
+            
+            if (reloadTime <= 0)
+                return new Shot()
+                {
+                    Timer = 200,
+                    Position = Position - new Vector2(rnd.Next(-10,10),rnd.Next(-10,10)),
+                    Rotation = Rotation,
+                    Speed = Speed + 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2), (float) Math.Sin(Rotation - MathHelper.PiOver2))
+                };
+
+                return null;
 
         }
 
@@ -39,9 +53,7 @@ namespace Space_Scavenger
             MyGame = (SpaceScavenger)game;
             var followDistance = 1000;
             var aimDistance = 100;
-            int i = 0;
-            float xDiff = 0;
-            float yDiff = 0;
+            
             Vector2 left = new Vector2(-1,0);
             Vector2 direction = MyGame.Player.Position - Position;
             direction.Normalize();
@@ -52,38 +64,6 @@ namespace Space_Scavenger
 
             var xDiffPlayer = Math.Abs(Position.X - MyGame.Player.Position.X);
             var yDiffPlayer = Math.Abs(Position.Y - MyGame.Player.Position.Y);
-
-            if (xDiffPlayer < followDistance &&  yDiffPlayer < followDistance)
-            {
-                
-                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)
-                    Position += Speed;
-                else
-                    Speed -= Speed;
-            }
-
-
-
-
-            foreach (Shot shot in MyGame.shots)
-            {
-                i++;
-            }
-
-            for (int j = 0; j < i; j++)
-            {
-                xDiff = Math.Abs(Position.X - MyGame.shots[j].Position.X);
-                yDiff = Math.Abs(Position.Y - MyGame.shots[j].Position.Y);
-
-                if (xDiff < 100 && yDiff < 100)
-                {
-                    Position += left;
-                }
-
-            }
-
-
-
 
 
             float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
@@ -98,6 +78,80 @@ namespace Space_Scavenger
             }
 
             Rotation = -targetrotation;
+
+            if (reloadTime > 0)
+            {
+                reloadTime--;
+            }
+
+
+            if (xDiffPlayer < followDistance &&  yDiffPlayer < followDistance)
+            {
+
+                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)
+                {
+                    Position += Speed;
+                    /*if (reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        MyGame.enemyShootEffect.Play();
+                        reloadTime += 20;
+                    }*/
+
+                }
+                else
+                {
+                    Speed -= Speed;
+                    /*if (reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        reloadTime += 20;
+                    }*/
+                }
+                if (xDiffPlayer < 300 || yDiffPlayer < 300)
+                {
+                    if (reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        MyGame.enemyShootEffect.Play();
+                        reloadTime += 20;
+                    }
+
+                }
+            }
+
+            
+
+
+            /*foreach (Shot shot in MyGame.shots)
+            {
+                i++;
+            }
+
+            for (int j = 0; j < i; j++)
+            {
+                xDiff = Math.Abs(Position.X - MyGame.shots[j].Position.X);
+                yDiff = Math.Abs(Position.Y - MyGame.shots[j].Position.Y);
+
+                if (xDiff < 100 && yDiff < 100)
+                {
+                    Position += 
+                }
+
+            }*/
+
+
+
+
+
+            
+            
             
         }
     }

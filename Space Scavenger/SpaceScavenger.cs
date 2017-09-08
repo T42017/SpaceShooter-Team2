@@ -28,12 +28,15 @@ namespace Space_Scavenger
         private SoundEffect laserEffect;
         private int reloadTime = 0;
         public GameObject gameObject;
+        public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
         public SoundEffect sound;
         private Camera camera;
+
         public List<Shot> shots = new List<Shot>();
+        public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
 
 
@@ -82,6 +85,7 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
+            enemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
             asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1");
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
@@ -153,12 +157,14 @@ namespace Space_Scavenger
 
             asteroid.Update(gameTime);
 
+            
             foreach (Shot shot in shots)
             {
                 shot.Update(gameTime);
                 Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
                  Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
+                
                 if (enemy != null)
                 {
                     enemies.Remove(enemy);
@@ -173,6 +179,20 @@ namespace Space_Scavenger
 
                     shot.isDead = true;
                 }
+                shot.Timer--;
+                if (shot.Timer <= 0)
+                {
+                    shot.isDead = true;
+                }
+            }
+            foreach (Shot shot in enemyshots)
+            {
+                shot.Update(gameTime);
+                shot.Timer--;
+                if (shot.Timer <= 0)
+                {
+                    shot.isDead = true;
+                }
             }
             foreach (Enemy e in enemies)
             {
@@ -180,6 +200,7 @@ namespace Space_Scavenger
             }
 
             shots.RemoveAll(s => s.isDead);
+            enemyshots.RemoveAll(shot => shot.isDead);
 
             Player.Update(gameTime);
             previousKbState = state;
@@ -260,6 +281,11 @@ namespace Space_Scavenger
             foreach (Shot s in shots)
             {
                 spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height/2), 1.0f, SpriteEffects.None, 0f);
+            }
+
+            foreach (Shot s in enemyshots)
+            {
+                spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
             }
 
             foreach (Enemy e in enemies)

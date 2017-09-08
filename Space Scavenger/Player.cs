@@ -72,6 +72,7 @@ namespace Space_Scavenger
             {
                 Position = Position,
                 Rotation = Rotation,
+                Timer = 200,
                 Speed = Speed + 10f * new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation))
             };
 
