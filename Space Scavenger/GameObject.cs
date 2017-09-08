@@ -16,6 +16,7 @@ namespace Space_Scavenger
         public float Rotation { get; set; }
         public int Health { get; set; }
         public SpaceScavenger MyGame { get; set; }
+        public int Timer { get; set; }
         
 
         public bool CollidesWith(IGameObject other)

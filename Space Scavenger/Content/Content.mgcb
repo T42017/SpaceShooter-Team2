@@ -72,6 +72,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Meteor1.png
+
 #begin EnemyShip.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -101,7 +102,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:laserShoot.wav
-
 
 #begin Meteor2.png
 /importer:TextureImporter
@@ -138,4 +138,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Meteor4.png
+
+#begin enemyShoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:enemyShoot.wav
 

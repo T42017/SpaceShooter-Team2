@@ -25,12 +25,13 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
-
+        public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
         public SoundEffect sound;
         private Camera camera;
+
         public List<Shot> shots = new List<Shot>();
         public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
@@ -80,6 +81,7 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
+            enemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
 
         }
 
@@ -149,15 +151,26 @@ namespace Space_Scavenger
                 shot.Update(gameTime);
                 Enemy enemy = enemies.FirstOrDefault(e => e.CollidesWith(shot));
 
+                
                 if (enemy != null)
                 {
                     enemies.Remove(enemy);
+                    shot.isDead = true;
+                }
+                shot.Timer--;
+                if (shot.Timer <= 0)
+                {
                     shot.isDead = true;
                 }
             }
             foreach (Shot shot in enemyshots)
             {
                 shot.Update(gameTime);
+                shot.Timer--;
+                if (shot.Timer <= 0)
+                {
+                    shot.isDead = true;
+                }
             }
             foreach (Enemy e in enemies)
             {
@@ -165,6 +178,7 @@ namespace Space_Scavenger
             }
 
             shots.RemoveAll(s => s.isDead);
+            enemyshots.RemoveAll(shot => shot.isDead);
 
             Player.Update(gameTime);
             previousKbState = state;

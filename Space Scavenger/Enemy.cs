@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
@@ -16,6 +17,8 @@ namespace Space_Scavenger
         int reloadTime = 0;
         Random rnd = new Random();
         private Texture2D enemyTexture;
+
+        
 
 
         public Enemy enemySpawn()
@@ -31,9 +34,11 @@ namespace Space_Scavenger
 
         public Shot EnemyShoot()
         {
+            
             if (reloadTime <= 0)
                 return new Shot()
                 {
+                    Timer = 200,
                     Position = Position - new Vector2(rnd.Next(-10,10),rnd.Next(-10,10)),
                     Rotation = Rotation,
                     Speed = Speed + 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2), (float) Math.Sin(Rotation - MathHelper.PiOver2))
@@ -48,9 +53,6 @@ namespace Space_Scavenger
             MyGame = (SpaceScavenger)game;
             var followDistance = 1000;
             var aimDistance = 100;
-            int i = 0;
-            float xDiff = 0;
-            float yDiff = 0;
             
             Vector2 left = new Vector2(-1,0);
             Vector2 direction = MyGame.Player.Position - Position;
@@ -63,29 +65,64 @@ namespace Space_Scavenger
             var xDiffPlayer = Math.Abs(Position.X - MyGame.Player.Position.X);
             var yDiffPlayer = Math.Abs(Position.Y - MyGame.Player.Position.Y);
 
+
+            float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
+            
+            if (targetrotation < 360)
+            {
+                Rotation += 360; 
+            }
+            else if (targetrotation > 360)
+            {
+                Rotation -= 360;
+            }
+
+            Rotation = -targetrotation;
+
+            if (reloadTime > 0)
+            {
+                reloadTime--;
+            }
+
+
             if (xDiffPlayer < followDistance &&  yDiffPlayer < followDistance)
             {
-                
-                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)    
+
+                if (xDiffPlayer > aimDistance || yDiffPlayer > aimDistance)
                 {
                     Position += Speed;
-                    if(reloadTime <= 0)
+                    /*if (reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        MyGame.enemyShootEffect.Play();
+                        reloadTime += 20;
+                    }*/
+
+                }
+                else
+                {
+                    Speed -= Speed;
+                    /*if (reloadTime <= 0)
                     {
                         Shot s = EnemyShoot();
                         if (s != null)
                             MyGame.enemyshots.Add(s);
                         reloadTime += 20;
-                    }
-                    
+                    }*/
                 }
-                else
-                    Speed -= Speed;
-                if (reloadTime <= 0)
+                if (xDiffPlayer < 300 || yDiffPlayer < 300)
                 {
-                    Shot s = EnemyShoot();
-                    if (s != null)
-                        MyGame.enemyshots.Add(s);
-                    reloadTime += 20;
+                    if (reloadTime <= 0)
+                    {
+                        Shot s = EnemyShoot();
+                        if (s != null)
+                            MyGame.enemyshots.Add(s);
+                        MyGame.enemyShootEffect.Play();
+                        reloadTime += 20;
+                    }
+
                 }
             }
 
@@ -113,23 +150,7 @@ namespace Space_Scavenger
 
 
 
-            float targetrotation = (float)Math.Atan2(Position.X - MyGame.Player.Position.X, Position.Y - MyGame.Player.Position.Y);
             
-            if (targetrotation < 360)
-            {
-                Rotation += 360; 
-            }
-            else if (targetrotation > 360)
-            {
-                Rotation -= 360;
-            }
-
-            Rotation = -targetrotation;
-
-            if (reloadTime > 0)
-            {
-                reloadTime--;
-            }
             
             
         }
