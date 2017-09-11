@@ -168,7 +168,7 @@ namespace Space_Scavenger
                 {
                     Player.isDead = true;
                     hitasteroid.isDead = true;
-                  //  agr.Play();
+                    agr.Play();
                     Debug.WriteLine(Player.isDead);
                     for (int k = 0; k < 10; k++)
                     {

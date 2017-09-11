@@ -175,3 +175,9 @@
 /processorParam:Quality=Best
 /build:AGR.wav
 
+#begin Explosion32.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion32.wav
+
