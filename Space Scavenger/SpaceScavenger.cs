@@ -27,6 +27,7 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
+        private int boostTime = 0;
         public GameObject gameObject;
         public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
@@ -150,6 +151,17 @@ namespace Space_Scavenger
             {
                 Player.Speed = new Vector2(0,0);
             }
+            if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
+            {
+                if (boostTime <= 0)
+                {
+                    Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
+                    boostTime = 600;
+                }
+                
+
+                
+            }
             if (state.IsKeyDown(Keys.S) && previousKbState.IsKeyDown(Keys.S) != state.IsKeyDown(Keys.S))
             {
                 Enemy e = Enemy.enemySpawn();
@@ -197,7 +209,11 @@ namespace Space_Scavenger
                 
                 if (enemy != null)
                 {
-                    enemies.Remove(enemy);
+                    enemy.Health -= 1;
+                    if (enemy.Health <= 0)
+                    {
+                        enemies.Remove(enemy);
+                    }
                     shot.isDead = true;
                 }
                 if (hitasteroid != null)
@@ -243,6 +259,8 @@ namespace Space_Scavenger
             {
                 reloadTime--;
             }
+            if (boostTime >= 0)
+                boostTime--;
 
 
             base.Update(gameTime);
