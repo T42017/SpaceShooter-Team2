@@ -28,6 +28,7 @@ namespace Space_Scavenger
         private SoundEffect laserEffect;
         private int reloadTime = 0;
         private int boostTime = 0;
+        private int shieldTime = 0;
         public GameObject gameObject;
         public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
@@ -204,9 +205,9 @@ namespace Space_Scavenger
             {
                 shot.Update(gameTime);
                 Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
-                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
-                
+
                 if (enemy != null)
                 {
                     enemy.Health -= 1;
@@ -234,16 +235,47 @@ namespace Space_Scavenger
             }
             foreach (Shot shot in enemyshots)
             {
+
                 shot.Update(gameTime);
                 shot.Timer--;
                 if (shot.Timer <= 0)
                 {
                     shot.isDead = true;
                 }
+                
             }
             foreach (Enemy e in enemies)
             {
                 e.Update(gameTime, this);
+            }
+
+
+            Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
+            if (shotHit != null)
+            {
+                if (Player.Shield <= 0)
+                    Player.Health -= 1;
+                else
+                {
+                    Player.Shield--;
+                    shieldTime = 300;
+                }
+            }
+            if (Player.Health <= 0)
+            {
+                Player.isDead = true;
+                Debug.Write(Player.isDead);
+            }
+
+            if (Player.Shield < 3 && shieldTime <= 0)
+            {
+                Player.Shield++;
+                shieldTime = 300;
+                Debug.WriteLine(Player.Shield + " " + shieldTime);
+            }
+            if (shieldTime >= 0)
+            {
+                shieldTime--;
             }
 
             shots.RemoveAll(s => s.isDead);
@@ -252,6 +284,7 @@ namespace Space_Scavenger
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
+
 
             camera.Update(gameTime, Player);
 

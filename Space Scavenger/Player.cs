@@ -18,6 +18,7 @@ namespace Space_Scavenger
         public float Rotation { get; set; }
         public bool Accelerating { get; set; }
         public int Health { get; set; }
+        public int Shield { get; set; }
 
         private Texture2D playerTexture;
         private Texture2D healthTexture; 
@@ -26,6 +27,7 @@ namespace Space_Scavenger
         {
             Position = new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2);
             Health = 10;
+            Shield = 3;
         }
 
         protected override void LoadContent()
