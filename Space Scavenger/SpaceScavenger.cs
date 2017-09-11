@@ -179,7 +179,11 @@ namespace Space_Scavenger
                 
                 if (enemy != null)
                 {
-                    enemies.Remove(enemy);
+                    enemy.Health -= 1;
+                    if (enemy.Health <= 0)
+                    {
+                        enemies.Remove(enemy);
+                    }
                     shot.isDead = true;
                 }
                 if (hitasteroid != null)
