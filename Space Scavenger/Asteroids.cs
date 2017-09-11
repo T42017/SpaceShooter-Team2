@@ -24,19 +24,21 @@ namespace Space_Scavenger
     {
         public Random randomTexture = new Random();
         public Random rand = new Random();
+        public Random randAsteroitField = new Random();
         private  List<Texture2D> meteorTexture2Ds = new List<Texture2D>();
         public  SpaceScavenger mygame;
         public GameObject myObject;
+
         public Texture2D asterTexture2D1;
         public Texture2D asterTexture2D2;
         public Texture2D asterTexture2D3;
         public Texture2D asterTexture2D4;
         public Texture2D MinitETexture2D1;
-
+        public int aTimer = 10;
         public bool isDead { get; set; }
         public float Rotation { get; set; }
         public int Health { get; set; }
-        public int wantedAsteroids = 400;
+        public int wantedAsteroids = 200;
 
         public List<Asteroid> _MiniStroids = new List<Asteroid>();
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
@@ -51,28 +53,37 @@ namespace Space_Scavenger
 
         public  void Update(GameTime gameTime)
         {
-       //     Debug.WriteLine(_nrofAsteroids[1].hpAsteroid);
-            
-            if (_nrofAsteroids.Count < wantedAsteroids)
-            {
+            //     Debug.WriteLine(_nrofAsteroids[1].hpAsteroid);
 
-                AsteroidSpawner();
-            }
-            for (int i = 0; _MiniStroids.Count > i; i++)
-            {
-                _MiniStroids[i].Position += _MiniStroids[i].Speed;
-            }
-            foreach (var asteroid in _nrofAsteroids)
-            {
-                asteroid.Position += asteroid.Speed;
-            }
-            for (int i = 0; i < _nrofAsteroids.Count; i++)
-            {
-                if (_nrofAsteroids[i].hpAsteroid == 0)
+            if (_nrofAsteroids.Count < wantedAsteroids)
                 {
-                    _nrofAsteroids.Remove(_nrofAsteroids[i]);
+
+                    AsteroidSpawner();
                 }
-            }
+                for (int i = 0; _MiniStroids.Count > i; i++)
+                {
+                    _MiniStroids[i].Position += _MiniStroids[i].Speed;
+                }
+                foreach (var asteroid in _nrofAsteroids)
+                {
+                    var xDiffPlayer = Math.Abs(asteroid.Position.X - mygame.Player.Position.X);
+                    var yDiffPlayer = Math.Abs(asteroid.Position.Y - mygame.Player.Position.Y);
+                asteroid.Position += asteroid.Speed;
+                    if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+                    {
+                        asteroid.isDead = true;
+                    }
+                }
+                for (int i = 0; i < _nrofAsteroids.Count; i++)
+                {
+
+                if (_nrofAsteroids[i].hpAsteroid == 0)
+                    {
+                        _nrofAsteroids.Remove(_nrofAsteroids[i]);
+                    }
+                }
+            
+
 
             // Debug.WriteLine(mygame.Window.ClientBounds.Bottom);
             // TODO: Add your update logic here
@@ -83,10 +94,10 @@ namespace Space_Scavenger
             
             _MiniStroids.Add(new Asteroid()
             {
-
+                Timer = rand.Next(100, 300),
                 //vänster
                 hpAsteroid = 10,
-                chosenTexture = randomTexture.Next(0, 5),
+                chosenTexture = randomTexture.Next(4),
                 addCounter = rand.Next(-677, 677) / 10000f,
                 Position = new Vector2(aspos.X + rand.Next(-20,20), aspos.Y + rand.Next(-20, 20)),
                 Speed = new Vector2((float)Math.Cos(rand.Next(-7, 7)), (float)Math.Sin(rand.Next(-7, 7))),
@@ -98,9 +109,9 @@ namespace Space_Scavenger
         {
             var xDiff = Math.Abs(mygame.Player.Position.X - 500);
 
-       int Spawnside = (rand.Next(0, 5));
+       int Spawnside = (rand.Next(1, 5));
        //     int Spawnside = 1;
-
+      // Debug.WriteLine(Spawnside);
             switch (Spawnside)
             {
                 case 1:
@@ -109,10 +120,11 @@ namespace Space_Scavenger
                         {
 
                           //vänster
+                            
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X  - mygame.Window.ClientBounds.X - rand.Next(1000, Globals.ScreenWidth *3), mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),                          
+                            Position = new Vector2(mygame.Player.Position.X  - mygame.Window.ClientBounds.X - rand.Next(1000, Globals.ScreenWidth *3), mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-2400, 3600)),                          
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5))),
                             Radius = 38
                         });
@@ -124,9 +136,9 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1,5 ),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-2400, 3600)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     
@@ -137,9 +149,9 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1050, 0)),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-2400, 0)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 50)))
                         });
                     
@@ -150,9 +162,9 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
-                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(1200, 1750)),
+                            Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(1200, 2400)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
                         });
                     

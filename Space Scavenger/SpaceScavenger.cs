@@ -32,9 +32,10 @@ namespace Space_Scavenger
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         private KeyboardState previousKbState;
-        public SoundEffect sound;
+        public SoundEffect sound, agr;
+        public Song BackgroundSong;
         private Camera camera;
-
+        public SoundEffect Assault;
         public List<Shot> shots = new List<Shot>();
         public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
@@ -91,7 +92,9 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
-
+            Assault = Content.Load<SoundEffect>("oblivion3");
+            BackgroundSong = Content.Load<Song>("OblivionMusic");
+            agr = Content.Load<SoundEffect>("AGR");
         }
 
         /// <summary>
@@ -114,8 +117,9 @@ namespace Space_Scavenger
                 Exit();
 
             KeyboardState state = Keyboard.GetState();
-            if (Keyboard.GetState().IsKeyDown(Keys.Space ) && previousKbState.IsKeyUp(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.G ) && previousKbState.IsKeyUp(Keys.G))
             {
+                MediaPlayer.Play(BackgroundSong);
             }
 
                 
@@ -139,7 +143,7 @@ namespace Space_Scavenger
                     Shot s = Player.Shoot();
                     if (s != null)
                         shots.Add(s);
-                    reloadTime = 20;
+                    reloadTime = 10;
                 }
             }
             if (state.IsKeyDown(Keys.B))
@@ -152,12 +156,38 @@ namespace Space_Scavenger
                 if (e != null)
                     enemies.Add(e);
             }
-            Debug.WriteLine(Window.ClientBounds.X);
-            Debug.WriteLine(Player.Position);
+        //    Debug.WriteLine(Window.ClientBounds.X);
+          //  Debug.WriteLine(Player.Position);
 
             asteroid.Update(gameTime);
+            foreach (var BigAsteroid in asteroid._nrofAsteroids)
+            {
+                
+                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
+                if (hitasteroid != null)
+                {
+                    Player.isDead = true;
+                    hitasteroid.isDead = true;
+                  //  agr.Play();
+                    Debug.WriteLine(Player.isDead);
+                    for (int k = 0; k < 10; k++)
+                    {
+                        asteroid.miniStroid(hitasteroid.Position);
+                    }
+                }
+                break;
+            }
+            foreach (var currentMiniAsteroid in asteroid._MiniStroids)
+            {
 
-            
+                if (currentMiniAsteroid.Timer <= 0)
+                {
+                    currentMiniAsteroid.isDead = true;
+                }
+                currentMiniAsteroid.Timer--;
+                
+            }
+            asteroid.Timer--;
             foreach (Shot shot in shots)
             {
                 shot.Update(gameTime);
@@ -172,6 +202,7 @@ namespace Space_Scavenger
                 }
                 if (hitasteroid != null)
                 {
+                    Assault.Play();
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -201,7 +232,8 @@ namespace Space_Scavenger
 
             shots.RemoveAll(s => s.isDead);
             enemyshots.RemoveAll(shot => shot.isDead);
-
+            asteroid._MiniStroids.RemoveAll(n => n.isDead);
+            asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
 
