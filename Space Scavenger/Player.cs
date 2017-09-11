@@ -40,17 +40,21 @@ namespace Space_Scavenger
             spriteBatch.Draw(playerTexture, Position, null, Color.White, Rotation + MathHelper.PiOver2, new Vector2(playerTexture.Width / 2, playerTexture.Height / 2), 0.5f, SpriteEffects.None, 0f);
 
 
-            for (int i = 0; i < Health; i++)
+            /*for (int i = 0; i < Health; i++)
             {
                 spriteBatch.Draw(healthTexture, new Vector2(5 + i*35, 10), Color.White);
                 DrawOrder = 76;
-            }
+            }*/
             
         }
 
         public override void Update(GameTime gameTime)
         {
             Position += Speed;
+            if (Speed.LengthSquared() > 25)
+                Speed = Speed * 0.99f;
+
+
             base.Update(gameTime);
         }
 
@@ -59,10 +63,6 @@ namespace Space_Scavenger
         public void Accelerate()
         {
             Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.08f;
-
-            if (Speed.LengthSquared() > 25)
-                Speed = Vector2.Normalize(Speed) * 5;
-
 
         }
 

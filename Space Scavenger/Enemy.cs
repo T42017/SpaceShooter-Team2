@@ -23,7 +23,7 @@ namespace Space_Scavenger
 
         public Enemy enemySpawn()
         {
-            return new Enemy()
+            return new Enemy
             {
                 Position = new Vector2(Globals.ScreenWidth, Globals.ScreenHeight / 2),
                 Rotation = Rotation,
@@ -36,12 +36,12 @@ namespace Space_Scavenger
         {
             
             if (reloadTime <= 0)
-                return new Shot()
+                return new Shot
                 {
                     Timer = 200,
                     Position = Position - new Vector2(rnd.Next(-10,10),rnd.Next(-10,10)),
                     Rotation = Rotation,
-                    Speed = Speed + 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2), (float) Math.Sin(Rotation - MathHelper.PiOver2))
+                    Speed = 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2), (float) Math.Sin(Rotation - MathHelper.PiOver2))
                 };
 
                 return null;
@@ -54,7 +54,6 @@ namespace Space_Scavenger
             var followDistance = 1000;
             var aimDistance = 100;
             
-            Vector2 left = new Vector2(-1,0);
             Vector2 direction = MyGame.Player.Position - Position;
             direction.Normalize();
             Speed += direction * 0.08f;

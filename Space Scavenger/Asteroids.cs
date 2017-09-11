@@ -98,7 +98,7 @@ namespace Space_Scavenger
         {
             var xDiff = Math.Abs(mygame.Player.Position.X - 500);
 
-       int Spawnside = (rand.Next(0, 5));
+       int Spawnside = (rand.Next(1, 5));
        //     int Spawnside = 1;
 
             switch (Spawnside)
@@ -110,7 +110,7 @@ namespace Space_Scavenger
 
                           //vänster
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X  - mygame.Window.ClientBounds.X - rand.Next(1000, Globals.ScreenWidth *3), mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),                          
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5))),
@@ -124,7 +124,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-1200, 2400)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
@@ -137,7 +137,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-1050, 0)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 50)))
@@ -150,7 +150,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
-                            chosenTexture = randomTexture.Next(0, 5),
+                            chosenTexture = randomTexture.Next(1, 5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(1200, 1750)),
                             Speed = new Vector2((float)Math.Cos(rand.Next(-5, 5)), (float)Math.Sin(rand.Next(-5, 5)))
