@@ -48,7 +48,7 @@ namespace Space_Scavenger
 
             var direction = MyGame.Player.Position - Position;
             direction.Normalize();
-            Speed += direction * 0.08f;
+            Speed += direction * 0.2f;
 
             if (Speed.LengthSquared() > 25)
                 Speed = Vector2.Normalize(Speed) * 5;

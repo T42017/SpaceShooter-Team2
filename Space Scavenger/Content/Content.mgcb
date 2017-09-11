@@ -157,3 +157,27 @@
 /processorParam:TextureFormat=Color
 /build:tMeteor.png
 
+#begin oblivion3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:oblivion3.wav
+
+#begin OblivionMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:OblivionMusic.mp3
+
+#begin AGR.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:AGR.wav
+
+#begin Explosion32.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion32.wav
+
