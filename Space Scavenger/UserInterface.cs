@@ -20,6 +20,7 @@ namespace Space_Scavenger
         private Texture2D ShieldBarMiddle;
         private Texture2D ShieldBarRight;
         SpriteBatch _spriteBatch;
+        Player player;
         
         Vector2 Position;
 
@@ -32,6 +33,7 @@ namespace Space_Scavenger
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            player = new Player(Game);
             ScoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
             HealthFont = Game.Content.Load<SpriteFont>("HealthFont");
             HealthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_red_left");
@@ -58,7 +60,7 @@ namespace Space_Scavenger
             _spriteBatch.DrawString(ScoreFont, "Health: ", new Vector2(Position.X - 940, Position.Y - 530),Color.White );
             _spriteBatch.DrawString(ScoreFont, "Shield: ", new Vector2(Position.X - 940, Position.Y - 490), Color.White);
             _spriteBatch.DrawString(ScoreFont, "Score: " +  500 /* Score */,new Vector2(Position.X + 620, Position.Y - 530), Color.White );
-            _spriteBatch.DrawString(HealthFont, 100 /*Health*/ + "%", new Vector2(Position.X - 30, Position.Y - 50), Color.White );
+            _spriteBatch.DrawString(HealthFont, player.Health*10 /*Health*/ + "%", new Vector2(Position.X - 30, Position.Y - 50), Color.White );
 
             // Healthbar
             _spriteBatch.Draw(HealthBarLeft, new Vector2(Position.X - 800, Position.Y - 530),Color.White);
