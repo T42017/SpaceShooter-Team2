@@ -23,6 +23,7 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
+        UserInterface ui;
         private int soundTime = 0;
         private Exp Exp;
         private Texture2D laserTexture;
@@ -73,7 +74,13 @@ namespace Space_Scavenger
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
-       //     Components.Add(asteroid);
+            //Components.Add(asteroid);
+            ui = new UserInterface(this);
+            Components.Add(ui);
+           
+       
+            
+            gameObject = (GameObject)gameObject;
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -98,9 +105,9 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
-            Assault = Content.Load<SoundEffect>("oblivion3");
-            BackgroundSong = Content.Load<Song>("OblivionMusic");
-            agr = Content.Load<SoundEffect>("AGR");
+            //Assault = Content.Load<SoundEffect>("oblivion3");
+            //BackgroundSong = Content.Load<Song>("OblivionMusic");
+            //agr = Content.Load<SoundEffect>("AGR");
         }
 
         /// <summary>
@@ -197,7 +204,7 @@ namespace Space_Scavenger
                 if (hitasteroid != null)
                 {
                     hitasteroid.isDead = true;
-                    agr.Play();
+                    //agr.Play();
                     for (int k = 0; k < 10; k++)
                     {
                         asteroid.miniStroid(hitasteroid.Position);
@@ -237,7 +244,7 @@ namespace Space_Scavenger
                 }
                 if (hitasteroid != null)
                 {
-                    Assault.Play();
+                    
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -258,7 +265,7 @@ namespace Space_Scavenger
 
                 if (hitasteroid != null)
                 {
-                    Assault.Play();
+                    
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -333,7 +340,7 @@ namespace Space_Scavenger
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
-
+            
 
             camera.Update(gameTime, Player);
 
@@ -428,6 +435,7 @@ namespace Space_Scavenger
             Player.Draw(spriteBatch);
             
             spriteBatch.End();
+            ui.Draw(gameTime);
         }
     }
 }
