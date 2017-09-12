@@ -23,6 +23,8 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
+        private int soundTime = 0;
+        private Exp Exp;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
@@ -67,11 +69,11 @@ namespace Space_Scavenger
 
             Player = new Player(this);
             Enemy = new Enemy();
+            Exp = new Exp();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
        //     Components.Add(asteroid);
-            gameObject = (GameObject)gameObject;
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -149,6 +151,7 @@ namespace Space_Scavenger
                         shots.Add(s);
                     reloadTime = 10;
                 }
+                
             }
             if (state.IsKeyDown(Keys.B))
             {
@@ -226,6 +229,9 @@ namespace Space_Scavenger
                     if (enemy.Health <= 0)
                     {
                         enemy.isDead = true;
+                        Exp.currentEXP += enemy.ExpReward;
+                        Exp.currentScore += enemy.ScoreReward;
+                        
                     }
                     shot.isDead = true;
                 }
@@ -236,7 +242,8 @@ namespace Space_Scavenger
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid._nrofAsteroids.Remove(hitasteroid);
-
+                    Exp.currentScore += hitasteroid.ScoreReward;
+                    Debug.WriteLine(Exp.currentScore);
                     shot.isDead = true;
                 }
                 shot.Timer--;

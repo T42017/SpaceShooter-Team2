@@ -9,7 +9,6 @@ namespace Space_Scavenger
     {
         private Texture2D enemyTexture;
         private SpaceScavenger MyGame;
-
         private int reloadTime;
         private readonly Random rnd = new Random();
 
@@ -28,6 +27,8 @@ namespace Space_Scavenger
                         //vänster
                         Radius = 20,
                         Health = 3,
+                        ExpReward = 100,
+                        ScoreReward = 100,
                         Rotation = Rotation,
                         Position = new Vector2(MyGame.Player.Position.X - MyGame.Window.ClientBounds.X - rnd.Next(1000, Globals.ScreenWidth * 3), MyGame.Player.Position.Y - MyGame.Window.ClientBounds.Height + rnd.Next(-2400, 3600))
                     };
@@ -37,6 +38,8 @@ namespace Space_Scavenger
                     {
                         Radius = 20,
                         Health = 3,
+                        ExpReward = 100,
+                        ScoreReward = 100,
                         Rotation = Rotation,
                         Position = new Vector2(MyGame.Player.Position.X + rnd.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + MyGame.Window.ClientBounds.X, MyGame.Player.Position.Y + MyGame.Window.ClientBounds.Height + rnd.Next(-2400, 3600))
                     };
@@ -46,6 +49,8 @@ namespace Space_Scavenger
                     {
                         Radius = 20,
                         Health = 3,
+                        ExpReward = 100,
+                        ScoreReward = 100,
                         Rotation = Rotation,
                         Position = new Vector2(
                             MyGame.Player.Position.X + rnd.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) +
@@ -58,6 +63,8 @@ namespace Space_Scavenger
                     {
                         Radius = 20,
                         Health = 3,
+                        ExpReward = 100,
+                        ScoreReward = 100,
                         Rotation = Rotation,
                         Position = new Vector2(
                             MyGame.Player.Position.X + rnd.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) +
@@ -138,10 +145,12 @@ namespace Space_Scavenger
                         var s = EnemyShoot();
                         if (s != null)
                             MyGame.enemyshots.Add(s);
-                        MyGame.enemyShootEffect.Play();
+                            MyGame.enemyShootEffect.Play();
                         reloadTime += 20;
                     }
             }
+            soundTime--;
+
         }
     }
 }

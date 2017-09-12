@@ -122,6 +122,7 @@ namespace Space_Scavenger
                           //vänster
                             
                             hpAsteroid = 10,
+                            ScoreReward = 10,
                             chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X  - mygame.Window.ClientBounds.X - rand.Next(1000, Globals.ScreenWidth *3), mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-2400, 3600)),                          
@@ -136,6 +137,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
+                            ScoreReward = 10,
                             chosenTexture = randomTexture.Next(1,5 ),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(Globals.ScreenWidth, Globals.ScreenWidth * 2) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Height + rand.Next(-2400, 3600)),
@@ -149,6 +151,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
+                            ScoreReward = 10,
                             chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y - mygame.Window.ClientBounds.Height + rand.Next(-2400, 0)),
@@ -162,6 +165,7 @@ namespace Space_Scavenger
                         {
                             Radius = 38,
                             hpAsteroid = 10,
+                            ScoreReward = 10,
                             chosenTexture = randomTexture.Next(1,5),
                             addCounter = rand.Next(-677, 677) / 10000f,
                             Position = new Vector2(mygame.Player.Position.X + rand.Next(-Globals.ScreenWidth, Globals.ScreenWidth * 3) + mygame.Window.ClientBounds.X, mygame.Player.Position.Y + mygame.Window.ClientBounds.Y + rand.Next(1200, 2400)),
