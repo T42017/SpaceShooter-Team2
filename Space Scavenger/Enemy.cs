@@ -149,7 +149,6 @@ namespace Space_Scavenger
                         reloadTime += 20;
                     }
             }
-            soundTime--;
 
         }
     }
