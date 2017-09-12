@@ -28,6 +28,7 @@ namespace Space_Scavenger
             Position = new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2);
             Health = 10;
             Shield = 3;
+            Radius = 12;
         }
 
         protected override void LoadContent()

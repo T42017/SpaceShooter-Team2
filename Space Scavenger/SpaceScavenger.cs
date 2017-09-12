@@ -29,7 +29,7 @@ namespace Space_Scavenger
         private int reloadTime = 0;
         private int boostTime = 0;
         private int shieldTime = 0;
-        private int wantedEnemies = 50;
+        private int wantedEnemies = 30;
         private int playerInvincibilityTimer = 100;
         public GameObject gameObject;
         public SoundEffect enemyShootEffect;
@@ -166,13 +166,24 @@ namespace Space_Scavenger
                 
             }
 
+            foreach (Enemy enemy in enemies)
+            {
+                var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
+                var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
+                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+                {
+                    enemy.isDead = true;
+                }
+            }
+
+
             if (enemies.Count < wantedEnemies)
             {
-
                 Enemy e = Enemy.enemySpawn(this);
                 if (e != null)
                     enemies.Add(e);
             }
+            
 
 
             asteroid.Update(gameTime);
@@ -216,7 +227,7 @@ namespace Space_Scavenger
                     enemy.Health -= 1;
                     if (enemy.Health <= 0)
                     {
-                        enemies.Remove(enemy);
+                        enemy.isDead = true;
                     }
                     shot.isDead = true;
                 }
@@ -265,27 +276,30 @@ namespace Space_Scavenger
             }
 
 
-            if (playerInvincibilityTimer <= 0)
-            {
+            
                 Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
                 if (shotHit != null)
                 {
-                    if (Player.Shield <= 0)
-                        Player.Health -= 1;
-                    else
+                    if (playerInvincibilityTimer <= 0)
                     {
-                        Player.Shield--;
-                        shieldTime = 300;
-                    }
+                        if (Player.Shield <= 0)
+                                Player.Health -= 1;
+                        else
+                        {
+                            Player.Shield--;
+                            shieldTime = 300;
+                        }
 
-                    playerInvincibilityTimer = 100;
+                        playerInvincibilityTimer = 100;
+                    }
+                    shotHit.isDead = true;
                 }
                 if (Player.Health <= 0)
                 {
                     Player.isDead = true;
                     Debug.Write(Player.isDead);
                 }
-            }
+            
 
             if (Player.Shield < 3 && shieldTime <= 0)
             {
@@ -304,6 +318,7 @@ namespace Space_Scavenger
 
             shots.RemoveAll(s => s.isDead);
             enemyshots.RemoveAll(shot => shot.isDead);
+            enemies.RemoveAll(enemy => enemy.isDead);
             asteroid._MiniStroids.RemoveAll(n => n.isDead);
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
