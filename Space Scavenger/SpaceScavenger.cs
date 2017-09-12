@@ -29,7 +29,7 @@ namespace Space_Scavenger
         private int reloadTime = 0;
         private int boostTime = 0;
         private int shieldTime = 0;
-        private int wantedEnemies = 30;
+        private int wantedEnemies = 15;
         private int playerInvincibilityTimer = 100;
         public GameObject gameObject;
         public SoundEffect enemyShootEffect;
@@ -283,21 +283,26 @@ namespace Space_Scavenger
                     if (playerInvincibilityTimer <= 0)
                     {
                         if (Player.Shield <= 0)
-                                Player.Health -= 1;
+                        {
+                            Player.Health -= 1;
+                            shieldTime = 300;
+                        }
                         else
                         {
                             Player.Shield--;
                             shieldTime = 300;
                         }
 
-                        playerInvincibilityTimer = 100;
+                        playerInvincibilityTimer = 10;
                     }
                     shotHit.isDead = true;
                 }
                 if (Player.Health <= 0)
                 {
-                    Player.isDead = true;
-                    Debug.Write(Player.isDead);
+                    shotHit.isDead = true;
+                    Player.Position = new Vector2(0,0);
+                    Player.Health = 10;
+                    Player.Shield = 10;
                 }
             
 
