@@ -193,10 +193,8 @@ namespace Space_Scavenger
                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
                 if (hitasteroid != null)
                 {
-                    Player.isDead = true;
                     hitasteroid.isDead = true;
                     agr.Play();
-                    Debug.WriteLine(Player.isDead);
                     for (int k = 0; k < 10; k++)
                     {
                         asteroid.miniStroid(hitasteroid.Position);
@@ -297,9 +295,9 @@ namespace Space_Scavenger
                     }
                     shotHit.isDead = true;
                 }
+
                 if (Player.Health <= 0)
                 {
-                    shotHit.isDead = true;
                     Player.Position = new Vector2(0,0);
                     Player.Health = 10;
                     Player.Shield = 10;
