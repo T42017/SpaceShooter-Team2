@@ -33,7 +33,7 @@ namespace Space_Scavenger
         public Texture2D asterTexture2D2;
         public Texture2D asterTexture2D3;
         public Texture2D asterTexture2D4;
-        public Texture2D MinitETexture2D1;
+        public Texture2D MinitETexture2D1, MiniTexture2D2;
         public int aTimer = 10;
         public bool isDead { get; set; }
         public float Rotation { get; set; }
@@ -97,7 +97,7 @@ namespace Space_Scavenger
                 Timer = rand.Next(100, 300),
                 //vänster
                 hpAsteroid = 10,
-                chosenTexture = randomTexture.Next(4),
+                chosenTexture = randomTexture.Next(1,3),
                 addCounter = rand.Next(-677, 677) / 10000f,
                 Position = new Vector2(aspos.X + rand.Next(-20,20), aspos.Y + rand.Next(-20, 20)),
                 Speed = new Vector2((float)Math.Cos(rand.Next(-7, 7)), (float)Math.Sin(rand.Next(-7, 7))),

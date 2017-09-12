@@ -93,6 +93,7 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
+            asteroid.MiniTexture2D2 = Content.Load<Texture2D>("tMeteor2");
             Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("OblivionMusic");
             agr = Content.Load<SoundEffect>("AGR");
@@ -172,23 +173,21 @@ namespace Space_Scavenger
           //  Debug.WriteLine(Player.Position);
 
             asteroid.Update(gameTime);
-            foreach (var BigAsteroid in asteroid._nrofAsteroids)
-            {
-                
-                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
+            Debug.WriteLine(Player.Health);
+
+            Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
                 if (hitasteroid != null)
                 {
-                    Player.isDead = true;
+                    Player.Health -=  5;
                     hitasteroid.isDead = true;
                     agr.Play();
-                    Debug.WriteLine(Player.isDead);
+
                     for (int k = 0; k < 10; k++)
                     {
                         asteroid.miniStroid(hitasteroid.Position);
                     }
                 }
-                break;
-            }
+            
             foreach (var currentMiniAsteroid in asteroid._MiniStroids)
             {
 
@@ -204,8 +203,8 @@ namespace Space_Scavenger
             {
                 shot.Update(gameTime);
                 Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
-                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
-
+                hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+                
                 
                 if (enemy != null)
                 {
@@ -281,20 +280,43 @@ namespace Space_Scavenger
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
 
 
+            var xDiffPlayer = Math.Abs(Window.ClientBounds.X - Player.Position.X);
+            var yDiffPlayer = Math.Abs(Window.ClientBounds.Y - Player.Position.Y);
+            //asteroid.Position += asteroid.Speed;
+            //if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+            //{
+            //    asteroid.isDead = true;
+            //}
 
-
-            for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+            for (float y = -yDiffPlayer; y < yDiffPlayer; y += backgroundTexture.Width)
             {
-                for (int x = -10000; x < 10000; x += backgroundTexture.Width)
+                for (float x = -xDiffPlayer; x < xDiffPlayer; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
 
                 }
             }
+            ////for (float y = -Window.ClientBounds.Y - Player.Position.Y; y < Window.ClientBounds.Y; y += backgroundTexture.Width)
+            ////{
+            ////    for (float x = -Window.ClientBounds.X + Player.Position.X ; x < Window.ClientBounds.X; x += backgroundTexture.Width)
+            ////    {
+            ////        spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+
+            ////    }
+            ////}
 
             foreach (Asteroid mini in asteroid._MiniStroids)
             {
-                spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+                switch (mini.chosenTexture)
+                {
+                    case 1:
+                        spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+                        break;
+                    case 2:
+                        spriteBatch.Draw(asteroid.MiniTexture2D2, mini.Position, Color.White);
+                        break;
+                }
+
             }
             for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
             {
