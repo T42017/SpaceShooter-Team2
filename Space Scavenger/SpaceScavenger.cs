@@ -23,6 +23,7 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
+        UserInterface ui;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
@@ -70,7 +71,9 @@ namespace Space_Scavenger
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
-            //     Components.Add(asteroid);
+            //Components.Add(asteroid);
+            ui = new UserInterface(this);
+            Components.Add(ui);
            
        
             
@@ -187,7 +190,7 @@ namespace Space_Scavenger
                 {
                     Player.isDead = true;
                     hitasteroid.isDead = true;
-                    agr.Play();
+                    //agr.Play();
                     Debug.WriteLine(Player.isDead);
                     for (int k = 0; k < 10; k++)
                     {
@@ -225,7 +228,7 @@ namespace Space_Scavenger
                 }
                 if (hitasteroid != null)
                 {
-                    Assault.Play();
+                    
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -245,7 +248,7 @@ namespace Space_Scavenger
 
                 if (hitasteroid != null)
                 {
-                    Assault.Play();
+                    
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -406,6 +409,7 @@ namespace Space_Scavenger
             Player.Draw(spriteBatch);
             
             spriteBatch.End();
+            ui.Draw(gameTime);
         }
     }
 }
