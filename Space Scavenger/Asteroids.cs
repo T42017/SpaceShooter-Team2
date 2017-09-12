@@ -109,7 +109,7 @@ namespace Space_Scavenger
         {
             var xDiff = Math.Abs(mygame.Player.Position.X - 500);
 
-       int Spawnside = (rand.Next(1, 5));
+       int Spawnside = rand.Next(1, 5);
        //     int Spawnside = 1;
       // Debug.WriteLine(Spawnside);
             switch (Spawnside)
