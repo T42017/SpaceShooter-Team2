@@ -23,7 +23,6 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
-        private UserInterface userinterface;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
@@ -72,8 +71,7 @@ namespace Space_Scavenger
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
             //     Components.Add(asteroid);
-            userinterface = new UserInterface(this);
-            Components.Add(userinterface);
+           
        
             
             gameObject = (GameObject)gameObject;
@@ -101,9 +99,9 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
-            Assault = Content.Load<SoundEffect>("oblivion3");
-            BackgroundSong = Content.Load<Song>("OblivionMusic");
-            agr = Content.Load<SoundEffect>("AGR");
+            //Assault = Content.Load<SoundEffect>("oblivion3");
+            //BackgroundSong = Content.Load<Song>("OblivionMusic");
+            //agr = Content.Load<SoundEffect>("AGR");
         }
 
         /// <summary>
@@ -313,7 +311,7 @@ namespace Space_Scavenger
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
-            userinterface.Update(gameTime);
+            
 
             camera.Update(gameTime, Player);
 
@@ -406,7 +404,7 @@ namespace Space_Scavenger
             }
 
             Player.Draw(spriteBatch);
-            userinterface.Draw(gameTime);
+            
             spriteBatch.End();
         }
     }
