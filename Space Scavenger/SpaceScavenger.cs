@@ -24,13 +24,14 @@ namespace Space_Scavenger
         Random rand = new Random();
         AsteroidComponent asteroid;
         UserInterface ui;
+        public Boost boost;
         private int soundTime = 0;
         public Exp Exp;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
-        public int boostTime = 0;
+        //public int boostTime = 0;
         private int shieldTime = 0;
         private int wantedEnemies = 15;
         private int playerInvincibilityTimer = 100;
@@ -46,6 +47,7 @@ namespace Space_Scavenger
         public List<Shot> shots = new List<Shot>();
         public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
+        
 
 
         public SpaceScavenger()
@@ -77,7 +79,8 @@ namespace Space_Scavenger
             //Components.Add(asteroid);
             ui = new UserInterface(this);
             Components.Add(ui);
-           
+           boost = new Boost(this);
+            Components.Add(boost);
        
             
             gameObject = (GameObject)gameObject;
@@ -164,17 +167,17 @@ namespace Space_Scavenger
             {
                 Player.Speed = new Vector2(0,0);
             }
-            if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
-            {
-                if (boostTime <= 0)
-                {
-                    Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
-                    boostTime = 600;
-                }
-                
-
-                
-            }
+           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
+           // {
+           //     if (boostTime <= 0)
+           //     {
+           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
+           //         boostTime = 600;
+           //     }
+           //     
+           //
+           //     
+           // }
 
             foreach (Enemy enemy in enemies)
             {
@@ -341,15 +344,15 @@ namespace Space_Scavenger
             Player.Update(gameTime);
             previousKbState = state;
             ui.Update(gameTime);
-
+            boost.Update(gameTime);
             camera.Update(gameTime, Player);
 
             if (reloadTime >= 0)
             {
                 reloadTime--;
             }
-            if (boostTime >= 0)
-                boostTime--;
+            //if (boostTime >= 0)
+            //    boostTime--;
 
 
             base.Update(gameTime);

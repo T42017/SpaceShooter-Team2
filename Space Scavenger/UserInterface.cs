@@ -197,7 +197,7 @@ namespace Space_Scavenger
             #region Boost
 
 
-            if (_myGame.boostTime <= 0)
+            if (_myGame.boost.BoostTime <= 0)
             {
                 _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
             }
