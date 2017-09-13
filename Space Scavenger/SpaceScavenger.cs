@@ -30,7 +30,7 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
-        private int boostTime = 0;
+        public int boostTime = 0;
         private int shieldTime = 0;
         private int wantedEnemies = 15;
         private int playerInvincibilityTimer = 100;
