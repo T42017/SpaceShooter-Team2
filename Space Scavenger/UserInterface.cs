@@ -11,37 +11,39 @@ namespace Space_Scavenger
     public class UserInterface : DrawableGameComponent
     {
         
-        private SpriteFont ScoreFont;
-        private SpriteFont HealthFont;
-        private Texture2D HealthBarLeft;
-        private Texture2D HealthbarMiddle;
-        private Texture2D HealthbarRight;
-        private Texture2D ShieldBarLeft;
-        private Texture2D ShieldBarMiddle;
-        private Texture2D ShieldBarRight;
-        SpriteBatch _spriteBatch;
-        Player player;
-        
-        Vector2 Position;
+        private SpriteFont _scoreFont;
+        private SpriteFont _healthFont;
+        private Texture2D _healthBarLeft;
+        private Texture2D _healthbarMiddle;
+        private Texture2D _healthbarRight;
+        private Texture2D _shieldBarLeft;
+        private Texture2D _shieldBarMiddle;
+        private Texture2D _shieldBarRight;
+        private SpriteBatch _spriteBatch;
+        private readonly SpaceScavenger _myGame;
+        private Vector2 _position;
 
         public UserInterface(Game game) : base(game)
         {
-            Position = new Vector2(Globals.ScreenWidth / 2f, Globals.ScreenHeight / 2f);
+            _position = new Vector2(Globals.ScreenWidth / 2f, Globals.ScreenHeight / 2f);
+            _myGame = (SpaceScavenger) game;
+            
             
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            player = new Player(Game);
-            ScoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
-            HealthFont = Game.Content.Load<SpriteFont>("HealthFont");
-            HealthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_red_left");
-            HealthbarMiddle = Game.Content.Load<Texture2D>("barHorizontal_red_mid");
-            HealthbarRight = Game.Content.Load<Texture2D>("barHorizontal_red_right");
-            ShieldBarLeft = Game.Content.Load<Texture2D>("barHorizontal_blue_left");
-            ShieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
-            ShieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
+            
+            
+            _scoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
+            _healthFont = Game.Content.Load<SpriteFont>("HealthFont");
+            _healthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_red_left");
+            _healthbarMiddle = Game.Content.Load<Texture2D>("barHorizontal_red_mid");
+            _healthbarRight = Game.Content.Load<Texture2D>("barHorizontal_red_right");
+            _shieldBarLeft = Game.Content.Load<Texture2D>("barHorizontal_blue_left");
+            _shieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
+            _shieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
             base.LoadContent();
         }
 
@@ -53,33 +55,107 @@ namespace Space_Scavenger
         public override void Draw(GameTime gameTime)
         {
 
+
             // TODO implement real health, shield and score value
 
-            // Text
+
+            #region DrawFonts
+
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(ScoreFont, "Health: ", new Vector2(Position.X - 940, Position.Y - 530),Color.White );
-            _spriteBatch.DrawString(ScoreFont, "Shield: ", new Vector2(Position.X - 940, Position.Y - 490), Color.White);
-            _spriteBatch.DrawString(ScoreFont, "Score: " +  500 /* Score */,new Vector2(Position.X + 620, Position.Y - 530), Color.White );
-            _spriteBatch.DrawString(HealthFont, player.Health*10 /*Health*/ + "%", new Vector2(Position.X - 30, Position.Y - 50), Color.White );
+            _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),Color.White );
+            _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.White);
+            _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.currentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
+            _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 30, _position.Y - 50), Color.White );
+            #endregion
+            
+            
 
-            // Healthbar
-            _spriteBatch.Draw(HealthBarLeft, new Vector2(Position.X - 800, Position.Y - 530),Color.White);
+            #region DrawHealthBars
 
-           for (int i = 0; i < 8; i++)
-           {
-               _spriteBatch.Draw(HealthbarMiddle, new Vector2(Position.X - 795 + i*HealthbarMiddle.Width, Position.Y - 530), Color.White);
-           }
 
-           _spriteBatch.Draw(HealthbarRight, new Vector2(Position.X - (795 - HealthbarMiddle.Width*8), Position.Y - 530), Color.White);
+
+            if (_myGame.Player.Health >= 1)
+            {
+                _spriteBatch.Draw(_healthBarLeft, new Vector2(_position.X - 800, _position.Y - 530), Color.White);
+
+                if (_myGame.Player.Health >= 2)
+                {
+                    _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795, _position.Y - 530), Color.White);
+                }
+
+                if (_myGame.Player.Health >= 3)
+                {
+                    _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width, _position.Y - 530), Color.White);
+                }
+
+               if (_myGame.Player.Health >= 4)
+               {
+                   _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*2, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 5)
+               {
+                   _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*3, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 6)
+               {
+                    _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*4, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 7)
+               {
+                   _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*5, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 8)
+               {
+                   _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*6, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 9)
+               {
+                   _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + _healthbarMiddle.Width*7, _position.Y - 530), Color.White);
+               }
+
+               if (_myGame.Player.Health >= 10)
+               {
+                    _spriteBatch.Draw(_healthbarRight, new Vector2(_position.X - 795 + _healthbarMiddle.Width*8, _position.Y - 530), Color.White);
+               }
+            }
+
+
+            #endregion
+
 
             // Shieldbar
 
-           _spriteBatch.Draw(ShieldBarLeft, new Vector2(Position.X - 800, Position.Y - 490), Color.White);
-            for (int i = 0; i < 8; i++)
+            #region DrawShieldBar
+
+            if (_myGame.Player.Shield >= 1)
             {
-                _spriteBatch.Draw(ShieldBarMiddle, new Vector2(Position.X - 795 + i*ShieldBarMiddle.Width,Position.Y - 490), Color.White);
-            }            
-            _spriteBatch.Draw(ShieldBarRight, new Vector2(Position.X - (795 - ShieldBarMiddle.Width*8), Position.Y - 490), Color.White);
+                _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
+                _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y -490), Color.White);
+                _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width,_position.Y - 490), Color.White);
+
+                if (_myGame.Player.Shield >= 2)
+                {
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 2,_position.Y - 490), Color.White);
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 3, _position.Y - 490), Color.White);
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 4, _position.Y - 490), Color.White);
+                }
+
+                if (_myGame.Player.Shield >= 3)
+                {
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 5, _position.Y - 490), Color.White);
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 6, _position.Y - 490), Color.White);
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 7, _position.Y - 490), Color.White);
+                    _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
+                }
+            }
+       
+            #endregion
+
 
             _spriteBatch.End();
         }

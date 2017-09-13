@@ -144,7 +144,7 @@ namespace Space_Scavenger
                     {
                         var s = EnemyShoot();
                         if (s != null)
-                            MyGame.enemyshots.Add(s);
+                             MyGame.enemyshots.Add(s);
                             MyGame.enemyShootEffect.Play();
                         reloadTime += 20;
                     }

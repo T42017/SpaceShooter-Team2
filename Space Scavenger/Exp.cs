@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Space_Scavenger
 {
-    class Exp
+    public class Exp
     {
         public int currentEXP = 0;
         public int currentScore = 0;

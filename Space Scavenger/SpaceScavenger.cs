@@ -25,7 +25,7 @@ namespace Space_Scavenger
         AsteroidComponent asteroid;
         UserInterface ui;
         private int soundTime = 0;
-        private Exp Exp;
+        public Exp Exp;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private SoundEffect laserEffect;
@@ -340,7 +340,7 @@ namespace Space_Scavenger
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
-            
+            ui.Update(gameTime);
 
             camera.Update(gameTime, Player);
 
