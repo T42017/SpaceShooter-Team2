@@ -137,7 +137,9 @@ namespace Space_Scavenger
 
             #region DrawShieldBar
 
-          //if (_myGame.Player.Shield >= 1)
+            // for where shield = 10
+          
+            //if (_myGame.Player.Shield >= 1)
           //{
           //    _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
           //
@@ -186,6 +188,8 @@ namespace Space_Scavenger
           //        _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
           //    }
           //}
+
+            // for where shield = 3
            if (_myGame.Player.Shield >= 1)
            {
                _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
