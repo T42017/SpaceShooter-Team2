@@ -189,14 +189,26 @@ namespace Space_Scavenger
              }
          }
 
-       
+
             #endregion
+
+            // Boost
+
+            #region Boost
+
 
             if (_myGame.boostTime <= 0)
             {
                 _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
             }
+           
             
+            #endregion
+
+
+
+
+
             _spriteBatch.End();
         }
 
