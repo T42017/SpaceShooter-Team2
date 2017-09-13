@@ -297,12 +297,12 @@ namespace Space_Scavenger
                         if (Player.Shield <= 0)
                         {
                             Player.Health -= 1;
-                            shieldTime = 300;
+                            shieldTime = 500;
                         }
                         else
                         {
                             Player.Shield--;
-                            shieldTime = 300;
+                            shieldTime = 500;
                         }
 
                         playerInvincibilityTimer = 10;
@@ -318,10 +318,10 @@ namespace Space_Scavenger
                 }
             
 
-            if (Player.Shield < 3 && shieldTime <= 0)
+            if (Player.Shield < 10 && shieldTime <= 0)
             {
                 Player.Shield++;
-                shieldTime = 300;
+                shieldTime = 40;
                 Debug.WriteLine(Player.Shield + " " + shieldTime);
             }
             if (shieldTime >= 0)

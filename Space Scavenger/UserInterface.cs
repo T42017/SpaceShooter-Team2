@@ -137,81 +137,59 @@ namespace Space_Scavenger
 
             #region DrawShieldBar
 
-            // for where shield = 10
+           
           
-            //if (_myGame.Player.Shield >= 1)
-          //{
-          //    _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
-          //
-          //    if (_myGame.Player.Shield >= 2)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 3)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 4)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 2, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 5)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 3, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 6)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 4, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 7)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 5, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 8)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 6, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 9)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 7, _position.Y - 490), Color.White);
-          //    }
-          //
-          //    if (_myGame.Player.Shield >= 10)
-          //    {
-          //        _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
-          //    }
-          //}
+            if (_myGame.Player.Shield >= 1)
+            {
+             _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
+         
+             if (_myGame.Player.Shield >= 2)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 3)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 4)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 2, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 5)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 3, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 6)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 4, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 7)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 5, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 8)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 6, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 9)
+             {
+                 _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 7, _position.Y - 490), Color.White);
+             }
+         
+             if (_myGame.Player.Shield >= 10)
+             {
+                 _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
+             }
+         }
 
-            // for where shield = 3
-           if (_myGame.Player.Shield >= 1)
-           {
-               _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
-               _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y -490), Color.White);
-               _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width,_position.Y - 490), Color.White);
-          
-               if (_myGame.Player.Shield >= 2)
-               {
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 2,_position.Y - 490), Color.White);
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 3, _position.Y - 490), Color.White);
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 4, _position.Y - 490), Color.White);
-               }
-          
-               if (_myGame.Player.Shield >= 3)
-               {
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 5, _position.Y - 490), Color.White);
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 6, _position.Y - 490), Color.White);
-                   _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 7, _position.Y - 490), Color.White);
-                   _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
-               }
-           }
-
+       
             #endregion
 
             if (_myGame.boostTime <= 0)
