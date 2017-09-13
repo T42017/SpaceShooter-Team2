@@ -10,25 +10,23 @@ namespace Space_Scavenger
 {
     public class Boost : DrawableGameComponent
     {
-        public int BoostTime;
+
         public int NrOfBoosts;
         public int BoostRegenerationCoolDown;
         private readonly SpaceScavenger _myGame;
-        private KeyboardState previousKbState;
+        private KeyboardState _previousKbState;
 
 
         public Boost(Game game) : base(game)
         {
             _myGame = (SpaceScavenger) game;
             NrOfBoosts = 3;
-            BoostTime = 200;
             BoostRegenerationCoolDown = 0;
         }
-        //_myGame.Player.Speed =  new Vector2((float) Math.Cos(_myGame.Player.Rotation), (float) Math.Sin(_myGame.Player.Rotation)) * 20f;
+        
         public override void Update(GameTime gameTime)
         {
-            KeyboardState state = Keyboard.GetState();
-
+            var state = Keyboard.GetState();
             if (NrOfBoosts > 0)
             {
                 if (BoostRegenerationCoolDown > 0)
@@ -36,11 +34,10 @@ namespace Space_Scavenger
                     BoostRegenerationCoolDown--;
                 }
                 
-                if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
+                if (state.IsKeyDown(Keys.X) && _previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
                 {
                     _myGame.Player.Speed =
-                        new Vector2((float) Math.Cos(_myGame.Player.Rotation), (float) Math.Sin(_myGame.Player.Rotation)) *
-                        20f;
+                        new Vector2((float) Math.Cos(_myGame.Player.Rotation), (float) Math.Sin(_myGame.Player.Rotation)) * 20f;
                     NrOfBoosts--;
                    BoostRegenerationCoolDown = 300;
 
@@ -52,9 +49,7 @@ namespace Space_Scavenger
                         NrOfBoosts++;
                         BoostRegenerationCoolDown = 300;
                     }
-                }
-               
-                           
+                }     
             }
             else if (NrOfBoosts == 0)
             {
@@ -68,19 +63,7 @@ namespace Space_Scavenger
                     BoostRegenerationCoolDown = 300;
                 }
             }
-
-
-            // if (BoostRegenerationCoolDown > 0)
-            // {
-            //     BoostRegenerationCoolDown--;
-            // }
-            // if (BoostRegenerationCoolDown <= 0)
-            // {
-            //     NrOfBoosts++;
-            // }
-
-
-            previousKbState = state;
+            _previousKbState = state;
         }
     }
 }
