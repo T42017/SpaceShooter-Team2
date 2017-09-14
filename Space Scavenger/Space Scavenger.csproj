@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Effects.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Exp.cs" />
     <Compile Include="GameObject.cs" />

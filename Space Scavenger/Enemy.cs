@@ -10,7 +10,10 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private SpaceScavenger MyGame;
         private int reloadTime;
+        
         private readonly Random rnd = new Random();
+
+
 
 
         public Enemy enemySpawn(Game game)
@@ -95,7 +98,7 @@ namespace Space_Scavenger
                     Timer = 200,
                     Position = Position - new Vector2(rnd.Next(-10, 10), rnd.Next(-10, 10)),
                     Rotation = Rotation,
-                    Speed = 10f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2),
+                    Speed = 15f * new Vector2((float) Math.Cos(Rotation - MathHelper.PiOver2),
                                 (float) Math.Sin(Rotation - MathHelper.PiOver2))
                 };
 
@@ -144,9 +147,15 @@ namespace Space_Scavenger
                     {
                         var s = EnemyShoot();
                         if (s != null)
+                        {
                             MyGame.enemyshots.Add(s);
-                            MyGame.enemyShootEffect.Play();
-                        reloadTime += 20;
+                            if (MyGame.soundEffectTimer <= 0)
+                            {
+                                MyGame.enemyShootEffect.Play(0.4f, 0.0f, 0.0f);
+                                MyGame.soundEffectTimer = 15;
+                            }
+                            reloadTime += 20;
+                        }
                     }
             }
 

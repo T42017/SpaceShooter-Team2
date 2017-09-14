@@ -33,7 +33,7 @@ namespace Space_Scavenger
 
         protected override void LoadContent()
         {
-            playerTexture = Game.Content.Load<Texture2D>("playerShip");
+            playerTexture = Game.Content.Load<Texture2D>("playerShipNeon");
             healthTexture = Game.Content.Load<Texture2D>("powerupRed");
             base.LoadContent();
         }
