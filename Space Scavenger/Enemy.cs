@@ -81,13 +81,6 @@ namespace Space_Scavenger
 
 
             return null;
-            /*return new Enemy
-            {
-                Position = new Vector2(Globals.ScreenWidth, Globals.ScreenHeight / 2),
-                Rotation = Rotation,
-                Health = 3,
-                Radius = 20
-            };*/
         }
 
         public Shot EnemyShoot()

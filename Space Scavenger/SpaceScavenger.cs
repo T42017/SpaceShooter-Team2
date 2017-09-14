@@ -32,11 +32,14 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private Texture2D spaceStation;
         private Texture2D enemyLaserTexture;
+        private Texture2D _powerUpHealth;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
         public int boostTime = 0;
         private int shieldTime = 0;
+
         private int wantedEnemies = 15;
+        private int wantedPowerUps = 5;
         public int soundEffectTimer = 0;
         public float spaceStationRotation { get; set; }
         private int playerInvincibilityTimer = 100;
@@ -47,6 +50,7 @@ namespace Space_Scavenger
         public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
+        public PowerUp PowerUp { get; private set; }
         private KeyboardState previousKbState;
         public SoundEffect sound, agr;
         public Song BackgroundSong;
@@ -55,6 +59,7 @@ namespace Space_Scavenger
         public List<Shot> shots = new List<Shot>();
         public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
+        List<PowerUp> powerups = new List<PowerUp>();
 
 
         public SpaceScavenger()
@@ -79,6 +84,7 @@ namespace Space_Scavenger
 
             Player = new Player(this);
             Enemy = new Enemy();
+            PowerUp = new PowerUp();
             Exp = new Exp();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
@@ -86,10 +92,8 @@ namespace Space_Scavenger
             //Components.Add(asteroid);
             ui = new UserInterface(this);
             effects = new Effects(this);
-            Powerup = new PowerUp(this);
             Components.Add(ui);
             Components.Add(effects);
-            Components.Add(Powerup);
            
 
        
@@ -111,6 +115,7 @@ namespace Space_Scavenger
 
             backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
+            _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
             enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
             enemyDamage = Content.Load<Texture2D>("burst");
@@ -185,9 +190,6 @@ namespace Space_Scavenger
                     Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
                     boostTime = 600;
                 }
-                
-
-                
             }
 
             #region Collision
@@ -200,6 +202,15 @@ namespace Space_Scavenger
                     enemy.isDead = true;
                 }
             }
+            foreach (PowerUp powerup in powerups)
+            {
+                var xDiffPlayer = Math.Abs(powerup.Position.X - Player.Position.X);
+                var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
+                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+                {
+                    powerup.isDead = true;
+                }
+            }
 
 
             if (enemies.Count < wantedEnemies)
@@ -209,7 +220,16 @@ namespace Space_Scavenger
                     enemies.Add(e);
             }
 
-  
+            if (powerups.Count < wantedPowerUps)
+            {
+                PowerUp p = PowerUp.powerUpSpawn(this);
+                if (p != null)
+                    powerups.Add(p);
+            }
+
+
+
+
             asteroid.Update(gameTime);
             foreach (var BigAsteroid in asteroid._nrofAsteroids)
             {
@@ -239,7 +259,7 @@ namespace Space_Scavenger
                     }
                 }
                 break;
-            }
+            } 
             foreach (var currentMiniAsteroid in asteroid._MiniStroids)
             {
 
@@ -251,6 +271,17 @@ namespace Space_Scavenger
                 
             }
             asteroid.Timer--;
+            foreach (PowerUp powerup in powerups)
+            {
+
+                PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
+                if (hitPowerup != null)
+                {
+                    Player.Health = 10;
+                    hitPowerup.isDead = true;
+                    Debug.WriteLine("Powerup!");
+                }
+            }
             foreach (Shot shot in shots)
             {
                 shot.Update(gameTime);
@@ -366,12 +397,12 @@ namespace Space_Scavenger
             shots.RemoveAll(s => s.isDead);
             enemyshots.RemoveAll(shot => shot.isDead);
             enemies.RemoveAll(enemy => enemy.isDead);
+            powerups.RemoveAll(powerup => powerup.isDead);
             asteroid._MiniStroids.RemoveAll(n => n.isDead);
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
             Player.Update(gameTime);
             previousKbState = state;
             ui.Update(gameTime);
-            Powerup.Update(gameTime);
 
             camera.Update(gameTime, Player);
 
@@ -462,9 +493,13 @@ namespace Space_Scavenger
                 spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
             }
 
+            foreach (PowerUp p in powerups)
+            {
+                spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
+            }
+
             spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
-            Powerup.Draw(spriteBatch);
             Player.Draw(spriteBatch);
 
             spaceStationRotation += 0.01f;
