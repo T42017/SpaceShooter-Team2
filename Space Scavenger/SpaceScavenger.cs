@@ -222,12 +222,12 @@ namespace Space_Scavenger
                         if (Player.Shield <= 0)
                         {
                             Player.Health -= 1;
-                            shieldTime = 500;
+                            shieldTime = 200;
                         }
                         else
                         {
                             Player.Shield--;
-                            shieldTime = 500;
+                            shieldTime = 200;
                         }
 
                         playerInvincibilityTimer = 10;

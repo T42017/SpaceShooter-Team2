@@ -38,7 +38,7 @@ namespace Space_Scavenger
         public bool isDead { get; set; }
         public float Rotation { get; set; }
         public int Health { get; set; }
-        public int wantedAsteroids = 200;
+        public int wantedAsteroids = 100;
 
         public List<Asteroid> _MiniStroids = new List<Asteroid>();
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
