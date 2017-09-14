@@ -88,6 +88,7 @@ namespace Space_Scavenger
             Components.Add(ui);
             Components.Add(effects);
            
+
        
             
             gameObject = (GameObject)gameObject;
@@ -107,7 +108,7 @@ namespace Space_Scavenger
 
             backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
-            enemyTexture = Content.Load<Texture2D>("EnemyShip");
+            enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
             enemyDamage = Content.Load<Texture2D>("burst");
             spaceStation = Content.Load<Texture2D>("spaceStation");
@@ -115,8 +116,8 @@ namespace Space_Scavenger
             enemyLaserTexture= Content.Load<Texture2D>("laserRed");
             asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1Neon");
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2Neon");
-            asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
-            asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
+            asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
+            asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4Neon");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
             //Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
@@ -152,11 +153,11 @@ namespace Space_Scavenger
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                Player.Rotation -= 0.05f;
+                Player.Rotation -= 0.07f;
             }
             else if (state.IsKeyDown(Keys.Right))
             {
-                Player.Rotation += 0.05f;
+                Player.Rotation += 0.07f;
             }
             if (state.IsKeyDown(Keys.Space))
             {
@@ -186,6 +187,7 @@ namespace Space_Scavenger
                 
             }
 
+            #region Collision
             foreach (Enemy enemy in enemies)
             {
                 var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
@@ -213,9 +215,22 @@ namespace Space_Scavenger
                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
                 if (hitasteroid != null)
                 {
-                    Player.Health--;
+                    if (playerInvincibilityTimer <= 0)
+                    {
+                        if (Player.Shield <= 0)
+                        {
+                            Player.Health -= 1;
+                            shieldTime = 500;
+                        }
+                        else
+                        {
+                            Player.Shield--;
+                            shieldTime = 500;
+                        }
+
+                        playerInvincibilityTimer = 10;
+                    }
                     hitasteroid.isDead = true;
-                    //agr.Play();
                     for (int k = 0; k < 10; k++)
                     {
                         asteroid.miniStroid(hitasteroid.Position);
@@ -343,6 +358,8 @@ namespace Space_Scavenger
             {
                 playerInvincibilityTimer--;
             }
+#endregion
+
 
             shots.RemoveAll(s => s.isDead);
             enemyshots.RemoveAll(shot => shot.isDead);
@@ -439,7 +456,7 @@ namespace Space_Scavenger
 
             foreach (Enemy e in enemies)
             {
-                spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
             }
 
             spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);

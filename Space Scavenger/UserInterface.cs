@@ -40,9 +40,9 @@ namespace Space_Scavenger
             
             _scoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
             _healthFont = Game.Content.Load<SpriteFont>("HealthFont");
-            _healthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_red_left");
-            _healthbarMiddle = Game.Content.Load<Texture2D>("barHorizontal_red_mid");
-            _healthbarRight = Game.Content.Load<Texture2D>("barHorizontal_red_right");
+            _healthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_purple_left");
+            _healthbarMiddle = Game.Content.Load<Texture2D>("barHorizontal_purple_mid");
+            _healthbarRight = Game.Content.Load<Texture2D>("barHorizontal_purple_right");
             _shieldBarLeft = Game.Content.Load<Texture2D>("barHorizontal_blue_left");
             _shieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
             _shieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
@@ -64,7 +64,7 @@ namespace Space_Scavenger
             //Font
             #region DrawFonts
             // Health
-            _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),Color.Orange );
+            _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),new Color(255, 0, 226));
             _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 810 + _healthbarMiddle.Width * _myGame.Player.MaxHealth, _position.Y - 530), Color.White);
             //Shield
             _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);
