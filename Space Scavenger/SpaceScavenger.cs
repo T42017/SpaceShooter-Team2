@@ -375,12 +375,14 @@ namespace Space_Scavenger
                     shotHit.isDead = true;
                 }
 
-                if (Player.Health <= 0)
-                {
-                    Player.Position = new Vector2(0,0);
-                    Player.Health = Player.MaxHealth;
-                    Player.Shield = Player.MaxShield;
-                }
+            if (Player.Health <= 0)
+            {
+                Player.Position = new Vector2(0,0);
+                Player.Health = Player.MaxHealth;
+                Player.Shield = Player.MaxShield;
+                Exp.currentScore = 0;
+                Exp.currentEXP = 0;
+            }
             
 
             if (Player.Shield < 10 && shieldTime <= 0)
