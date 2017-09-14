@@ -332,6 +332,17 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:barHorizontal_purple_mid.png
+#begin powerupRedPill.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:powerupRedPill.png
 
 #begin barHorizontal_purple_right.png
 /importer:TextureImporter
@@ -392,4 +403,5 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:enemyShipNeon.png
+
 
