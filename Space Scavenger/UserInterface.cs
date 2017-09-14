@@ -24,6 +24,7 @@ namespace Space_Scavenger
         private Texture2D _boosticon;
         private readonly SpaceScavenger _myGame;
         private Vector2 _position;
+        
 
         public UserInterface(Game game) : base(game)
         {
@@ -66,11 +67,17 @@ namespace Space_Scavenger
             #region DrawFonts
 
 
-            _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),Color.White );
-            _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.White);
+            _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),Color.Orange );
+            _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 650, _position.Y - 530), Color.White);
+
+            _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);
+            _spriteBatch.DrawString(_healthFont, _myGame.Player.Shield * 10 + "%", new Vector2(_position.X - 650, _position.Y - 490), Color.White);
+
             _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.currentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
-            _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 30, _position.Y - 50), Color.White );
+            _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.currentEXP, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
+
             _spriteBatch.DrawString(_scoreFont, "Boost: ", new Vector2(_position.X - 940, _position.Y - 450), Color.White );
+           
             #endregion
             
             
