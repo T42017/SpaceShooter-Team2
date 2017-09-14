@@ -20,6 +20,7 @@ namespace Space_Scavenger
         public int Health { get; set; }
         public int Shield { get; set; }
         public int MaxHealth { get; set; }
+        public int MaxShield { get; set; }
 
         private Texture2D playerTexture;
         private Texture2D healthTexture; 
@@ -28,9 +29,10 @@ namespace Space_Scavenger
         {
             Position = new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2);
             Health = 15;
-            Shield = 10;
+            Shield = 15;
             Radius = 12;
             MaxHealth = Health;
+            MaxShield = Shield;
 
         }
 

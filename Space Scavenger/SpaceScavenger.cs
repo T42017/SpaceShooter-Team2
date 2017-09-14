@@ -314,7 +314,7 @@ namespace Space_Scavenger
                 {
                     Player.Position = new Vector2(0,0);
                     Player.Health = Player.MaxHealth;
-                    Player.Shield = 10;
+                    Player.Shield = Player.MaxShield;
                 }
             
 

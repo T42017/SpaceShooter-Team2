@@ -69,7 +69,7 @@ namespace Space_Scavenger
             //_spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 940, _position.Y - 530), Color.White);
             //Shield
             _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);
-            _spriteBatch.DrawString(_healthFont, _myGame.Player.Shield * 10 + "%", new Vector2(_position.X - 650, _position.Y - 490), Color.White);
+            
             //Score and Currency
             _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.currentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
             _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.currentEXP, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
@@ -99,65 +99,31 @@ namespace Space_Scavenger
                     
 
                 }
-                _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 795 + _healthbarMiddle.Width * (_myGame.Player.MaxHealth), _position.Y - 530), Color.White);
+                _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 795 + _healthbarMiddle.Width * _myGame.Player.MaxHealth, _position.Y - 530), Color.White);
 
             }
 
             #endregion
 
 
-            
+
             // Shieldbar
             #region DrawShieldBar
-
+            // _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y - 490), Color.White);
             if (_myGame.Player.Shield >= 1)
             {
                  _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
+                for (int i = 0; i < _myGame.Player.Shield - 2 ; i++)
+                {
+                    _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + (i*_shieldBarMiddle.Width), _position.Y - 490), Color.White);
+                }        
          
-                 if (_myGame.Player.Shield >= 2)
+                 if (_myGame.Player.Shield >= _myGame.Player.MaxShield)
                  {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795, _position.Y - 490), Color.White);
+                     _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * (_myGame.Player.MaxShield - 2), _position.Y - 490), Color.White);
                  }
-         
-                 if (_myGame.Player.Shield >= 3)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 4)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 2, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 5)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 3, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 6)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 4, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 7)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 5, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 8)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 6, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 9)
-                 {
-                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 7, _position.Y - 490), Color.White);
-                 }
-         
-                 if (_myGame.Player.Shield >= 10)
-                 {
-                     _spriteBatch.Draw(_shieldBarRight, new Vector2(_position.X - 795 + _shieldBarMiddle.Width * 8, _position.Y - 490), Color.White);
-                 }
+
+                _spriteBatch.DrawString(_healthFont, _myGame.Player.Shield * 10 + "%", new Vector2(_position.X - 795 + _healthbarMiddle.Width *_myGame.Player.MaxShield, _position.Y - 490), Color.White);
             }
 
             #endregion
