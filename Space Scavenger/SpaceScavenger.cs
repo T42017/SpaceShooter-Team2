@@ -24,6 +24,7 @@ namespace Space_Scavenger
         Random rand = new Random();
         AsteroidComponent asteroid;
         UserInterface ui;
+        public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
         private int soundTime = 0;
@@ -35,7 +36,7 @@ namespace Space_Scavenger
         private Texture2D _powerUpHealth;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
-        public int boostTime = 0;
+        //public int boostTime = 0;
         private int shieldTime = 0;
 
         private int wantedEnemies = 15;
@@ -93,6 +94,8 @@ namespace Space_Scavenger
             ui = new UserInterface(this);
             effects = new Effects(this);
             Components.Add(ui);
+           boost = new Boost(this);
+            Components.Add(boost);
             Components.Add(effects);
            
 
@@ -183,14 +186,17 @@ namespace Space_Scavenger
             {
                 Player.Speed = new Vector2(0,0);
             }
-            if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
-            {
-                if (boostTime <= 0)
-                {
-                    Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
-                    boostTime = 600;
-                }
-            }
+           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
+           // {
+           //     if (boostTime <= 0)
+           //     {
+           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
+           //         boostTime = 600;
+           //     }
+           //     
+           //
+           //     
+           // }
 
             #region Collision
             foreach (Enemy enemy in enemies)
@@ -403,17 +409,17 @@ namespace Space_Scavenger
             Player.Update(gameTime);
             previousKbState = state;
             ui.Update(gameTime);
-
+            boost.Update(gameTime);
             camera.Update(gameTime, Player);
 
             if (reloadTime >= 0)
             {
                 reloadTime--;
             }
-            if (boostTime >= 0)
-                boostTime--;
             if (soundEffectTimer > 0)
                 soundEffectTimer--;
+            //if (boostTime >= 0)
+            //    boostTime--;
 
             base.Update(gameTime);
         }

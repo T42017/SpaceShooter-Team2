@@ -126,11 +126,15 @@ namespace Space_Scavenger
             // Boost
             #region Boost
 
-
-            if (_myGame.boostTime <= 0)
+            for (int i = 0; i < _myGame.boost.NrOfBoosts; i++)
             {
-                _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
+                _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800 + i*(_boosticon.Width + 20), _position.Y - 455), Color.White);
             }
+
+           //if (_myGame.boost.BoostTime <= 0)
+           //{
+           //    _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
+           //}
            
             
             #endregion
