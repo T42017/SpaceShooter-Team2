@@ -267,12 +267,6 @@
 /processorParam:TextureFormat=Color
 /build:playerShipNeon.png
 
-#begin backgroundMusicNeon.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:backgroundMusicNeon.mp3
-
 #begin spaceStation.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -332,6 +326,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:barHorizontal_purple_mid.png
+
 #begin powerupRedPill.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -404,4 +399,9 @@
 /processorParam:TextureFormat=Color
 /build:enemyShipNeon.png
 
+#begin backgroundMusicNeon.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:backgroundMusicNeon.wav
 
