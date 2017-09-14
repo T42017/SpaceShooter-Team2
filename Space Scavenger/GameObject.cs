@@ -17,7 +17,9 @@ namespace Space_Scavenger
         public int Health { get; set; }
         public SpaceScavenger MyGame { get; set; }
         public int Timer { get; set; }
-        
+        public int ExpReward { get; set; }
+        public int ScoreReward { get; set; }
+
 
         public bool CollidesWith(IGameObject other)
         {

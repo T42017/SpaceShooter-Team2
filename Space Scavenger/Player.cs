@@ -19,6 +19,8 @@ namespace Space_Scavenger
         public bool Accelerating { get; set; }
         public int Health { get; set; }
         public int Shield { get; set; }
+        public int MaxHealth { get; set; }
+        public int MaxShield { get; set; }
 
         private Texture2D playerTexture;
         private Texture2D healthTexture; 
@@ -27,13 +29,16 @@ namespace Space_Scavenger
         {
             Position = new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2);
             Health = 10;
-            Shield = 3;
+            Shield = 10;
             Radius = 12;
+            MaxHealth = Health;
+            MaxShield = Shield;
+
         }
 
         protected override void LoadContent()
         {
-            playerTexture = Game.Content.Load<Texture2D>("playerShip");
+            playerTexture = Game.Content.Load<Texture2D>("playerShipNeon");
             healthTexture = Game.Content.Load<Texture2D>("powerupRed");
             base.LoadContent();
         }
@@ -54,10 +59,14 @@ namespace Space_Scavenger
         public override void Update(GameTime gameTime)
         {
             Position += Speed;
-            if (Speed.LengthSquared() > 25)
+            if (Speed.LengthSquared() > 30)
                 Speed = Speed * 0.99f;
 
-
+            if (Speed.LengthSquared() <= 30 && !Accelerating)
+            {
+                Speed = Speed * 0.99f;
+            }
+            Accelerating = false;
             base.Update(gameTime);
         }
 
@@ -65,8 +74,8 @@ namespace Space_Scavenger
 
         public void Accelerate()
         {
-            Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.08f;
-
+            Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.15f;
+            Accelerating = true;
         }
 
         public Shot Shoot()
