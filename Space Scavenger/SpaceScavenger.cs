@@ -25,6 +25,7 @@ namespace Space_Scavenger
         AsteroidComponent asteroid;
         UserInterface ui;
         Effects effects;
+        public PowerUp Powerup { get; private set; }
         private int soundTime = 0;
         public Exp Exp;
         private Texture2D laserTexture;
@@ -85,8 +86,10 @@ namespace Space_Scavenger
             //Components.Add(asteroid);
             ui = new UserInterface(this);
             effects = new Effects(this);
+            Powerup = new PowerUp(this);
             Components.Add(ui);
             Components.Add(effects);
+            Components.Add(Powerup);
            
        
             
@@ -203,9 +206,8 @@ namespace Space_Scavenger
                 if (e != null)
                     enemies.Add(e);
             }
-            
 
-
+  
             asteroid.Update(gameTime);
             foreach (var BigAsteroid in asteroid._nrofAsteroids)
             {
@@ -352,6 +354,7 @@ namespace Space_Scavenger
             Player.Update(gameTime);
             previousKbState = state;
             ui.Update(gameTime);
+            Powerup.Update(gameTime);
 
             camera.Update(gameTime, Player);
 
@@ -444,7 +447,7 @@ namespace Space_Scavenger
 
             spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
-
+            Powerup.Draw(spriteBatch);
             Player.Draw(spriteBatch);
 
             spaceStationRotation += 0.01f;
@@ -454,8 +457,10 @@ namespace Space_Scavenger
                 spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
                 enemyHit = false;
             }
-            spriteBatch.End();
 
+            
+            spriteBatch.End();
+            
             ui.Draw(gameTime);
         }
     }
