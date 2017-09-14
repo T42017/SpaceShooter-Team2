@@ -24,17 +24,25 @@ namespace Space_Scavenger
         Random rand = new Random();
         AsteroidComponent asteroid;
         UserInterface ui;
+        Effects effects;
         private int soundTime = 0;
         public Exp Exp;
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
+        private Texture2D spaceStation;
+        private Texture2D enemyLaserTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
         public int boostTime = 0;
         private int shieldTime = 0;
         private int wantedEnemies = 15;
+        public int soundEffectTimer = 0;
+        public float spaceStationRotation { get; set; }
         private int playerInvincibilityTimer = 100;
+        private Vector2 enemyPositionExplosion = new Vector2(0,0);
+        bool enemyHit = false;
         public GameObject gameObject;
+        private Texture2D enemyDamage;
         public SoundEffect enemyShootEffect;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
@@ -76,7 +84,9 @@ namespace Space_Scavenger
             asteroid = new AsteroidComponent(this, Player, gameObject);
             //Components.Add(asteroid);
             ui = new UserInterface(this);
+            effects = new Effects(this);
             Components.Add(ui);
+            Components.Add(effects);
            
        
             
@@ -95,19 +105,24 @@ namespace Space_Scavenger
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            backgroundTexture = Content.Load<Texture2D>("purple");
+            backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
             enemyTexture = Content.Load<Texture2D>("EnemyShip");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
+            enemyDamage = Content.Load<Texture2D>("burst");
+            spaceStation = Content.Load<Texture2D>("spaceStation");
             enemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
-            asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1");
-            asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2");
+            enemyLaserTexture= Content.Load<Texture2D>("laserRed");
+            asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1Neon");
+            asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2Neon");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
             //Assault = Content.Load<SoundEffect>("oblivion3");
-            //BackgroundSong = Content.Load<Song>("OblivionMusic");
+            BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
             //agr = Content.Load<SoundEffect>("AGR");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(BackgroundSong);
         }
 
         /// <summary>
@@ -130,12 +145,7 @@ namespace Space_Scavenger
                 Exit();
 
             KeyboardState state = Keyboard.GetState();
-            if (Keyboard.GetState().IsKeyDown(Keys.G ) && previousKbState.IsKeyUp(Keys.G))
-            {
-                MediaPlayer.Play(BackgroundSong);
-            }
-
-                
+     
             if (state.IsKeyDown(Keys.Up))
             {
                 Player.Accelerate();
@@ -152,7 +162,7 @@ namespace Space_Scavenger
             {
                 if (reloadTime < 0)
                 {
-                    laserEffect.Play();
+                    laserEffect.Play(0.2f, 0.0f, 0.0f);
                     Shot s = Player.Shoot();
                     if (s != null)
                         shots.Add(s);
@@ -203,6 +213,7 @@ namespace Space_Scavenger
                 Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
                 if (hitasteroid != null)
                 {
+                    Player.Health--;
                     hitasteroid.isDead = true;
                     //agr.Play();
                     for (int k = 0; k < 10; k++)
@@ -240,6 +251,9 @@ namespace Space_Scavenger
                         Exp.currentScore += enemy.ScoreReward;
                         
                     }
+                    enemyHit = true;
+                    enemyPositionExplosion = enemy.Position;
+                    Debug.WriteLine(enemyPositionExplosion);
                     shot.isDead = true;
                 }
                 if (hitasteroid != null)
@@ -286,9 +300,6 @@ namespace Space_Scavenger
             {
                 e.Update(gameTime, this);
             }
-
-
-            
                 Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
                 if (shotHit != null)
                 {
@@ -350,7 +361,8 @@ namespace Space_Scavenger
             }
             if (boostTime >= 0)
                 boostTime--;
-
+            if (soundEffectTimer > 0)
+                soundEffectTimer--;
 
             base.Update(gameTime);
         }
@@ -366,9 +378,7 @@ namespace Space_Scavenger
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
-
 
 
 
@@ -424,7 +434,7 @@ namespace Space_Scavenger
 
             foreach (Shot s in enemyshots)
             {
-                spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
             }
 
             foreach (Enemy e in enemies)
@@ -432,9 +442,20 @@ namespace Space_Scavenger
                 spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
             }
 
+            spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+
             Player.Draw(spriteBatch);
-            
+
+            spaceStationRotation += 0.01f;
+
+            if (enemyHit)
+            {
+                spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+                enemyHit = false;
+            }
             spriteBatch.End();
+
             ui.Draw(gameTime);
         }
     }
