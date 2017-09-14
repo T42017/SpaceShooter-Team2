@@ -19,6 +19,7 @@ namespace Space_Scavenger
         public bool Accelerating { get; set; }
         public int Health { get; set; }
         public int Shield { get; set; }
+        public int MaxHealth { get; set; }
 
         private Texture2D playerTexture;
         private Texture2D healthTexture; 
@@ -26,9 +27,11 @@ namespace Space_Scavenger
         public Player(Game game) : base(game)
         {
             Position = new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2);
-            Health = 10;
+            Health = 15;
             Shield = 10;
             Radius = 12;
+            MaxHealth = Health;
+
         }
 
         protected override void LoadContent()

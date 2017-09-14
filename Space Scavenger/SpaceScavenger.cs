@@ -313,7 +313,7 @@ namespace Space_Scavenger
                 if (Player.Health <= 0)
                 {
                     Player.Position = new Vector2(0,0);
-                    Player.Health = 10;
+                    Player.Health = Player.MaxHealth;
                     Player.Shield = 10;
                 }
             
