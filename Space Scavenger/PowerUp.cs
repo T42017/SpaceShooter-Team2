@@ -26,7 +26,7 @@ namespace Space_Scavenger
                     return new PowerUp
                     {
                         //vänster
-                        Radius = 20,
+                        Radius = 30,
                         Health = 3,
                         ScoreReward = 100,
                         Position = new Vector2(
@@ -38,7 +38,7 @@ namespace Space_Scavenger
                     //höger
                     return new PowerUp()
                     {
-                        Radius = 20,
+                        Radius = 30,
                         Health = 3,
                         ScoreReward = 100,
                         Position = new Vector2(
@@ -50,7 +50,7 @@ namespace Space_Scavenger
                     //upp
                     return new PowerUp()
                     {
-                        Radius = 20,
+                        Radius = 30,
                         Health = 3,
                         ScoreReward = 100,
                         Position = new Vector2(
@@ -62,7 +62,7 @@ namespace Space_Scavenger
                     //ner
                     return new PowerUp()
                     {
-                        Radius = 20,
+                        Radius = 30,
                         Health = 3,
                         ScoreReward = 100,
                         Position = new Vector2(

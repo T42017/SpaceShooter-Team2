@@ -24,6 +24,7 @@ namespace Space_Scavenger
         Random rand = new Random();
         AsteroidComponent asteroid;
         UserInterface ui;
+        private Money Money;
         public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
@@ -32,6 +33,7 @@ namespace Space_Scavenger
         private Texture2D laserTexture;
         private Texture2D enemyTexture;
         private Texture2D spaceStation;
+        private Texture2D moneyTexture;
         private Texture2D enemyLaserTexture;
         private Texture2D _powerUpHealth;
         private SoundEffect laserEffect;
@@ -39,6 +41,7 @@ namespace Space_Scavenger
         //public int boostTime = 0;
         private int shieldTime = 0;
 
+        public bool multiShot { get; set; }
         private int wantedEnemies = 15;
         private int wantedPowerUps = 5;
         public int soundEffectTimer = 0;
@@ -87,6 +90,7 @@ namespace Space_Scavenger
             Enemy = new Enemy();
             PowerUp = new PowerUp();
             Exp = new Exp();
+            Money = new Money();
             camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
@@ -120,6 +124,7 @@ namespace Space_Scavenger
             laserTexture = Content.Load<Texture2D>("laserBlue");
             _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
             enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
+            moneyTexture = Content.Load<Texture2D>("Money");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
             enemyDamage = Content.Load<Texture2D>("burst");
             spaceStation = Content.Load<Texture2D>("spaceStation");
@@ -129,7 +134,7 @@ namespace Space_Scavenger
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2Neon");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4Neon");
-            asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
+            asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteorNeon");
             //Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
             //agr = Content.Load<SoundEffect>("AGR");
@@ -174,11 +179,26 @@ namespace Space_Scavenger
             {
                 if (reloadTime < 0)
                 {
-                    laserEffect.Play(0.2f, 0.0f, 0.0f);
-                    Shot s = Player.Shoot();
-                    if (s != null)
-                        shots.Add(s);
-                    reloadTime = 10;
+                    if (multiShot)
+                    {
+                        laserEffect.Play(0.2f, 0.0f, 0.0f);
+                        Shot s = Player.multiShot();
+                        if (s != null)
+                            shots.Add(s);
+                        Shot s2 = Player.multiShot();
+                        if (s2 != null)
+                            shots.Add(s2);
+                        reloadTime = 10;
+                    }
+                    else
+                    {
+                        laserEffect.Play(0.2f, 0.0f, 0.0f);
+                        Shot s = Player.Shoot();
+                        if (s != null)
+                            shots.Add(s);
+                        reloadTime = 10;
+                    }
+                    
                 }
                 
             }
@@ -186,17 +206,10 @@ namespace Space_Scavenger
             {
                 Player.Speed = new Vector2(0,0);
             }
-           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
-           // {
-           //     if (boostTime <= 0)
-           //     {
-           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
-           //         boostTime = 600;
-           //     }
-           //     
-           //
-           //     
-           // }
+            if (state.IsKeyDown(Keys.L))
+            {
+                multiShot = true;
+            }
 
             #region Collision
             foreach (Enemy enemy in enemies)
@@ -217,8 +230,6 @@ namespace Space_Scavenger
                     powerup.isDead = true;
                 }
             }
-
-
             if (enemies.Count < wantedEnemies)
             {
                 Enemy e = Enemy.enemySpawn(this);
@@ -232,9 +243,6 @@ namespace Space_Scavenger
                 if (p != null)
                     powerups.Add(p);
             }
-
-
-
 
             asteroid.Update(gameTime);
             foreach (var BigAsteroid in asteroid._nrofAsteroids)
@@ -255,7 +263,6 @@ namespace Space_Scavenger
                             Player.Shield--;
                             shieldTime = 200;
                         }
-
                         playerInvincibilityTimer = 10;
                     }
                     hitasteroid.isDead = true;
@@ -301,9 +308,12 @@ namespace Space_Scavenger
                     if (enemy.Health <= 0)
                     {
                         enemy.isDead = true;
-                        Exp.currentEXP += enemy.ExpReward;
                         Exp.currentScore += enemy.ScoreReward;
-                        
+                        for(int i = 0; i < rand.Next(1, 5); i++)
+                        {
+                            Money.MoneyRoid(enemy.Position + new Vector2(rand.Next(-50, 50)));
+                        }
+
                     }
                     enemyHit = true;
                     enemyPositionExplosion = enemy.Position;
@@ -355,7 +365,7 @@ namespace Space_Scavenger
                 e.Update(gameTime, this);
             }
                 Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
-                if (shotHit != null)
+            if (shotHit != null)
                 {
                     if (playerInvincibilityTimer <= 0)
                     {
@@ -374,6 +384,14 @@ namespace Space_Scavenger
                     }
                     shotHit.isDead = true;
                 }
+
+            Asteroid hitmoney = Money.moneyroids.FirstOrDefault(m => m.CollidesWith(Player));
+            if (hitmoney != null)
+            {
+                hitmoney.isDead = true;
+                Exp.currentEXP += hitmoney.value;
+            }
+
 
             if (Player.Health <= 0)
             {
@@ -405,6 +423,7 @@ namespace Space_Scavenger
             shots.RemoveAll(s => s.isDead);
             enemyshots.RemoveAll(shot => shot.isDead);
             enemies.RemoveAll(enemy => enemy.isDead);
+            Money.moneyroids.RemoveAll(money => money.isDead);
             powerups.RemoveAll(powerup => powerup.isDead);
             asteroid._MiniStroids.RemoveAll(n => n.isDead);
             asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
@@ -413,6 +432,7 @@ namespace Space_Scavenger
             ui.Update(gameTime);
             boost.Update(gameTime);
             camera.Update(gameTime, Player);
+            Money.Update(gameTime, this);
 
             if (reloadTime >= 0)
             {
@@ -420,16 +440,10 @@ namespace Space_Scavenger
             }
             if (soundEffectTimer > 0)
                 soundEffectTimer--;
-            //if (boostTime >= 0)
-            //    boostTime--;
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>s
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -441,9 +455,9 @@ namespace Space_Scavenger
 
 
 
-            for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+            for (int y = -25000; y < 25000; y += backgroundTexture.Width)
             {
-                for (int x = -10000; x < 10000; x += backgroundTexture.Width)
+                for (int x = -25000; x < 25000; x += backgroundTexture.Width)
                 {
                     spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
 
@@ -453,6 +467,10 @@ namespace Space_Scavenger
             foreach (Asteroid mini in asteroid._MiniStroids)
             {
                 spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+            }
+            foreach (Asteroid money in Money.moneyroids)
+            {
+                spriteBatch.Draw(moneyTexture, money.Position, null, Color.White, asteroid.Rotation + money.RotationCounter, new Vector2(moneyTexture.Width / 2f, moneyTexture.Height / 2f), 0.7f, SpriteEffects.None, 0f);
             }
             for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
             {
@@ -476,15 +494,7 @@ namespace Space_Scavenger
                         break;
                 }
 
-                /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
-                  {                                                   anti integer overflow system. Activate if it happens
-                      _nrofAsteroids[i].RotationCounter = 0;
-                  }*/
             }
-
-
-
-            
 
             foreach (Shot s in shots)
             {

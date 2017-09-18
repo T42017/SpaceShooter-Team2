@@ -18,6 +18,7 @@ namespace Space_Scavenger
         public float RotationCounter;
         public float addCounter;
         public int chosenTexture;
+        public int value;
     }
 
     class AsteroidComponent : GameObject
@@ -44,7 +45,6 @@ namespace Space_Scavenger
         public List<Asteroid> _nrofAsteroids = new List<Asteroid>();
 
         public AsteroidComponent(Game game, Player Player, GameObject gameObject) 
-
         {
             mygame = (SpaceScavenger)game;
             myObject = (GameObject)gameObject;
