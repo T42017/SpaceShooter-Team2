@@ -100,7 +100,7 @@ namespace Space_Scavenger
            boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
-            gamestate = GameState.Playing;
+            gamestate = GameState.Menu;
 
 
 
@@ -162,8 +162,11 @@ namespace Space_Scavenger
             switch (gamestate)
             {
                 case GameState.Menu:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        gamestate = GameState.Playing;
+                    }
                     break;
-                
 
                 case GameState.Playing:
                     #region state playing
