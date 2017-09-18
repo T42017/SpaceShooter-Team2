@@ -44,6 +44,8 @@ namespace Space_Scavenger
         //public int boostTime = 0;
         private int shieldTime = 0;
 
+        private Texture2D bossTexture;
+
         public bool multiShot { get; set; }
         private int wantedEnemies = 15;
         private int wantedPowerUps = 5;
@@ -54,23 +56,25 @@ namespace Space_Scavenger
         bool enemyHit = false;
         public GameObject gameObject;
         private Texture2D enemyDamage;
-        public SoundEffect enemyShootEffect;
+        public SoundEffect EnemyShootEffect;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
+        public BossEnemy BossEnemy { get; private set; }
         public PowerUp PowerUp { get; private set; }
-        private KeyboardState previousKbState;
-        public SoundEffect sound, agr;
+        private KeyboardState _previousKbState;
+        public SoundEffect Sound, Agr;
         public Song BackgroundSong;
-        private Camera camera;
+        private Camera _camera;
         public SoundEffect Assault;
-        public List<Shot> shots = new List<Shot>();
-        public List<Shot> enemyshots = new List<Shot>();
-        List<Enemy> enemies = new List<Enemy>();
-        List<PowerUp> powerups = new List<PowerUp>();
-        
+        public List<Shot> Shots = new List<Shot>();
+        public List<Shot> Enemyshots = new List<Shot>();
+        private readonly List<Enemy> _enemies = new List<Enemy>();
+        private readonly List<PowerUp> _powerups = new List<PowerUp>();
+        private readonly List<BossEnemy> bosses = new List<BossEnemy>();
 
 
-       
+
+
         public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -93,10 +97,11 @@ namespace Space_Scavenger
             
             Player = new Player(this);
             Enemy = new Enemy();
+            BossEnemy = new BossEnemy();
             PowerUp = new PowerUp();
             Exp = new Exp();
             Money = new Money();
-            camera = new Camera(GraphicsDevice.Viewport);
+            _camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
             //Components.Add(asteroid);
@@ -134,8 +139,9 @@ namespace Space_Scavenger
             laserEffect = Content.Load<SoundEffect>("laserShoot");
             enemyDamage = Content.Load<Texture2D>("burst");
             spaceStation = Content.Load<Texture2D>("spaceStation");
-            enemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
+            EnemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
             enemyLaserTexture= Content.Load<Texture2D>("laserRed");
+            bossTexture = Content.Load<Texture2D>("boss");
             asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1Neon");
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2Neon");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
@@ -204,10 +210,10 @@ namespace Space_Scavenger
                                 laserEffect.Play(0.2f, 0.0f, 0.0f);
                                 Shot s = Player.multiShot();
                                 if (s != null)
-                                    shots.Add(s);
+                                    Shots.Add(s);
                                 Shot s2 = Player.multiShot();
                                 if (s2 != null)
-                                    shots.Add(s2);
+                                    Shots.Add(s2);
                                 reloadTime = 10;
                             }
                             else
@@ -215,7 +221,7 @@ namespace Space_Scavenger
                                 laserEffect.Play(0.2f, 0.0f, 0.0f);
                                 Shot s = Player.Shoot();
                                 if (s != null)
-                                    shots.Add(s);
+                                    Shots.Add(s);
                                 reloadTime = 10;
                             }
 
@@ -224,10 +230,14 @@ namespace Space_Scavenger
                     {
                         Player.Speed = new Vector2(0, 0);
                     }
+                    if (state.IsKeyDown(Keys.L))
+                    {
+                        multiShot = true;
+                    }
 
                     #region Collision
 
-                    foreach (Enemy enemy in enemies)
+                    foreach (Enemy enemy in _enemies)
                     {
                         var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
                         var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
@@ -236,7 +246,7 @@ namespace Space_Scavenger
                             enemy.isDead = true;
                         }
                     }
-                    foreach (PowerUp powerup in powerups)
+                    foreach (PowerUp powerup in _powerups)
                     {
                         var xDiffPlayer = Math.Abs(powerup.Position.X - Player.Position.X);
                         var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
@@ -247,18 +257,24 @@ namespace Space_Scavenger
                     }
 
 
-                    if (enemies.Count < wantedEnemies)
+                    if (_enemies.Count < wantedEnemies)
                     {
                         Enemy e = Enemy.enemySpawn(this);
                         if (e != null)
-                            enemies.Add(e);
+                            _enemies.Add(e);
+                    }
+                    if (bosses.Count < 1)
+                    {
+                        BossEnemy be = BossEnemy.SpawnBoss(this);
+                        if (be != null)
+                            bosses.Add(be);
                     }
 
-                    if (powerups.Count < wantedPowerUps)
+                    if (_powerups.Count < wantedPowerUps)
                     {
-                        PowerUp p = PowerUp.powerUpSpawn(this);
+                        PowerUp p = PowerUp.PowerUpSpawn(this);
                         if (p != null)
-                            powerups.Add(p);
+                            _powerups.Add(p);
                     }
 
                     asteroid.Update(gameTime);
@@ -302,10 +318,10 @@ namespace Space_Scavenger
 
                     }
                     asteroid.Timer--;
-                    foreach (PowerUp powerup in powerups)
+                    foreach (PowerUp powerup in _powerups)
                     {
 
-                        PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
+                        PowerUp hitPowerup = _powerups.FirstOrDefault(e => e.CollidesWith(Player));
                         if (hitPowerup != null)
                         {
                             Player.Health = 10;
@@ -313,12 +329,12 @@ namespace Space_Scavenger
                             Debug.WriteLine("Powerup!");
                         }
                     }
-                    foreach (Shot shot in shots)
+                    foreach (Shot shot in Shots)
                     {
                         shot.Update(gameTime);
-                        Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
+                        Enemy enemy = _enemies.FirstOrDefault(d => d.CollidesWith(shot));
                         Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
-
+                        BossEnemy hitBoss = bosses.FirstOrDefault(e => e.CollidesWith(shot));
 
                         if (enemy != null)
                         {
@@ -326,7 +342,6 @@ namespace Space_Scavenger
                             if (enemy.Health <= 0)
                             {
                                 enemy.isDead = true;
-                                Exp.currentEXP += enemy.ExpReward;
                                 Exp.currentScore += enemy.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 5); i++)
                                 {
@@ -336,6 +351,24 @@ namespace Space_Scavenger
                             }
                             enemyHit = true;
                             enemyPositionExplosion = enemy.Position;
+                            Debug.WriteLine(enemyPositionExplosion);
+                            shot.isDead = true;
+                        }
+                        if (hitBoss != null)
+                        {
+                            hitBoss.Health -= 1;
+                            if (hitBoss.Health <= 0)
+                            {
+                                hitBoss.isDead = true;
+                                Exp.currentScore += hitBoss.ScoreReward;
+                                for (int i = 0; i < rand.Next(1, 30); i++)
+                                {
+                                    Money.MoneyRoid(hitBoss.Position + new Vector2(rand.Next(-100, 100)));
+                                }
+
+                            }
+                            enemyHit = true;
+                            enemyPositionExplosion = hitBoss.Position;
                             Debug.WriteLine(enemyPositionExplosion);
                             shot.isDead = true;
                         }
@@ -356,7 +389,7 @@ namespace Space_Scavenger
                             shot.isDead = true;
                         }
                     }
-                    foreach (Shot shot in enemyshots)
+                    foreach (Shot shot in Enemyshots)
                     {
                         Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
@@ -379,11 +412,17 @@ namespace Space_Scavenger
                         }
 
                     }
-                    foreach (Enemy e in enemies)
+                    foreach (Enemy e in _enemies)
                     {
                         e.Update(gameTime, this);
                     }
-                    Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
+                    foreach (BossEnemy be in bosses)
+                    {
+                        be.Update(gameTime);
+                    }
+
+
+                    Shot shotHit = Enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
                     if (shotHit != null)
                     {
                         if (playerInvincibilityTimer <= 0)
@@ -403,7 +442,7 @@ namespace Space_Scavenger
                         }
                         shotHit.isDead = true;
                     }
-                    Asteroid moneyHit = Money.moneyroids.FirstOrDefault(m => m.CollidesWith(Player));
+                    Asteroid moneyHit = Money.Moneyroids.FirstOrDefault(m => m.CollidesWith(Player));
                     if (moneyHit != null)
                     {
                         moneyHit.isDead = true;
@@ -438,20 +477,19 @@ namespace Space_Scavenger
                     #endregion
 
 
-                    shots.RemoveAll(s => s.isDead);
-                    enemyshots.RemoveAll(shot => shot.isDead);
-                    enemies.RemoveAll(enemy => enemy.isDead);
-                    powerups.RemoveAll(powerup => powerup.isDead);
+                    Shots.RemoveAll(s => s.isDead);
+                    Enemyshots.RemoveAll(shot => shot.isDead);
+                    _enemies.RemoveAll(enemy => enemy.isDead);
+                    _powerups.RemoveAll(powerup => powerup.isDead);
                     asteroid._MiniStroids.RemoveAll(n => n.isDead);
                     asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
-                    Money.moneyroids.RemoveAll(money => money.isDead);
+                    Money.Moneyroids.RemoveAll(money => money.isDead);
                     Player.Update(gameTime);
-                    previousKbState = state;
+                    _previousKbState = state;
                     ui.Update(gameTime);
                     boost.Update(gameTime);
-                    camera.Update(gameTime, Player);
+                    _camera.Update(gameTime, Player);
                     Money.Update(gameTime, this);
-
 
                     if (reloadTime >= 0)
                     {
@@ -494,7 +532,7 @@ namespace Space_Scavenger
                     base.Draw(gameTime);
                     
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
 
                         backgrSpriteBatch.Begin();
 
@@ -518,10 +556,16 @@ namespace Space_Scavenger
                 spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, null, Color.White, asteroid.Rotation + mini.RotationCounter, new Vector2(asteroid.MinitETexture2D1.Width / 2f, asteroid.MinitETexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
                 mini.RotationCounter += mini.addCounter;
             }
-            foreach (Asteroid money in Money.moneyroids)
+            foreach (Asteroid money in Money.Moneyroids)
             {
-                spriteBatch.Draw(moneyTexture, money.Position, null, Color.White, asteroid.Rotation + money.RotationCounter, new Vector2(moneyTexture.Width / 2f, moneyTexture.Height / 2f), 0.7f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(moneyTexture, money.Position, null, Color.White, money.Rotation + money.RotationCounter, new Vector2(moneyTexture.Width / 2f, moneyTexture.Height / 2f), 0.7f, SpriteEffects.None, 0f);
             }
+
+            foreach (BossEnemy boss in bosses)
+            {
+                spriteBatch.Draw(bossTexture, boss.Position, null, Color.White, boss.Rotation, new Vector2(bossTexture.Width / 2f, bossTexture.Height / 2f), 3f, SpriteEffects.None, 0f);
+            }
+
             for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
             {
                 switch (asteroid._nrofAsteroids[i].chosenTexture)
@@ -550,22 +594,22 @@ namespace Space_Scavenger
 
 
 
-                    foreach (Shot s in shots)
+                    foreach (Shot s in Shots)
                     {
                         spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (Shot s in enemyshots)
+                    foreach (Shot s in Enemyshots)
                     {
                         spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (Enemy e in enemies)
+                    foreach (Enemy e in _enemies)
                     {
                         spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (PowerUp p in powerups)
+                    foreach (PowerUp p in _powerups)
                     {
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace Space_Scavenger
@@ -11,24 +7,24 @@ namespace Space_Scavenger
     class Money : GameObject
     {
         Random rnd = new Random();
-        public List<Asteroid> moneyroids = new List<Asteroid>();
+        public List<Asteroid> Moneyroids = new List<Asteroid>();
         
 
         public void Update(GameTime gametime, Game game)
         {
             MyGame = (SpaceScavenger)game;
-            for (int i = 0; moneyroids.Count > i; i++)
+            for (int i = 0; Moneyroids.Count > i; i++)
             {
-                var direction = MyGame.Player.Position - moneyroids[i].Position;
+                var direction = MyGame.Player.Position - Moneyroids[i].Position;
                 direction.Normalize();
-                moneyroids[i].Position += direction * 8f;
+                Moneyroids[i].Position += direction * 8f;
             }
         }
 
         public void MoneyRoid(Vector2 aspos)
         {
 
-            moneyroids.Add(new Asteroid()
+            Moneyroids.Add(new Asteroid()
             {
                 Timer = 1000,
                 hpAsteroid = 1,
