@@ -10,7 +10,7 @@ namespace Space_Scavenger
 {
     class Pause
     {
-        protected override void Update(GameTime gameTime)
+        protected void Update(GameTime gameTime)
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
