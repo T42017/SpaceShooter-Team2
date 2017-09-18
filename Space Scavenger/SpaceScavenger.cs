@@ -26,6 +26,7 @@ namespace Space_Scavenger
         AsteroidComponent asteroid;
         private UserInterface _ui;
         private StartMenu _startMenu;
+        private GameOverScreen _gameOverScreen;
         public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
@@ -103,7 +104,9 @@ namespace Space_Scavenger
             Components.Add(effects);
             _startMenu = new StartMenu(this);
             Components.Add(_startMenu);
-            gamestate = GameState.Menu;
+            _gameOverScreen = new GameOverScreen(this);
+            Components.Add(_gameOverScreen);
+            gamestate = GameState.GameOver;
 
 
 
@@ -386,6 +389,7 @@ namespace Space_Scavenger
                         Player.Shield = Player.MaxShield;
                         Exp.currentScore = 0;
                         Exp.currentEXP = 0;
+                        gamestate = GameState.GameOver;
                     }
 
 
@@ -437,7 +441,12 @@ namespace Space_Scavenger
                     #region Shopping
 #endregion Shopping
                     break;
-                case GameState.Gameover:
+                case GameState.GameOver:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        gamestate = GameState.Menu;
+                        
+                    }
                     break;
             }
 
@@ -453,6 +462,7 @@ namespace Space_Scavenger
             switch (gamestate)
             {
                     case GameState.Menu:
+                    GraphicsDevice.Clear(Color.Black);
                     _startMenu.Draw(gameTime);
                     break;
                     case GameState.Playing:
@@ -544,7 +554,8 @@ namespace Space_Scavenger
                     break;
                     case GameState.Shopping:
                     break;
-                    case GameState.Gameover:
+                    case GameState.GameOver:
+                    _gameOverScreen.Draw(gameTime);
                     break;
             }
 

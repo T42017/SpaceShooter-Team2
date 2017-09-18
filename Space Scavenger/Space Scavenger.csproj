@@ -47,6 +47,7 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="Exp.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameOverScreen.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="IGameObject.cs" />
     <Compile Include="Asteroids.cs" />
