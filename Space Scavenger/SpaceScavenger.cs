@@ -106,7 +106,7 @@ namespace Space_Scavenger
             Components.Add(_startMenu);
             _gameOverScreen = new GameOverScreen(this);
             Components.Add(_gameOverScreen);
-            gamestate = GameState.GameOver;
+            gamestate = GameState.Menu;
 
 
 
