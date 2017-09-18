@@ -24,7 +24,8 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
-        UserInterface ui;
+        private UserInterface _ui;
+        private StartMenu _startMenu;
         public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
@@ -94,12 +95,14 @@ namespace Space_Scavenger
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
             //Components.Add(asteroid);
-            ui = new UserInterface(this);
+            _ui = new UserInterface(this);
             effects = new Effects(this);
-            Components.Add(ui);
+            Components.Add(_ui);
            boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
+            _startMenu = new StartMenu(this);
+            Components.Add(_startMenu);
             gamestate = GameState.Menu;
 
 
@@ -411,7 +414,7 @@ namespace Space_Scavenger
                     asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
                     Player.Update(gameTime);
                     previousKbState = state;
-                    ui.Update(gameTime);
+                    _ui.Update(gameTime);
                     boost.Update(gameTime);
                     camera.Update(gameTime, Player);
 
@@ -450,17 +453,13 @@ namespace Space_Scavenger
             switch (gamestate)
             {
                     case GameState.Menu:
+                    _startMenu.Draw(gameTime);
                     break;
                     case GameState.Playing:
                     #region state playing
                     GraphicsDevice.Clear(Color.CornflowerBlue);
-
-                    // TODO: Add your drawing code here
-
                     base.Draw(gameTime);
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
-
-
 
                     for (int y = -10000; y < 10000; y += backgroundTexture.Width)
                     {
@@ -503,10 +502,6 @@ namespace Space_Scavenger
                           }*/
                     }
 
-
-
-
-
                     foreach (Shot s in shots)
                     {
                         spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
@@ -542,7 +537,7 @@ namespace Space_Scavenger
 
                     spriteBatch.End();
 
-                    ui.Draw(gameTime);
+                    _ui.Draw(gameTime);
                     #endregion state playing
                     break;
                     case GameState.Paused:
