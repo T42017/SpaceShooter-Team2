@@ -178,8 +178,11 @@ namespace Space_Scavenger
                     #endregion
                     break;
                 case GameState.Playing:
+
                     #region Playing
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                        Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
                     if (state.IsKeyDown(Keys.Up))
                     {
@@ -195,7 +198,7 @@ namespace Space_Scavenger
                     }
                     if (state.IsKeyDown(Keys.Space))
                     {
-                        if(reloadTime <= 0)
+                        if (reloadTime <= 0)
                             if (multiShot)
                             {
                                 laserEffect.Play(0.2f, 0.0f, 0.0f);
@@ -221,8 +224,9 @@ namespace Space_Scavenger
                     {
                         Player.Speed = new Vector2(0, 0);
                     }
-                    
+
                     #region Collision
+
                     foreach (Enemy enemy in enemies)
                     {
                         var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
@@ -324,6 +328,10 @@ namespace Space_Scavenger
                                 enemy.isDead = true;
                                 Exp.currentEXP += enemy.ExpReward;
                                 Exp.currentScore += enemy.ScoreReward;
+                                for (int i = 0; i < rand.Next(1, 5); i++)
+                                {
+                                    Money.MoneyRoid(enemy.Position + new Vector2(rand.Next(-50, 50)));
+                                }
 
                             }
                             enemyHit = true;
@@ -395,6 +403,13 @@ namespace Space_Scavenger
                         }
                         shotHit.isDead = true;
                     }
+                    Asteroid moneyHit = Money.moneyroids.FirstOrDefault(m => m.CollidesWith(Player));
+                    if (moneyHit != null)
+                    {
+                        moneyHit.isDead = true;
+                        Exp.currentEXP += 50;
+                    }
+
 
                     if (Player.Health <= 0)
                     {
@@ -429,13 +444,14 @@ namespace Space_Scavenger
                     powerups.RemoveAll(powerup => powerup.isDead);
                     asteroid._MiniStroids.RemoveAll(n => n.isDead);
                     asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
+                    Money.moneyroids.RemoveAll(money => money.isDead);
                     Player.Update(gameTime);
                     previousKbState = state;
                     ui.Update(gameTime);
                     boost.Update(gameTime);
                     camera.Update(gameTime, Player);
-            Money.Update(gameTime, this);
-            Money.moneyroids.RemoveAll(money => money.isDead);
+                    Money.Update(gameTime, this);
+
 
                     if (reloadTime >= 0)
                     {
