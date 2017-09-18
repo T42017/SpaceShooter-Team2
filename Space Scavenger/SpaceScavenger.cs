@@ -18,8 +18,10 @@ namespace Space_Scavenger
     /// </summary>
     public class SpaceScavenger : Game
     {
+
+        
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        SpriteBatch spriteBatch, backgrSpriteBatch;
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
@@ -27,6 +29,8 @@ namespace Space_Scavenger
         private Money Money;
         public Boost boost;
         Effects effects;
+        public float startY, startX;
+
         public PowerUp Powerup { get; private set; }
         private int soundTime = 0;
         public Exp Exp;
@@ -98,7 +102,7 @@ namespace Space_Scavenger
             ui = new UserInterface(this);
             effects = new Effects(this);
             Components.Add(ui);
-           boost = new Boost(this);
+            boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
            
@@ -119,6 +123,7 @@ namespace Space_Scavenger
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            backgrSpriteBatch = new SpriteBatch(GraphicsDevice);
 
             backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
@@ -202,6 +207,9 @@ namespace Space_Scavenger
                 }
                 
             }
+
+
+
             if (state.IsKeyDown(Keys.B))
             {
                 Player.Speed = new Vector2(0,0);
@@ -451,22 +459,30 @@ namespace Space_Scavenger
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
 
+            backgrSpriteBatch.Begin();
 
+            startX = Player.Position.X % backgroundTexture.Width;
+            startY = Player.Position.Y % backgroundTexture.Height;
 
-            for (int y = -25000; y < 25000; y += backgroundTexture.Width)
+            for (float y = -startY - backgroundTexture.Height; y < Globals.ScreenHeight; y += backgroundTexture.Width)
             {
-                for (int x = -25000; x < 25000; x += backgroundTexture.Width)
+                for (float x = -startX - backgroundTexture.Width; x < Globals.ScreenWidth; x += backgroundTexture.Width)
                 {
-                    spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    backgrSpriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
 
                 }
             }
 
+            backgrSpriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+
             foreach (Asteroid mini in asteroid._MiniStroids)
             {
-                spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+
+                spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, null, Color.White, asteroid.Rotation + mini.RotationCounter, new Vector2(asteroid.MinitETexture2D1.Width / 2f, asteroid.MinitETexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+                mini.RotationCounter += mini.addCounter;
             }
             foreach (Asteroid money in Money.moneyroids)
             {
