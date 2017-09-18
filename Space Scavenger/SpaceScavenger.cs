@@ -27,6 +27,7 @@ namespace Space_Scavenger
         private UserInterface _ui;
         private StartMenu _startMenu;
         private GameOverScreen _gameOverScreen;
+        private Shop _shop;
         public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
@@ -106,7 +107,10 @@ namespace Space_Scavenger
             Components.Add(_startMenu);
             _gameOverScreen = new GameOverScreen(this);
             Components.Add(_gameOverScreen);
+            _shop = new Shop(this);
+            Components.Add(_shop);
             gamestate = GameState.GameOver;
+            
 
 
 
