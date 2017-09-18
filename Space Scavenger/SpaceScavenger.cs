@@ -18,6 +18,7 @@ namespace Space_Scavenger
     /// </summary>
     public class SpaceScavenger : Game
     {
+        private GameState gamestate;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
@@ -61,8 +62,10 @@ namespace Space_Scavenger
         public List<Shot> enemyshots = new List<Shot>();
         List<Enemy> enemies = new List<Enemy>();
         List<PowerUp> powerups = new List<PowerUp>();
+        
 
 
+       
         public SpaceScavenger()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -82,7 +85,7 @@ namespace Space_Scavenger
         /// </summary>
         protected override void Initialize()
         {
-
+            
             Player = new Player(this);
             Enemy = new Enemy();
             PowerUp = new PowerUp();
@@ -97,10 +100,10 @@ namespace Space_Scavenger
            boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
-           
+            gamestate = GameState.Playing;
 
-       
-            
+
+
             gameObject = (GameObject)gameObject;
             // TODO: Add your initialization logic here
 
@@ -153,275 +156,548 @@ namespace Space_Scavenger
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState state = Keyboard.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            switch (gamestate)
+            {
+                case GameState.Menu:
+                    break;
+                
 
-            KeyboardState state = Keyboard.GetState();
+                case GameState.Playing:
+                    #region state playing
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                        Exit();
+                    if (state.IsKeyDown(Keys.Up))
+                    {
+                        Player.Accelerate();
+                    }
+                    if (state.IsKeyDown(Keys.Left))
+                    {
+                        Player.Rotation -= 0.07f;
+                    }
+                    else if (state.IsKeyDown(Keys.Right))
+                    {
+                        Player.Rotation += 0.07f;
+                    }
+                    if (state.IsKeyDown(Keys.Space))
+                    {
+                        if (reloadTime < 0)
+                        {
+                            laserEffect.Play(0.2f, 0.0f, 0.0f);
+                            Shot s = Player.Shoot();
+                            if (s != null)
+                                shots.Add(s);
+                            reloadTime = 10;
+                        }
+
+                    }
+                    if (state.IsKeyDown(Keys.B))
+                    {
+                        Player.Speed = new Vector2(0, 0);
+                    }
+                    
+                    #region Collision
+                    foreach (Enemy enemy in enemies)
+                    {
+                        var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
+                        var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
+                        if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+                        {
+                            enemy.isDead = true;
+                        }
+                    }
+                    foreach (PowerUp powerup in powerups)
+                    {
+                        var xDiffPlayer = Math.Abs(powerup.Position.X - Player.Position.X);
+                        var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
+                        if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+                        {
+                            powerup.isDead = true;
+                        }
+                    }
+
+
+                    if (enemies.Count < wantedEnemies)
+                    {
+                        Enemy e = Enemy.enemySpawn(this);
+                        if (e != null)
+                            enemies.Add(e);
+                    }
+
+                    if (powerups.Count < wantedPowerUps)
+                    {
+                        PowerUp p = PowerUp.powerUpSpawn(this);
+                        if (p != null)
+                            powerups.Add(p);
+                    }
+
+                    asteroid.Update(gameTime);
+                    foreach (var BigAsteroid in asteroid._nrofAsteroids)
+                    {
+
+                        Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
+                        if (hitasteroid != null)
+                        {
+                            if (playerInvincibilityTimer <= 0)
+                            {
+                                if (Player.Shield <= 0)
+                                {
+                                    Player.Health -= 1;
+                                    shieldTime = 200;
+                                }
+                                else
+                                {
+                                    Player.Shield--;
+                                    shieldTime = 200;
+                                }
+
+                                playerInvincibilityTimer = 10;
+                            }
+                            hitasteroid.isDead = true;
+                            for (int k = 0; k < 10; k++)
+                            {
+                                asteroid.miniStroid(hitasteroid.Position);
+                            }
+                        }
+                        break;
+                    }
+                    foreach (var currentMiniAsteroid in asteroid._MiniStroids)
+                    {
+
+                        if (currentMiniAsteroid.Timer <= 0)
+                        {
+                            currentMiniAsteroid.isDead = true;
+                        }
+                        currentMiniAsteroid.Timer--;
+
+                    }
+                    asteroid.Timer--;
+                    foreach (PowerUp powerup in powerups)
+                    {
+
+                        PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
+                        if (hitPowerup != null)
+                        {
+                            Player.Health = 10;
+                            hitPowerup.isDead = true;
+                            Debug.WriteLine("Powerup!");
+                        }
+                    }
+                    foreach (Shot shot in shots)
+                    {
+                        shot.Update(gameTime);
+                        Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
+                        Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+
+
+                        if (enemy != null)
+                        {
+                            enemy.Health -= 1;
+                            if (enemy.Health <= 0)
+                            {
+                                enemy.isDead = true;
+                                Exp.currentEXP += enemy.ExpReward;
+                                Exp.currentScore += enemy.ScoreReward;
+
+                            }
+                            enemyHit = true;
+                            enemyPositionExplosion = enemy.Position;
+                            Debug.WriteLine(enemyPositionExplosion);
+                            shot.isDead = true;
+                        }
+                        if (hitasteroid != null)
+                        {
+
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid._nrofAsteroids.Remove(hitasteroid);
+                            Exp.currentScore += hitasteroid.ScoreReward;
+                            Debug.WriteLine(Exp.currentScore);
+                            shot.isDead = true;
+                        }
+                        shot.Timer--;
+                        if (shot.Timer <= 0)
+                        {
+                            shot.isDead = true;
+                        }
+                    }
+                    foreach (Shot shot in enemyshots)
+                    {
+                        Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+
+                        if (hitasteroid != null)
+                        {
+
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid.miniStroid(hitasteroid.Position);
+                            asteroid._nrofAsteroids.Remove(hitasteroid);
+
+                            shot.isDead = true;
+                        }
+
+                        shot.Update(gameTime);
+                        shot.Timer--;
+                        if (shot.Timer <= 0)
+                        {
+                            shot.isDead = true;
+                        }
+
+                    }
+                    foreach (Enemy e in enemies)
+                    {
+                        e.Update(gameTime, this);
+                    }
+                    Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
+                    if (shotHit != null)
+                    {
+                        if (playerInvincibilityTimer <= 0)
+                        {
+                            if (Player.Shield <= 0)
+                            {
+                                Player.Health -= 1;
+                                shieldTime = 500;
+                            }
+                            else
+                            {
+                                Player.Shield--;
+                                shieldTime = 500;
+                            }
+
+                            playerInvincibilityTimer = 10;
+                        }
+                        shotHit.isDead = true;
+                    }
+
+                    if (Player.Health <= 0)
+                    {
+                        Player.Position = new Vector2(0, 0);
+                        Player.Health = Player.MaxHealth;
+                        Player.Shield = Player.MaxShield;
+                        Exp.currentScore = 0;
+                        Exp.currentEXP = 0;
+                    }
+
+
+                    if (Player.Shield < 10 && shieldTime <= 0)
+                    {
+                        Player.Shield++;
+                        shieldTime = 40;
+                        Debug.WriteLine(Player.Shield + " " + shieldTime);
+                    }
+                    if (shieldTime >= 0)
+                    {
+                        shieldTime--;
+                    }
+                    if (playerInvincibilityTimer >= 0)
+                    {
+                        playerInvincibilityTimer--;
+                    }
+                    #endregion
+
+
+                    shots.RemoveAll(s => s.isDead);
+                    enemyshots.RemoveAll(shot => shot.isDead);
+                    enemies.RemoveAll(enemy => enemy.isDead);
+                    powerups.RemoveAll(powerup => powerup.isDead);
+                    asteroid._MiniStroids.RemoveAll(n => n.isDead);
+                    asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
+                    Player.Update(gameTime);
+                    previousKbState = state;
+                    ui.Update(gameTime);
+                    boost.Update(gameTime);
+                    camera.Update(gameTime, Player);
+
+                    if (reloadTime >= 0)
+                    {
+                        reloadTime--;
+                    }
+                    if (soundEffectTimer > 0)
+                        soundEffectTimer--;
+                    //if (boostTime >= 0)
+                    //    boostTime--;
+
+                    break;
+#endregion state playing
+                case GameState.Paused:
+                    break;
+                case GameState.Shopping:
+                    break;
+                case GameState.Gameover:
+                    break;
+            }
+//            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+//                Exit();
+
+//            KeyboardState state = Keyboard.GetState();
      
-            if (state.IsKeyDown(Keys.Up))
-            {
-                Player.Accelerate();
-            }
-            if (state.IsKeyDown(Keys.Left))
-            {
-                Player.Rotation -= 0.07f;
-            }
-            else if (state.IsKeyDown(Keys.Right))
-            {
-                Player.Rotation += 0.07f;
-            }
-            if (state.IsKeyDown(Keys.Space))
-            {
-                if (reloadTime < 0)
-                {
-                    laserEffect.Play(0.2f, 0.0f, 0.0f);
-                    Shot s = Player.Shoot();
-                    if (s != null)
-                        shots.Add(s);
-                    reloadTime = 10;
-                }
+//            if (state.IsKeyDown(Keys.Up))
+//            {
+//                Player.Accelerate();
+//            }
+//            if (state.IsKeyDown(Keys.Left))
+//            {
+//                Player.Rotation -= 0.07f;
+//            }
+//            else if (state.IsKeyDown(Keys.Right))
+//            {
+//                Player.Rotation += 0.07f;
+//            }
+//            if (state.IsKeyDown(Keys.Space))
+//            {
+//                if (reloadTime < 0)
+//                {
+//                    laserEffect.Play(0.2f, 0.0f, 0.0f);
+//                    Shot s = Player.Shoot();
+//                    if (s != null)
+//                        shots.Add(s);
+//                    reloadTime = 10;
+//                }
                 
-            }
-            if (state.IsKeyDown(Keys.B))
-            {
-                Player.Speed = new Vector2(0,0);
-            }
-           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
-           // {
-           //     if (boostTime <= 0)
-           //     {
-           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
-           //         boostTime = 600;
-           //     }
-           //     
-           //
-           //     
-           // }
+//            }
+//            if (state.IsKeyDown(Keys.B))
+//            {
+//                Player.Speed = new Vector2(0,0);
+//            }
+//           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
+//           // {
+//           //     if (boostTime <= 0)
+//           //     {
+//           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
+//           //         boostTime = 600;
+//           //     }
+//           //     
+//           //
+//           //     
+//           // }
 
-            #region Collision
-            foreach (Enemy enemy in enemies)
-            {
-                var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
-                var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
-                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
-                {
-                    enemy.isDead = true;
-                }
-            }
-            foreach (PowerUp powerup in powerups)
-            {
-                var xDiffPlayer = Math.Abs(powerup.Position.X - Player.Position.X);
-                var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
-                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
-                {
-                    powerup.isDead = true;
-                }
-            }
-
-
-            if (enemies.Count < wantedEnemies)
-            {
-                Enemy e = Enemy.enemySpawn(this);
-                if (e != null)
-                    enemies.Add(e);
-            }
-
-            if (powerups.Count < wantedPowerUps)
-            {
-                PowerUp p = PowerUp.powerUpSpawn(this);
-                if (p != null)
-                    powerups.Add(p);
-            }
+//            #region Collision
+//            foreach (Enemy enemy in enemies)
+//            {
+//                var xDiffPlayer = Math.Abs(enemy.Position.X - Player.Position.X);
+//                var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
+//                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+//                {
+//                    enemy.isDead = true;
+//                }
+//            }
+//            foreach (PowerUp powerup in powerups)
+//            {
+//                var xDiffPlayer = Math.Abs(powerup.Position.X - Player.Position.X);
+//                var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
+//                if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
+//                {
+//                    powerup.isDead = true;
+//                }
+//            }
 
 
+//            if (enemies.Count < wantedEnemies)
+//            {
+//                Enemy e = Enemy.enemySpawn(this);
+//                if (e != null)
+//                    enemies.Add(e);
+//            }
+
+//            if (powerups.Count < wantedPowerUps)
+//            {
+//                PowerUp p = PowerUp.powerUpSpawn(this);
+//                if (p != null)
+//                    powerups.Add(p);
+//            }
 
 
-            asteroid.Update(gameTime);
-            foreach (var BigAsteroid in asteroid._nrofAsteroids)
-            {
+
+
+//            asteroid.Update(gameTime);
+//            foreach (var BigAsteroid in asteroid._nrofAsteroids)
+//            {
                 
-                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
-                if (hitasteroid != null)
-                {
-                    if (playerInvincibilityTimer <= 0)
-                    {
-                        if (Player.Shield <= 0)
-                        {
-                            Player.Health -= 1;
-                            shieldTime = 200;
-                        }
-                        else
-                        {
-                            Player.Shield--;
-                            shieldTime = 200;
-                        }
+//                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(Player));
+//                if (hitasteroid != null)
+//                {
+//                    if (playerInvincibilityTimer <= 0)
+//                    {
+//                        if (Player.Shield <= 0)
+//                        {
+//                            Player.Health -= 1;
+//                            shieldTime = 200;
+//                        }
+//                        else
+//                        {
+//                            Player.Shield--;
+//                            shieldTime = 200;
+//                        }
 
-                        playerInvincibilityTimer = 10;
-                    }
-                    hitasteroid.isDead = true;
-                    for (int k = 0; k < 10; k++)
-                    {
-                        asteroid.miniStroid(hitasteroid.Position);
-                    }
-                }
-                break;
-            } 
-            foreach (var currentMiniAsteroid in asteroid._MiniStroids)
-            {
+//                        playerInvincibilityTimer = 10;
+//                    }
+//                    hitasteroid.isDead = true;
+//                    for (int k = 0; k < 10; k++)
+//                    {
+//                        asteroid.miniStroid(hitasteroid.Position);
+//                    }
+//                }
+//                break;
+//            } 
+//            foreach (var currentMiniAsteroid in asteroid._MiniStroids)
+//            {
 
-                if (currentMiniAsteroid.Timer <= 0)
-                {
-                    currentMiniAsteroid.isDead = true;
-                }
-                currentMiniAsteroid.Timer--;
+//                if (currentMiniAsteroid.Timer <= 0)
+//                {
+//                    currentMiniAsteroid.isDead = true;
+//                }
+//                currentMiniAsteroid.Timer--;
                 
-            }
-            asteroid.Timer--;
-            foreach (PowerUp powerup in powerups)
-            {
+//            }
+//            asteroid.Timer--;
+//            foreach (PowerUp powerup in powerups)
+//            {
 
-                PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
-                if (hitPowerup != null)
-                {
-                    Player.Health = 10;
-                    hitPowerup.isDead = true;
-                    Debug.WriteLine("Powerup!");
-                }
-            }
-            foreach (Shot shot in shots)
-            {
-                shot.Update(gameTime);
-                Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
-                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+//                PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
+//                if (hitPowerup != null)
+//                {
+//                    Player.Health = 10;
+//                    hitPowerup.isDead = true;
+//                    Debug.WriteLine("Powerup!");
+//                }
+//            }
+//            foreach (Shot shot in shots)
+//            {
+//                shot.Update(gameTime);
+//                Enemy enemy = enemies.FirstOrDefault(d => d.CollidesWith(shot));
+//                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
 
-                if (enemy != null)
-                {
-                    enemy.Health -= 1;
-                    if (enemy.Health <= 0)
-                    {
-                        enemy.isDead = true;
-                        Exp.currentEXP += enemy.ExpReward;
-                        Exp.currentScore += enemy.ScoreReward;
+//                if (enemy != null)
+//                {
+//                    enemy.Health -= 1;
+//                    if (enemy.Health <= 0)
+//                    {
+//                        enemy.isDead = true;
+//                        Exp.currentEXP += enemy.ExpReward;
+//                        Exp.currentScore += enemy.ScoreReward;
                         
-                    }
-                    enemyHit = true;
-                    enemyPositionExplosion = enemy.Position;
-                    Debug.WriteLine(enemyPositionExplosion);
-                    shot.isDead = true;
-                }
-                if (hitasteroid != null)
-                {
+//                    }
+//                    enemyHit = true;
+//                    enemyPositionExplosion = enemy.Position;
+//                    Debug.WriteLine(enemyPositionExplosion);
+//                    shot.isDead = true;
+//                }
+//                if (hitasteroid != null)
+//                {
                     
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid._nrofAsteroids.Remove(hitasteroid);
-                    Exp.currentScore += hitasteroid.ScoreReward;
-                    Debug.WriteLine(Exp.currentScore);
-                    shot.isDead = true;
-                }
-                shot.Timer--;
-                if (shot.Timer <= 0)
-                {
-                    shot.isDead = true;
-                }
-            }
-            foreach (Shot shot in enemyshots)
-            {
-                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid._nrofAsteroids.Remove(hitasteroid);
+//                    Exp.currentScore += hitasteroid.ScoreReward;
+//                    Debug.WriteLine(Exp.currentScore);
+//                    shot.isDead = true;
+//                }
+//                shot.Timer--;
+//                if (shot.Timer <= 0)
+//                {
+//                    shot.isDead = true;
+//                }
+//            }
+//            foreach (Shot shot in enemyshots)
+//            {
+//                Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
-                if (hitasteroid != null)
-                {
+//                if (hitasteroid != null)
+//                {
                     
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid.miniStroid(hitasteroid.Position);
-                    asteroid._nrofAsteroids.Remove(hitasteroid);
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid.miniStroid(hitasteroid.Position);
+//                    asteroid._nrofAsteroids.Remove(hitasteroid);
 
-                    shot.isDead = true;
-                }
+//                    shot.isDead = true;
+//                }
 
-                shot.Update(gameTime);
-                shot.Timer--;
-                if (shot.Timer <= 0)
-                {
-                    shot.isDead = true;
-                }
+//                shot.Update(gameTime);
+//                shot.Timer--;
+//                if (shot.Timer <= 0)
+//                {
+//                    shot.isDead = true;
+//                }
                 
-            }
-            foreach (Enemy e in enemies)
-            {
-                e.Update(gameTime, this);
-            }
-                Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
-                if (shotHit != null)
-                {
-                    if (playerInvincibilityTimer <= 0)
-                    {
-                        if (Player.Shield <= 0)
-                        {
-                            Player.Health -= 1;
-                            shieldTime = 500;
-                        }
-                        else
-                        {
-                            Player.Shield--;
-                            shieldTime = 500;
-                        }
+//            }
+//            foreach (Enemy e in enemies)
+//            {
+//                e.Update(gameTime, this);
+//            }
+//                Shot shotHit = enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
+//                if (shotHit != null)
+//                {
+//                    if (playerInvincibilityTimer <= 0)
+//                    {
+//                        if (Player.Shield <= 0)
+//                        {
+//                            Player.Health -= 1;
+//                            shieldTime = 500;
+//                        }
+//                        else
+//                        {
+//                            Player.Shield--;
+//                            shieldTime = 500;
+//                        }
 
-                        playerInvincibilityTimer = 10;
-                    }
-                    shotHit.isDead = true;
-                }
+//                        playerInvincibilityTimer = 10;
+//                    }
+//                    shotHit.isDead = true;
+//                }
 
-            if (Player.Health <= 0)
-            {
-                Player.Position = new Vector2(0,0);
-                Player.Health = Player.MaxHealth;
-                Player.Shield = Player.MaxShield;
-                Exp.currentScore = 0;
-                Exp.currentEXP = 0;
-            }
+//            if (Player.Health <= 0)
+//            {
+//                Player.Position = new Vector2(0,0);
+//                Player.Health = Player.MaxHealth;
+//                Player.Shield = Player.MaxShield;
+//                Exp.currentScore = 0;
+//                Exp.currentEXP = 0;
+//            }
             
 
-            if (Player.Shield < 10 && shieldTime <= 0)
-            {
-                Player.Shield++;
-                shieldTime = 40;
-                Debug.WriteLine(Player.Shield + " " + shieldTime);
-            }
-            if (shieldTime >= 0)
-            {
-                shieldTime--;
-            }
-            if (playerInvincibilityTimer >= 0)
-            {
-                playerInvincibilityTimer--;
-            }
-#endregion
+//            if (Player.Shield < 10 && shieldTime <= 0)
+//            {
+//                Player.Shield++;
+//                shieldTime = 40;
+//                Debug.WriteLine(Player.Shield + " " + shieldTime);
+//            }
+//            if (shieldTime >= 0)
+//            {
+//                shieldTime--;
+//            }
+//            if (playerInvincibilityTimer >= 0)
+//            {
+//                playerInvincibilityTimer--;
+//            }
+//#endregion
 
 
-            shots.RemoveAll(s => s.isDead);
-            enemyshots.RemoveAll(shot => shot.isDead);
-            enemies.RemoveAll(enemy => enemy.isDead);
-            powerups.RemoveAll(powerup => powerup.isDead);
-            asteroid._MiniStroids.RemoveAll(n => n.isDead);
-            asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
-            Player.Update(gameTime);
-            previousKbState = state;
-            ui.Update(gameTime);
-            boost.Update(gameTime);
-            camera.Update(gameTime, Player);
+//            shots.RemoveAll(s => s.isDead);
+//            enemyshots.RemoveAll(shot => shot.isDead);
+//            enemies.RemoveAll(enemy => enemy.isDead);
+//            powerups.RemoveAll(powerup => powerup.isDead);
+//            asteroid._MiniStroids.RemoveAll(n => n.isDead);
+//            asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
+//            Player.Update(gameTime);
+//            previousKbState = state;
+//            ui.Update(gameTime);
+//            boost.Update(gameTime);
+//            camera.Update(gameTime, Player);
 
-            if (reloadTime >= 0)
-            {
-                reloadTime--;
-            }
-            if (soundEffectTimer > 0)
-                soundEffectTimer--;
-            //if (boostTime >= 0)
-            //    boostTime--;
+//            if (reloadTime >= 0)
+//            {
+//                reloadTime--;
+//            }
+//            if (soundEffectTimer > 0)
+//                soundEffectTimer--;
+//            //if (boostTime >= 0)
+//            //    boostTime--;
 
             base.Update(gameTime);
         }
@@ -432,96 +708,202 @@ namespace Space_Scavenger
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
-
-
-
-            for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+            switch (gamestate)
             {
-                for (int x = -10000; x < 10000; x += backgroundTexture.Width)
-                {
-                    spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    case GameState.Menu:
+                    break;
+                    case GameState.Playing:
+                    #region state playing
+                    GraphicsDevice.Clear(Color.CornflowerBlue);
 
-                }
+                    // TODO: Add your drawing code here
+
+                    base.Draw(gameTime);
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+
+
+
+                    for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+                    {
+                        for (int x = -10000; x < 10000; x += backgroundTexture.Width)
+                        {
+                            spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+
+                        }
+                    }
+
+                    foreach (Asteroid mini in asteroid._MiniStroids)
+                    {
+                        spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+                    }
+                    for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
+                    {
+                        switch (asteroid._nrofAsteroids[i].chosenTexture)
+                        {
+                            case 1:
+                                spriteBatch.Draw(asteroid.asterTexture2D1, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D1.Width / 2f, asteroid.asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 2:
+                                spriteBatch.Draw(asteroid.asterTexture2D2, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D2.Width / 2f, asteroid.asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 3:
+                                spriteBatch.Draw(asteroid.asterTexture2D3, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D3.Width / 2f, asteroid.asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 4:
+                                spriteBatch.Draw(asteroid.asterTexture2D4, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D4.Width / 2f, asteroid.asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                        }
+
+                        /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
+                          {                                                   anti integer overflow system. Activate if it happens
+                              _nrofAsteroids[i].RotationCounter = 0;
+                          }*/
+                    }
+
+
+
+
+
+                    foreach (Shot s in shots)
+                    {
+                        spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (Shot s in enemyshots)
+                    {
+                        spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (Enemy e in enemies)
+                    {
+                        spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (PowerUp p in powerups)
+                    {
+                        spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
+                    }
+
+                    spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+                    Player.Draw(spriteBatch);
+
+                    spaceStationRotation += 0.01f;
+
+                    if (enemyHit)
+                    {
+                        spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+                        enemyHit = false;
+                    }
+
+
+                    spriteBatch.End();
+
+                    ui.Draw(gameTime);
+                    #endregion state playing
+                    break;
+                    case GameState.Paused:
+                    break;
+                    case GameState.Shopping:
+                    break;
+                    case GameState.Gameover:
+                    break;
             }
 
-            foreach (Asteroid mini in asteroid._MiniStroids)
-            {
-                spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
-            }
-            for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
-            {
-                switch (asteroid._nrofAsteroids[i].chosenTexture)
-                {
-                    case 1:
-                        spriteBatch.Draw(asteroid.asterTexture2D1, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D1.Width / 2f, asteroid.asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
-                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
-                        break;
-                    case 2:
-                        spriteBatch.Draw(asteroid.asterTexture2D2, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D2.Width / 2f, asteroid.asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
-                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
-                        break;
-                    case 3:
-                        spriteBatch.Draw(asteroid.asterTexture2D3, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D3.Width / 2f, asteroid.asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
-                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
-                        break;
-                    case 4:
-                        spriteBatch.Draw(asteroid.asterTexture2D4, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D4.Width / 2f, asteroid.asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
-                        asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
-                        break;
-                }
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
 
-                /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
-                  {                                                   anti integer overflow system. Activate if it happens
-                      _nrofAsteroids[i].RotationCounter = 0;
-                  }*/
-            }
+            //// TODO: Add your drawing code here
+
+            //base.Draw(gameTime);
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+
+
+
+            //for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+            //{
+            //    for (int x = -10000; x < 10000; x += backgroundTexture.Width)
+            //    {
+            //        spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+
+            //    }
+            //}
+
+            //foreach (Asteroid mini in asteroid._MiniStroids)
+            //{
+            //    spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+            //}
+            //for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
+            //{
+            //    switch (asteroid._nrofAsteroids[i].chosenTexture)
+            //    {
+            //        case 1:
+            //            spriteBatch.Draw(asteroid.asterTexture2D1, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D1.Width / 2f, asteroid.asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+            //            asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+            //            break;
+            //        case 2:
+            //            spriteBatch.Draw(asteroid.asterTexture2D2, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D2.Width / 2f, asteroid.asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
+            //            asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+            //            break;
+            //        case 3:
+            //            spriteBatch.Draw(asteroid.asterTexture2D3, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D3.Width / 2f, asteroid.asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
+            //            asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+            //            break;
+            //        case 4:
+            //            spriteBatch.Draw(asteroid.asterTexture2D4, asteroid._nrofAsteroids[i].Position, null, Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter, new Vector2(asteroid.asterTexture2D4.Width / 2f, asteroid.asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
+            //            asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+            //            break;
+            //    }
+
+            //    /*  if (_nrofAsteroids[i].RotationCounter > 2000000000 || _nrofAsteroids[i].RotationCounter < -2000000000)
+            //      {                                                   anti integer overflow system. Activate if it happens
+            //          _nrofAsteroids[i].RotationCounter = 0;
+            //      }*/
+            //}
 
 
 
             
 
-            foreach (Shot s in shots)
-            {
-                spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height/2), 1.0f, SpriteEffects.None, 0f);
-            }
+            //foreach (Shot s in shots)
+            //{
+            //    spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height/2), 1.0f, SpriteEffects.None, 0f);
+            //}
 
-            foreach (Shot s in enemyshots)
-            {
-                spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
-            }
+            //foreach (Shot s in enemyshots)
+            //{
+            //    spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+            //}
 
-            foreach (Enemy e in enemies)
-            {
-                spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
-            }
+            //foreach (Enemy e in enemies)
+            //{
+            //    spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
+            //}
 
-            foreach (PowerUp p in powerups)
-            {
-                spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
-            }
+            //foreach (PowerUp p in powerups)
+            //{
+            //    spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
+            //}
 
-            spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
-            Player.Draw(spriteBatch);
+            //Player.Draw(spriteBatch);
 
-            spaceStationRotation += 0.01f;
+            //spaceStationRotation += 0.01f;
 
-            if (enemyHit)
-            {
-                spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
-                enemyHit = false;
-            }
+            //if (enemyHit)
+            //{
+            //    spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+            //    enemyHit = false;
+            //}
 
             
-            spriteBatch.End();
+            //spriteBatch.End();
             
-            ui.Draw(gameTime);
+            //ui.Draw(gameTime);
         }
     }
 }
