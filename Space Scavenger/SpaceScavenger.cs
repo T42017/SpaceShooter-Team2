@@ -42,6 +42,7 @@ namespace Space_Scavenger
         private int reloadTime = 0;
         //public int boostTime = 0;
         private int shieldTime = 0;
+        private int _shoptimer = 0;
 
         private int wantedEnemies = 15;
         private int wantedPowerUps = 5;
@@ -109,7 +110,7 @@ namespace Space_Scavenger
             Components.Add(_gameOverScreen);
             _shop = new Shop(this);
             Components.Add(_shop);
-            gamestate = GameState.GameOver;
+            gamestate = GameState.Playing;
             
 
 
@@ -167,22 +168,36 @@ namespace Space_Scavenger
         protected override void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+           
             switch (gamestate)
             {
                 case GameState.Menu:
                     #region Menu
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                        Exit();
+
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                     {
                         gamestate = GameState.Playing;
                     }
                     #endregion
+
                     break;
                 case GameState.Playing:
                     #region Playing
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.L) && _shoptimer <= 0)
+                    {
+                        gamestate = GameState.Shopping;
+                        _shoptimer = 10;
+                    }
+                    else
+                    {
+                        _shoptimer--;
+                    }
+                   
                     if (state.IsKeyDown(Keys.Up))
                     {
                         Player.Accelerate();
@@ -432,8 +447,7 @@ namespace Space_Scavenger
                     }
                     if (soundEffectTimer > 0)
                         soundEffectTimer--;
-                    //if (boostTime >= 0)
-                    //    boostTime--;
+                    
                     #endregion playing
                     break;
 
@@ -443,7 +457,25 @@ namespace Space_Scavenger
                     break;
                 case GameState.Shopping:
                     #region Shopping
-#endregion Shopping
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                        Exit();
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.L) && _shoptimer <= 0)
+                    {
+                        gamestate = GameState.Playing;
+                        _shoptimer = 10;
+                    }
+                    else if(_shoptimer > 0)
+                    {
+                        _shoptimer--;
+                    }
+                    Player.Speed = new Vector2(0, 0);
+
+                    _shop.Update(gameTime);
+                      
+            
+            
+                    #endregion Shopping
                     break;
                 case GameState.GameOver:
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
@@ -557,9 +589,102 @@ namespace Space_Scavenger
                     case GameState.Paused:
                     break;
                     case GameState.Shopping:
+                    #region Shopping
+                    GraphicsDevice.Clear(Color.CornflowerBlue);
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+
+                    for (int y = -10000; y < 10000; y += backgroundTexture.Width)
+                    {
+                        for (int x = -10000; x < 10000; x += backgroundTexture.Width)
+                        {
+                            spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+
+                        }
+                    }
+
+                    foreach (Asteroid mini in asteroid._MiniStroids)
+                    {
+                        spriteBatch.Draw(asteroid.MinitETexture2D1, mini.Position, Color.White);
+                    }
+                    for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
+                    {
+                        switch (asteroid._nrofAsteroids[i].chosenTexture)
+                        {
+                            case 1:
+                                spriteBatch.Draw(asteroid.asterTexture2D1, asteroid._nrofAsteroids[i].Position, null,
+                                    Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter,
+                                    new Vector2(asteroid.asterTexture2D1.Width / 2f,
+                                        asteroid.asterTexture2D1.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 2:
+                                spriteBatch.Draw(asteroid.asterTexture2D2, asteroid._nrofAsteroids[i].Position, null,
+                                    Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter,
+                                    new Vector2(asteroid.asterTexture2D2.Width / 2f,
+                                        asteroid.asterTexture2D2.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 3:
+                                spriteBatch.Draw(asteroid.asterTexture2D3, asteroid._nrofAsteroids[i].Position, null,
+                                    Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter,
+                                    new Vector2(asteroid.asterTexture2D3.Width / 2f,
+                                        asteroid.asterTexture2D3.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                            case 4:
+                                spriteBatch.Draw(asteroid.asterTexture2D4, asteroid._nrofAsteroids[i].Position, null,
+                                    Color.White, asteroid.Rotation + asteroid._nrofAsteroids[i].RotationCounter,
+                                    new Vector2(asteroid.asterTexture2D4.Width / 2f,
+                                        asteroid.asterTexture2D4.Height / 2f), 1f, SpriteEffects.None, 0f);
+                                asteroid._nrofAsteroids[i].RotationCounter += asteroid._nrofAsteroids[i].addCounter;
+                                break;
+                        }
+                    }
+
+                    foreach (Shot s in shots)
+                    {
+                        spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (Shot s in enemyshots)
+                    {
+                        spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (Enemy e in enemies)
+                    {
+                        spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
+                    }
+
+                    foreach (PowerUp p in powerups)
+                    {
+                        spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
+                    }
+
+                    spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+                    Player.Draw(spriteBatch);
+
+                    spaceStationRotation += 0.01f;
+
+                    if (enemyHit)
+                    {
+                        spriteBatch.Draw(enemyDamage, enemyPositionExplosion, null, Color.White, 1f, new Vector2(enemyDamage.Width / 2f, enemyDamage.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+                        enemyHit = false;
+                    }
+
+                    base.Draw(gameTime);
+                    spriteBatch.End();
+
+                    _ui.Draw(gameTime);
+                    _shop.Draw(gameTime);
+                    #endregion Shopping
                     break;
                     case GameState.GameOver:
+                    #region GameOver
+                    GraphicsDevice.Clear(Color.Black);
                     _gameOverScreen.Draw(gameTime);
+#endregion
                     break;
             }
 
