@@ -54,6 +54,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="PowerUp.cs" />
+    <Compile Include="Shop.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="SpaceScavenger.cs" />
     <Compile Include="Program.cs" />
