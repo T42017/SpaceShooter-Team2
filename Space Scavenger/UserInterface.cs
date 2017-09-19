@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
@@ -66,12 +61,18 @@ namespace Space_Scavenger
             // Health
             _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),new Color(255, 0, 226));
             _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 810 + _healthbarMiddle.Width * _myGame.Player.MaxHealth, _position.Y - 530), Color.White);
+            // BossHealth
+            if (_myGame.bosses.Count > 0)
+            {
+                _spriteBatch.DrawString(_scoreFont, "BossHealth: ", new Vector2((Globals.ScreenWidth / 2 - 170), 9), new Color(255, 0, 226));
+                _spriteBatch.DrawString(_healthFont, _myGame.bosses[0].Health * 2 + "%", new Vector2((Globals.ScreenWidth / 2 + 50), 10), Color.White);
+            }
             //Shield
             _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);
             _spriteBatch.DrawString(_healthFont, _myGame.Player.Shield * 10 + "%", new Vector2(_position.X - 810 + _healthbarMiddle.Width * _myGame.Player.MaxShield, _position.Y - 490), Color.White);
             //Score and Currency
-            _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.currentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
-            _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.currentEXP, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
+            _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.CurrentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
+            _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.CurrentExp, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
             // Boost
             _spriteBatch.DrawString(_scoreFont, "Boost: ", new Vector2(_position.X - 940, _position.Y - 450), Color.White );
            

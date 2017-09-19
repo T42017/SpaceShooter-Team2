@@ -37,6 +37,8 @@ namespace Space_Scavenger
         private Texture2D enemyTexture;
         private Texture2D spaceStation;
         private Texture2D moneyTexture;
+        public Texture2D BossShotTexture;
+        public Texture2D BossShotTexture2;
         private Texture2D enemyLaserTexture;
         private Texture2D _powerUpHealth;
         private SoundEffect laserEffect;
@@ -70,7 +72,8 @@ namespace Space_Scavenger
         public List<Shot> Enemyshots = new List<Shot>();
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly List<PowerUp> _powerups = new List<PowerUp>();
-        private readonly List<BossEnemy> bosses = new List<BossEnemy>();
+        public readonly List<Shot> BossShots = new List<Shot>();
+        public readonly List<BossEnemy> bosses = new List<BossEnemy>();
 
 
 
@@ -136,12 +139,14 @@ namespace Space_Scavenger
             _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
             enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
             moneyTexture = Content.Load<Texture2D>("Money");
+            BossShotTexture = Content.Load<Texture2D>("BossShotNeon");
+            BossShotTexture2 = Content.Load<Texture2D>("BossShotNeon2");
             laserEffect = Content.Load<SoundEffect>("laserShoot");
             enemyDamage = Content.Load<Texture2D>("burst");
             spaceStation = Content.Load<Texture2D>("spaceStation");
             EnemyShootEffect = Content.Load<SoundEffect>("enemyShoot");
             enemyLaserTexture= Content.Load<Texture2D>("laserRed");
-            bossTexture = Content.Load<Texture2D>("boss");
+            bossTexture = Content.Load<Texture2D>("ufoBlue");
             asteroid.asterTexture2D1 = Content.Load<Texture2D>("Meteor1Neon");
             asteroid.asterTexture2D2 = Content.Load<Texture2D>("Meteor2Neon");
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
@@ -243,7 +248,7 @@ namespace Space_Scavenger
                         var yDiffPlayer = Math.Abs(enemy.Position.Y - Player.Position.Y);
                         if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
                         {
-                            enemy.isDead = true;
+                            enemy.IsDead = true;
                         }
                     }
                     foreach (PowerUp powerup in _powerups)
@@ -252,7 +257,7 @@ namespace Space_Scavenger
                         var yDiffPlayer = Math.Abs(powerup.Position.Y - Player.Position.Y);
                         if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
                         {
-                            powerup.isDead = true;
+                            powerup.IsDead = true;
                         }
                     }
 
@@ -263,11 +268,12 @@ namespace Space_Scavenger
                         if (e != null)
                             _enemies.Add(e);
                     }
-                    if (bosses.Count < 1)
-                    {
-                        BossEnemy be = BossEnemy.SpawnBoss(this);
-                        if (be != null)
-                            bosses.Add(be);
+                    if (Exp.CurrentEnemiesKilled > 14)
+                    { 
+                            BossEnemy be = BossEnemy.SpawnBoss(this);
+                            if (be != null)
+                                bosses.Add(be);
+                        Exp.CurrentEnemiesKilled = 0;
                     }
 
                     if (_powerups.Count < wantedPowerUps)
@@ -299,7 +305,7 @@ namespace Space_Scavenger
 
                                 playerInvincibilityTimer = 10;
                             }
-                            hitasteroid.isDead = true;
+                            hitasteroid.IsDead = true;
                             for (int k = 0; k < 10; k++)
                             {
                                 asteroid.miniStroid(hitasteroid.Position);
@@ -312,7 +318,7 @@ namespace Space_Scavenger
 
                         if (currentMiniAsteroid.Timer <= 0)
                         {
-                            currentMiniAsteroid.isDead = true;
+                            currentMiniAsteroid.IsDead = true;
                         }
                         currentMiniAsteroid.Timer--;
 
@@ -325,8 +331,16 @@ namespace Space_Scavenger
                         if (hitPowerup != null)
                         {
                             Player.Health = 10;
-                            hitPowerup.isDead = true;
+                            hitPowerup.IsDead = true;
                             Debug.WriteLine("Powerup!");
+                        }
+                    }
+                    foreach (Shot bs in BossShots)
+                    {
+                        bs.Timer--;
+                        if (bs.Timer <= 0)
+                        {
+                            bs.IsDead = true;
                         }
                     }
                     foreach (Shot shot in Shots)
@@ -341,27 +355,27 @@ namespace Space_Scavenger
                             enemy.Health -= 1;
                             if (enemy.Health <= 0)
                             {
-                                enemy.isDead = true;
-                                Exp.currentScore += enemy.ScoreReward;
+                                enemy.IsDead = true;
+                                Exp.CurrentScore += enemy.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 5); i++)
                                 {
                                     Money.MoneyRoid(enemy.Position + new Vector2(rand.Next(-50, 50)));
                                 }
-
+                                Exp.CurrentEnemiesKilled++;
                             }
                             enemyHit = true;
                             enemyPositionExplosion = enemy.Position;
                             Debug.WriteLine(enemyPositionExplosion);
-                            shot.isDead = true;
+                            shot.IsDead = true;
                         }
                         if (hitBoss != null)
                         {
                             hitBoss.Health -= 1;
                             if (hitBoss.Health <= 0)
                             {
-                                hitBoss.isDead = true;
-                                Exp.currentScore += hitBoss.ScoreReward;
-                                for (int i = 0; i < rand.Next(1, 30); i++)
+                                hitBoss.IsDead = true;
+                                Exp.CurrentScore += hitBoss.ScoreReward;
+                                for (int i = 0; i < rand.Next(20, 30); i++)
                                 {
                                     Money.MoneyRoid(hitBoss.Position + new Vector2(rand.Next(-100, 100)));
                                 }
@@ -370,7 +384,7 @@ namespace Space_Scavenger
                             enemyHit = true;
                             enemyPositionExplosion = hitBoss.Position;
                             Debug.WriteLine(enemyPositionExplosion);
-                            shot.isDead = true;
+                            shot.IsDead = true;
                         }
                         if (hitasteroid != null)
                         {
@@ -379,14 +393,14 @@ namespace Space_Scavenger
                             asteroid.miniStroid(hitasteroid.Position);
                             asteroid.miniStroid(hitasteroid.Position);
                             asteroid._nrofAsteroids.Remove(hitasteroid);
-                            Exp.currentScore += hitasteroid.ScoreReward;
-                            Debug.WriteLine(Exp.currentScore);
-                            shot.isDead = true;
+                            Exp.CurrentScore += hitasteroid.ScoreReward;
+                            Debug.WriteLine(Exp.CurrentScore);
+                            shot.IsDead = true;
                         }
                         shot.Timer--;
                         if (shot.Timer <= 0)
                         {
-                            shot.isDead = true;
+                            shot.IsDead = true;
                         }
                     }
                     foreach (Shot shot in Enemyshots)
@@ -401,14 +415,14 @@ namespace Space_Scavenger
                             asteroid.miniStroid(hitasteroid.Position);
                             asteroid._nrofAsteroids.Remove(hitasteroid);
 
-                            shot.isDead = true;
+                            shot.IsDead = true;
                         }
 
                         shot.Update(gameTime);
                         shot.Timer--;
                         if (shot.Timer <= 0)
                         {
-                            shot.isDead = true;
+                            shot.IsDead = true;
                         }
 
                     }
@@ -418,9 +432,13 @@ namespace Space_Scavenger
                     }
                     foreach (BossEnemy be in bosses)
                     {
-                        be.Update(gameTime);
+                        be.Update(gameTime, this);
                     }
 
+                    foreach (Shot s in BossShots)
+                    {
+                        s.Update(gameTime);
+                    }
 
                     Shot shotHit = Enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
                     if (shotHit != null)
@@ -440,13 +458,35 @@ namespace Space_Scavenger
 
                             playerInvincibilityTimer = 10;
                         }
-                        shotHit.isDead = true;
+                        shotHit.IsDead = true;
                     }
+                    Shot bossShot = BossShots.FirstOrDefault(be => be.CollidesWith(Player));
+                    if (bossShot != null)
+                    {
+                        if (playerInvincibilityTimer <= 0)
+                        {
+                            if (Player.Shield <= 0)
+                            {
+                                Player.Health -= 1;
+                                shieldTime = 500;
+                            }
+                            else
+                            {
+                                Player.Shield--;
+                                shieldTime = 500;
+                            }
+
+                            playerInvincibilityTimer = 10;
+                        }
+                        bossShot.IsDead = true;
+                    }
+                    
+
                     Asteroid moneyHit = Money.Moneyroids.FirstOrDefault(m => m.CollidesWith(Player));
                     if (moneyHit != null)
                     {
-                        moneyHit.isDead = true;
-                        Exp.currentEXP += 50;
+                        moneyHit.IsDead = true;
+                        Exp.CurrentExp += 50;
                     }
 
 
@@ -455,8 +495,8 @@ namespace Space_Scavenger
                         Player.Position = new Vector2(0, 0);
                         Player.Health = Player.MaxHealth;
                         Player.Shield = Player.MaxShield;
-                        Exp.currentScore = 0;
-                        Exp.currentEXP = 0;
+                        Exp.CurrentScore = 0;
+                        Exp.CurrentExp = 0;
                     }
 
 
@@ -477,13 +517,15 @@ namespace Space_Scavenger
                     #endregion
 
 
-                    Shots.RemoveAll(s => s.isDead);
-                    Enemyshots.RemoveAll(shot => shot.isDead);
-                    _enemies.RemoveAll(enemy => enemy.isDead);
-                    _powerups.RemoveAll(powerup => powerup.isDead);
-                    asteroid._MiniStroids.RemoveAll(n => n.isDead);
-                    asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
-                    Money.Moneyroids.RemoveAll(money => money.isDead);
+                    Shots.RemoveAll(s => s.IsDead);
+                    BossShots.RemoveAll(bs => bs.IsDead);
+                    Enemyshots.RemoveAll(shot => shot.IsDead);
+                    _enemies.RemoveAll(enemy => enemy.IsDead);
+                    _powerups.RemoveAll(powerup => powerup.IsDead);
+                    asteroid._MiniStroids.RemoveAll(n => n.IsDead);
+                    asteroid._nrofAsteroids.RemoveAll(j => j.IsDead);
+                    Money.Moneyroids.RemoveAll(money => money.IsDead);
+                    bosses.RemoveAll(b => b.IsDead);
                     Player.Update(gameTime);
                     _previousKbState = state;
                     ui.Update(gameTime);
@@ -561,10 +603,7 @@ namespace Space_Scavenger
                 spriteBatch.Draw(moneyTexture, money.Position, null, Color.White, money.Rotation + money.RotationCounter, new Vector2(moneyTexture.Width / 2f, moneyTexture.Height / 2f), 0.7f, SpriteEffects.None, 0f);
             }
 
-            foreach (BossEnemy boss in bosses)
-            {
-                spriteBatch.Draw(bossTexture, boss.Position, null, Color.White, boss.Rotation, new Vector2(bossTexture.Width / 2f, bossTexture.Height / 2f), 3f, SpriteEffects.None, 0f);
-            }
+
 
             for (int i = 0; i < asteroid._nrofAsteroids.Count; i++)
             {
@@ -604,6 +643,12 @@ namespace Space_Scavenger
                         spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
+                    foreach (Shot s in BossShots)
+                    {
+                                spriteBatch.Draw(s.chosenTexture2D, s.Position, null, Color.White, s.Rotation, new Vector2(BossShotTexture.Width / 2, BossShotTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                    }
+
+
                     foreach (Enemy e in _enemies)
                     {
                         spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
@@ -613,6 +658,11 @@ namespace Space_Scavenger
                     {
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }
+
+                        foreach (BossEnemy boss in bosses)
+                        {
+                            spriteBatch.Draw(bossTexture, boss.Position, null, Color.White, spaceStationRotation, new Vector2(bossTexture.Width / 2f, bossTexture.Height / 2f), 1f, SpriteEffects.None, 0f);
+                        }
 
                     spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 

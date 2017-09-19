@@ -71,7 +71,7 @@ namespace Space_Scavenger
                 asteroid.Position += asteroid.Speed;
                     if (xDiffPlayer > 3000 || yDiffPlayer > 3000)
                     {
-                        asteroid.isDead = true;
+                        asteroid.IsDead = true;
                     }
                 }
                 for (int i = 0; i < _nrofAsteroids.Count; i++)

@@ -11,7 +11,7 @@ namespace Space_Scavenger
 {
     public class Player : DrawableGameComponent, IGameObject
     {
-        public bool isDead { get; set; }
+        public bool IsDead { get; set; }
         public Vector2 Position { get; set; }
         public float Radius { get; set; }
         public Vector2 Speed { get; set; }
