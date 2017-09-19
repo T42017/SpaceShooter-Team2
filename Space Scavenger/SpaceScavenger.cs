@@ -51,7 +51,7 @@ namespace Space_Scavenger
         bool enemyHit = false;
         public GameObject gameObject;
         private Texture2D enemyDamage;
-        public SoundEffect enemyShootEffect;
+        public SoundEffect enemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         public PowerUp PowerUp { get; private set; }
@@ -134,6 +134,14 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4Neon");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteor");
+            PlayerDamage = Content.Load<SoundEffect>("PlayerDamage");
+            PlayerHitAsteoid = Content.Load<SoundEffect>("PlayerHitAsteroid");
+            ShieldRegenerating = Content.Load<SoundEffect>("ShieldRegenerating");
+            ShieldDestroyed = Content.Load<SoundEffect>("ShieldDestroyed");
+            ShieldUp = Content.Load<SoundEffect>("ShieldUp");
+            HealthPickup = Content.Load<SoundEffect>("HealthPickup");
+            MeteorExplosion = Content.Load<SoundEffect>("ExplosionMeteor");
+            ShieldDamage = Content.Load<SoundEffect>("ShieldDamage");
             //Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
             //agr = Content.Load<SoundEffect>("AGR");
@@ -182,7 +190,7 @@ namespace Space_Scavenger
                     Shot s = Player.Shoot();
                     if (s != null)
                         shots.Add(s);
-                    reloadTime = 10;
+                    reloadTime = 1;
                 }
                 
             }
@@ -193,22 +201,6 @@ namespace Space_Scavenger
             {
                 Player.Speed = new Vector2(0,0);
             }
-
-
-
-
-           // if (state.IsKeyDown(Keys.X) && previousKbState.IsKeyDown(Keys.X) != state.IsKeyDown(Keys.X))
-           // {
-           //     if (boostTime <= 0)
-           //     {
-           //         Player.Speed = new Vector2((float)Math.Cos(Player.Rotation), (float)Math.Sin(Player.Rotation)) * 20f;
-           //         boostTime = 600;
-           //     }
-           //     
-           //
-           //     
-           // }
-
             #region Collision
             foreach (Enemy enemy in enemies)
             {
@@ -258,11 +250,13 @@ namespace Space_Scavenger
                     {
                         if (Player.Shield <= 0)
                         {
+                            PlayerHitAsteoid.Play();
                             Player.Health -= 1;
                             shieldTime = 200;
                         }
                         else
                         {
+                            PlayerHitAsteoid.Play();
                             Player.Shield--;
                             shieldTime = 200;
                         }
@@ -294,6 +288,7 @@ namespace Space_Scavenger
                 PowerUp hitPowerup = powerups.FirstOrDefault(e => e.CollidesWith(Player));
                 if (hitPowerup != null)
                 {
+                    HealthPickup.Play();
                     Player.Health = 10;
                     hitPowerup.isDead = true;
                     Debug.WriteLine("Powerup!");
@@ -311,6 +306,7 @@ namespace Space_Scavenger
                     enemy.Health -= 1;
                     if (enemy.Health <= 0)
                     {
+                        MeteorExplosion.Play();
                         enemy.isDead = true;
                         Exp.currentEXP += enemy.ExpReward;
                         Exp.currentScore += enemy.ScoreReward;
@@ -323,7 +319,13 @@ namespace Space_Scavenger
                 }
                 if (hitasteroid != null)
                 {
-                    
+                    var xDiffPlayer = Math.Abs(hitasteroid.Position.X - Player.Position.X);
+                    var yDiffPlayer = Math.Abs(hitasteroid.Position.Y - Player.Position.Y);
+                    if (yDiffPlayer < 1300 && xDiffPlayer < 1300)
+                    {
+                        MeteorExplosion.Play();
+                    }
+
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -344,7 +346,7 @@ namespace Space_Scavenger
 
                 if (hitasteroid != null)
                 {
-                    
+                    MeteorExplosion.Play();
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
                     asteroid.miniStroid(hitasteroid.Position);
@@ -372,15 +374,23 @@ namespace Space_Scavenger
                     {
                         if (Player.Shield <= 0)
                         {
+                            PlayerDamage.Play();
                             Player.Health -= 1;
                             shieldTime = 500;
                         }
                         else
                         {
                             Player.Shield--;
-                            shieldTime = 500;
+                        if (Player.Shield == 0)
+                            {
+                                ShieldDestroyed.Play();
+                            }
+                            else
+                            {
+                                ShieldDamage.Play();
+                            }
+                        shieldTime = 500;
                         }
-
                         playerInvincibilityTimer = 10;
                     }
                     shotHit.isDead = true;
@@ -398,7 +408,16 @@ namespace Space_Scavenger
 
             if (Player.Shield < 10 && shieldTime <= 0)
             {
+                
                 Player.Shield++;
+                if (Player.Shield == 10)
+                {
+                    ShieldUp.Play();
+                }
+                else
+                {
+                    ShieldRegenerating.Play();
+                }
                 shieldTime = 40;
                 Debug.WriteLine(Player.Shield + " " + shieldTime);
             }

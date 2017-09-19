@@ -405,3 +405,51 @@
 /processorParam:Quality=Best
 /build:backgroundMusicNeon.wav
 
+#begin ExplosionMeteor.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ExplosionMeteor.wav
+
+#begin HealthPickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:HealthPickup.wav
+
+#begin PlayerDamage.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PlayerDamage.wav
+
+#begin PlayerHitAsteroid.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PlayerHitAsteroid.wav
+
+#begin ShieldRegenerating.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ShieldRegenerating.wav
+
+#begin ShieldUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ShieldUp.wav
+
+#begin ShieldDestroyed.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ShieldDestroyed.wav
+
+#begin ShieldDamage.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ShieldDamage.wav
+
