@@ -58,7 +58,7 @@ namespace Space_Scavenger
         bool enemyHit = false;
         public GameObject gameObject;
         private Texture2D enemyDamage;
-        public SoundEffect EnemyShootEffect;
+        public SoundEffect enemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         public BossEnemy BossEnemy { get; private set; }
@@ -153,6 +153,14 @@ namespace Space_Scavenger
             asteroid.asterTexture2D3 = Content.Load<Texture2D>("Meteor3Neon");
             asteroid.asterTexture2D4 = Content.Load<Texture2D>("Meteor4Neon");
             asteroid.MinitETexture2D1 = Content.Load<Texture2D>("tMeteorNeon");
+            PlayerDamage = Content.Load<SoundEffect>("PlayerDamage");
+            PlayerHitAsteoid = Content.Load<SoundEffect>("PlayerHitAsteroid");
+            ShieldRegenerating = Content.Load<SoundEffect>("ShieldRegenerating");
+            ShieldDestroyed = Content.Load<SoundEffect>("ShieldDestroyed");
+            ShieldUp = Content.Load<SoundEffect>("ShieldUp");
+            HealthPickup = Content.Load<SoundEffect>("HealthPickup");
+            MeteorExplosion = Content.Load<SoundEffect>("ExplosionMeteor");
+            ShieldDamage = Content.Load<SoundEffect>("ShieldDamage");
             //Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
             //agr = Content.Load<SoundEffect>("AGR");
