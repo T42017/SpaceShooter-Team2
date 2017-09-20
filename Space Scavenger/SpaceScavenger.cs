@@ -355,10 +355,10 @@ namespace Space_Scavenger
 
                         if (enemy != null)
                         {
-                            MeteorExplosion.Play();
                             enemy.Health -= 1;
                             if (enemy.Health <= 0)
                             {
+                                MeteorExplosion.Play();
                                 enemy.isDead = true;
                                 Exp.currentScore += enemy.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 5); i++)
@@ -377,6 +377,7 @@ namespace Space_Scavenger
                             hitBoss.Health -= 1;
                             if (hitBoss.Health <= 0)
                             {
+                                MeteorExplosion.Play();
                                 hitBoss.isDead = true;
                                 Exp.currentScore += hitBoss.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 30); i++)
@@ -392,7 +393,12 @@ namespace Space_Scavenger
                         }
                         if (hitasteroid != null)
                         {
-
+                            var xDiffPlayer = Math.Abs(hitasteroid.Position.X - Player.Position.X);
+                            var yDiffPlayer = Math.Abs(hitasteroid.Position.Y - Player.Position.Y);
+                            if (yDiffPlayer < 1300 && xDiffPlayer < 1300)
+                            {
+                                MeteorExplosion.Play();
+                            }
                             asteroid.miniStroid(hitasteroid.Position);
                             asteroid.miniStroid(hitasteroid.Position);
                             asteroid.miniStroid(hitasteroid.Position);
