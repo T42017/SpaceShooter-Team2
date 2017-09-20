@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Space_Scavenger
@@ -14,14 +9,15 @@ namespace Space_Scavenger
         public SpriteFont _scoreFont { get; private set; }
         private SpriteFont _healthFont;
         private SpriteBatch _spriteBatch;
-
         private Texture2D _healthBarLeft;
         private Texture2D _healthbarMiddle;
         private Texture2D _healthbarRight;
         private Texture2D _shieldBarLeft;
         private Texture2D _shieldBarMiddle;
+        private Texture2D _ArrowTexture;
         private Texture2D _shieldBarRight;
         private Texture2D _boosticon;
+        private Texture2D CompassTexture;
         private readonly SpaceScavenger _myGame;
         private Vector2 _position;
         
@@ -36,8 +32,8 @@ namespace Space_Scavenger
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            
-            
+
+            CompassTexture = Game.Content.Load<Texture2D>("Compass");
             _scoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
             _healthFont = Game.Content.Load<SpriteFont>("HealthFont");
             _healthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_purple_left");
@@ -47,6 +43,7 @@ namespace Space_Scavenger
             _shieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
             _shieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
             _boosticon = Game.Content.Load<Texture2D>("powerupBlue_bolt");
+            _ArrowTexture = Game.Content.Load<Texture2D>("Arrow");
 
             base.LoadContent();
         }
@@ -66,12 +63,18 @@ namespace Space_Scavenger
             // Health
             _spriteBatch.DrawString(_scoreFont, "Health: ", new Vector2(_position.X - 940, _position.Y - 530),new Color(255, 0, 226));
             _spriteBatch.DrawString(_healthFont, _myGame.Player.Health * 10 + "%", new Vector2(_position.X - 810 + _healthbarMiddle.Width * _myGame.Player.MaxHealth, _position.Y - 530), Color.White);
+            // BossHealth
+            if (_myGame.bosses.Count > 0)
+            {
+                _spriteBatch.DrawString(_scoreFont, "BossHealth: ", new Vector2((Globals.ScreenWidth / 2 - 170), 9), new Color(255, 0, 226));
+                _spriteBatch.DrawString(_healthFont, _myGame.bosses[0].Health + "%", new Vector2((Globals.ScreenWidth / 2 + 50), 10), Color.White);
+            }
             //Shield
             _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);
             _spriteBatch.DrawString(_healthFont, _myGame.Player.Shield * 10 + "%", new Vector2(_position.X - 810 + _healthbarMiddle.Width * _myGame.Player.MaxShield, _position.Y - 490), Color.White);
             //Score and Currency
-            _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.currentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
-            _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.currentEXP, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
+            _spriteBatch.DrawString(_scoreFont, "score: " + _myGame.Exp.CurrentScore,new Vector2(_position.X + 620, _position.Y - 530), Color.White );
+            _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.CurrentExp, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
             // Boost
             _spriteBatch.DrawString(_scoreFont, "Boost: ", new Vector2(_position.X - 940, _position.Y - 450), Color.White );
            // Shop
@@ -132,15 +135,20 @@ namespace Space_Scavenger
                 _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800 + i*(_boosticon.Width + 20), _position.Y - 455), Color.White);
             }
 
-           //if (_myGame.boost.BoostTime <= 0)
-           //{
-           //    _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
-           //}
-           
-            
+            //if (_myGame.boost.BoostTime <= 0)
+            //{
+            //    _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
+            //}
+
+
             #endregion
 
 
+
+
+            /* _spriteBatch.Draw(CompassTexture, new Vector2(500, 500), null, Color.White, 0f, new Vector2(CompassTexture.Width / 2f, CompassTexture.Height / 2f), 1f, SpriteEffects.None, 0f);*/
+
+            _spriteBatch.Draw(_ArrowTexture, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, _myGame.compass.Rotation, new Vector2(_ArrowTexture.Width / 2f, _ArrowTexture.Height / 2f), 1f, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
         }
