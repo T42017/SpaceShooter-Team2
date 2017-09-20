@@ -45,6 +45,7 @@
     <Compile Include="Boost.cs" />
     <Compile Include="BossEnemy.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Compass.cs" />
     <Compile Include="Effects.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Exp.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="IGameObject.cs" />
     <Compile Include="Asteroids.cs" />
     <Compile Include="Money.cs" />
+    <Compile Include="MovingMenu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="PowerUp.cs" />

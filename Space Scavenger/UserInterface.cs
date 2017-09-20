@@ -9,14 +9,15 @@ namespace Space_Scavenger
         private SpriteFont _scoreFont;
         private SpriteFont _healthFont;
         private SpriteBatch _spriteBatch;
-
         private Texture2D _healthBarLeft;
         private Texture2D _healthbarMiddle;
         private Texture2D _healthbarRight;
         private Texture2D _shieldBarLeft;
         private Texture2D _shieldBarMiddle;
+        private Texture2D _ArrowTexture;
         private Texture2D _shieldBarRight;
         private Texture2D _boosticon;
+        private Texture2D CompassTexture;
         private readonly SpaceScavenger _myGame;
         private Vector2 _position;
         
@@ -31,8 +32,8 @@ namespace Space_Scavenger
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            
-            
+
+            CompassTexture = Game.Content.Load<Texture2D>("Compass");
             _scoreFont = Game.Content.Load<SpriteFont>("ScoreFont");
             _healthFont = Game.Content.Load<SpriteFont>("HealthFont");
             _healthBarLeft = Game.Content.Load<Texture2D>("barHorizontal_purple_left");
@@ -42,6 +43,7 @@ namespace Space_Scavenger
             _shieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
             _shieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
             _boosticon = Game.Content.Load<Texture2D>("powerupBlue_bolt");
+            _ArrowTexture = Game.Content.Load<Texture2D>("Arrow");
 
             base.LoadContent();
         }
@@ -132,15 +134,20 @@ namespace Space_Scavenger
                 _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800 + i*(_boosticon.Width + 20), _position.Y - 455), Color.White);
             }
 
-           //if (_myGame.boost.BoostTime <= 0)
-           //{
-           //    _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
-           //}
-           
-            
+            //if (_myGame.boost.BoostTime <= 0)
+            //{
+            //    _spriteBatch.Draw(_boosticon, new Vector2(_position.X - 800, _position.Y - 455), Color.White);
+            //}
+
+
             #endregion
 
 
+
+
+            /* _spriteBatch.Draw(CompassTexture, new Vector2(500, 500), null, Color.White, 0f, new Vector2(CompassTexture.Width / 2f, CompassTexture.Height / 2f), 1f, SpriteEffects.None, 0f);*/
+
+            _spriteBatch.Draw(_ArrowTexture, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, _myGame.compass.Rotation, new Vector2(_ArrowTexture.Width / 2f, _ArrowTexture.Height / 2f), 1f, SpriteEffects.None, 0f);
 
             _spriteBatch.End();
         }

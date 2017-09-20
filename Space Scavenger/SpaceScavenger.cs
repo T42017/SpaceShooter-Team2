@@ -43,6 +43,7 @@ namespace Space_Scavenger
         public Texture2D BossShotTexture2;
         private Texture2D enemyLaserTexture;
         private Texture2D _powerUpHealth;
+
         private Texture2D treasureShipTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
@@ -71,6 +72,8 @@ namespace Space_Scavenger
         public SoundEffect Sound, Agr;
         public Song BackgroundSong;
         private Camera _camera;
+        public Compass compass;
+        private bool spawnCompass = true;
         public SoundEffect Assault;
         public List<Shot> Shots = new List<Shot>();
         public List<Shot> Enemyshots = new List<Shot>();
@@ -108,6 +111,7 @@ namespace Space_Scavenger
             TreasureShip = new TreasureShip();
             BossEnemy = new BossEnemy();
             PowerUp = new PowerUp();
+            compass = new Compass();
             Exp = new Exp();
             Money = new Money();
             _camera = new Camera(GraphicsDevice.Viewport);
@@ -149,6 +153,7 @@ namespace Space_Scavenger
             _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
             enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
             moneyTexture = Content.Load<Texture2D>("Money");
+
             treasureShipTexture = Content.Load<Texture2D>("TreasureShip");
             BossShotTexture = Content.Load<Texture2D>("BossShotNeon");
             BossShotTexture2 = Content.Load<Texture2D>("TreasureShot");
@@ -280,6 +285,13 @@ namespace Space_Scavenger
                         }
                     }
 
+                    if (spawnCompass)
+                    {
+                        spawnCompass = false;
+                        compass = compass.compassSpawn(1);
+                    }
+
+                    compass.Update(gameTime, this);
 
                     if (_enemies.Count < wantedEnemies)
                     {
@@ -294,9 +306,9 @@ namespace Space_Scavenger
                                 bosses.Add(be);
                         Exp.CurrentEnemiesKilled = 0;
                     }
-                    if (treasureShips.Count < 1)
+                    if (treasureShips.Count < 5)
                     {
-                        if (rand.Next(0, 600) == 500)
+                        if (rand.Next(0, 60) == 50)
                         {
                             TreasureShip te = TreasureShip.SpawnTreasureShip(this);
                             if (te != null)
@@ -757,6 +769,7 @@ namespace Space_Scavenger
                     }
 
                     spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+
 
                     Player.Draw(spriteBatch);
 
