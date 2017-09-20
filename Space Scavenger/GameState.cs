@@ -12,6 +12,6 @@ namespace Space_Scavenger
         Playing,
         Paused,
         Shopping,
-        Gameover,
+        GameOver,
     }
 }

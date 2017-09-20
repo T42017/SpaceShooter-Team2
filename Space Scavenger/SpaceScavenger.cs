@@ -24,7 +24,9 @@ namespace Space_Scavenger
         Texture2D backgroundTexture;
         Random rand = new Random();
         AsteroidComponent asteroid;
-        UserInterface ui;
+        private UserInterface _ui;
+        private StartMenu _startMenu;
+        private GameOverScreen _gameOverScreen;
         private Money Money;
         public Boost boost;
         Effects effects;
@@ -105,12 +107,16 @@ namespace Space_Scavenger
             Components.Add(Player);
             asteroid = new AsteroidComponent(this, Player, gameObject);
             //Components.Add(asteroid);
-            ui = new UserInterface(this);
+            _ui = new UserInterface(this);
             effects = new Effects(this);
             Components.Add(ui);
             boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
+            _startMenu = new StartMenu(this);
+            Components.Add(_startMenu);
+            _gameOverScreen = new GameOverScreen(this);
+            Components.Add(_gameOverScreen);
             gamestate = GameState.Menu;
 
 
@@ -457,6 +463,7 @@ namespace Space_Scavenger
                         Player.Shield = Player.MaxShield;
                         Exp.currentScore = 0;
                         Exp.currentEXP = 0;
+                        gamestate = GameState.GameOver;
                     }
 
 
@@ -485,8 +492,8 @@ namespace Space_Scavenger
                     asteroid._nrofAsteroids.RemoveAll(j => j.isDead);
                     Money.Moneyroids.RemoveAll(money => money.isDead);
                     Player.Update(gameTime);
+                    _ui.Update(gameTime);
                     _previousKbState = state;
-                    ui.Update(gameTime);
                     boost.Update(gameTime);
                     _camera.Update(gameTime, Player);
                     Money.Update(gameTime, this);
@@ -510,7 +517,12 @@ namespace Space_Scavenger
                     #region Shopping
 #endregion Shopping
                     break;
-                case GameState.Gameover:
+                case GameState.GameOver:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        gamestate = GameState.Menu;
+                        
+                    }
                     break;
             }
 
@@ -522,13 +534,12 @@ namespace Space_Scavenger
             switch (gamestate)
             {
                     case GameState.Menu:
+                    GraphicsDevice.Clear(Color.Black);
+                    _startMenu.Draw(gameTime);
                     break;
                     case GameState.Playing:
                     #region state playing
                     GraphicsDevice.Clear(Color.CornflowerBlue);
-
-                    // TODO: Add your drawing code here
-
                     base.Draw(gameTime);
                     
 
@@ -629,14 +640,15 @@ namespace Space_Scavenger
 
                     spriteBatch.End();
 
-                    ui.Draw(gameTime);
+                    _ui.Draw(gameTime);
                     #endregion state playing
                     break;
                     case GameState.Paused:
                     break;
                     case GameState.Shopping:
                     break;
-                    case GameState.Gameover:
+                    case GameState.GameOver:
+                    _gameOverScreen.Draw(gameTime);
                     break;
             }
 
