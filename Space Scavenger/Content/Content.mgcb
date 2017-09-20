@@ -417,18 +417,6 @@
 /processorParam:TextureFormat=Color
 /build:grey_panel.png
 
-#begin plate.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:plate.png
-
 #begin metalPanel_blueCorner.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -452,4 +440,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:glassPanel_projection.png
+
+#begin panel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:panel.png
 

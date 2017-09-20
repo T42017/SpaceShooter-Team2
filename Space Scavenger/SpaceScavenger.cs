@@ -111,7 +111,7 @@ namespace Space_Scavenger
             _shop = new Shop(this);
             Components.Add(_shop);
             gamestate = GameState.Playing;
-            
+             
 
 
 
@@ -129,7 +129,7 @@ namespace Space_Scavenger
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
             _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
@@ -457,6 +457,8 @@ namespace Space_Scavenger
                     break;
                 case GameState.Shopping:
                     #region Shopping
+
+                    
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
 
@@ -470,6 +472,24 @@ namespace Space_Scavenger
                         _shoptimer--;
                     }
                     Player.Speed = new Vector2(0, 0);
+                    
+                    // Buy Item 1 in shop
+                    if (_shop._rectangleHover.Intersects(_shop._rectangleItem1))
+                    {
+                        if (state.IsKeyDown(Keys.Space))
+                        {
+                            if (Exp.currentEXP >= 100)
+                            {
+                                Player.MaxHealth = 15;
+                                Player.Health = Player.MaxHealth;
+                                Exp.currentEXP -= 100;
+                                _shop._rectangleItem1.Width = 0;
+                                _shop._rectangleItem1.Height = 0;
+                            }
+                        }
+                    }
+
+
 
                     _shop.Update(gameTime);
                       
