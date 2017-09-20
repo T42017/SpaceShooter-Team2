@@ -373,8 +373,8 @@ namespace Space_Scavenger
                             if (enemy.Health <= 0)
                             {
                                 MeteorExplosion.Play();
-                                enemy.isDead = true;
-                                Exp.currentScore += enemy.ScoreReward;
+                                enemy.IsDead = true;
+                                Exp.CurrentScore += enemy.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 5); i++)
                                 {
                                     Money.MoneyRoid(enemy.Position + new Vector2(rand.Next(-50, 50)));
@@ -392,8 +392,8 @@ namespace Space_Scavenger
                             if (hitBoss.Health <= 0)
                             {
                                 MeteorExplosion.Play();
-                                hitBoss.isDead = true;
-                                Exp.currentScore += hitBoss.ScoreReward;
+                                hitBoss.IsDead = true;
+                                Exp.CurrentScore += hitBoss.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 30); i++)
                                 {
                                     Money.MoneyRoid(hitBoss.Position + new Vector2(rand.Next(-100, 100)));
@@ -519,9 +519,11 @@ namespace Space_Scavenger
                         Player.Position = new Vector2(0, 0);
                         Player.Health = Player.MaxHealth;
                         Player.Shield = Player.MaxShield;
-                        Exp.currentScore = 0;
-                        Exp.currentEXP = 0;
+                        Exp.CurrentScore = 0;
+                        Exp.CurrentExp = 0;
                         gamestate = GameState.GameOver;
+                        bosses.Clear();
+                        _enemies.Clear();
                     }
 
 
