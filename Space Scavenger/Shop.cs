@@ -15,15 +15,11 @@ namespace Space_Scavenger
         private SpriteBatch _spriteBatch;
         private SpaceScavenger _myGame;
         private Texture2D _shopPanel;
-        private Texture2D _smallPanel;
+        public Texture2D _smallPanel;
         private SpriteFont _shopHeadlineFont;
         private SpriteFont _shopMoneyFont;
         public Rectangle _rectangleHover;
-        public Rectangle _rectangleItem1;
-        private Rectangle _rectangleItem2;
-        private Rectangle _rectangleItem3;
-        private Vector2 _position;
-        private Texture2D _hoverTexture;
+        public Texture2D _hoverTexture;
         private KeyboardState _state;
         private SpriteFont _itemDescFont;
         private string CloseShopString;
@@ -34,7 +30,7 @@ namespace Space_Scavenger
         public Shop(Game game) : base(game)
         {
             _myGame = (SpaceScavenger) game;
-            _position = new Vector2(1110,160);
+            
            
             
         }
@@ -48,8 +44,7 @@ namespace Space_Scavenger
             _shopMoneyFont = Game.Content.Load<SpriteFont>("ScoreFont");
             _itemDescFont = Game.Content.Load<SpriteFont>("ItemDescFont");
            
-            _rectangleHover = new Rectangle(1120, 205, _hoverTexture.Width, _hoverTexture.Height);
-            _rectangleItem1 = new Rectangle(1120, 210, _smallPanel.Width, _smallPanel.Height);
+            
             base.LoadContent();
         }
 
