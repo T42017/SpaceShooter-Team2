@@ -65,7 +65,7 @@ namespace Space_Scavenger
             if (_myGame.bosses.Count > 0)
             {
                 _spriteBatch.DrawString(_scoreFont, "BossHealth: ", new Vector2((Globals.ScreenWidth / 2 - 170), 9), new Color(255, 0, 226));
-                _spriteBatch.DrawString(_healthFont, _myGame.bosses[0].Health * 2 + "%", new Vector2((Globals.ScreenWidth / 2 + 50), 10), Color.White);
+                _spriteBatch.DrawString(_healthFont, _myGame.bosses[0].Health + "%", new Vector2((Globals.ScreenWidth / 2 + 50), 10), Color.White);
             }
             //Shield
             _spriteBatch.DrawString(_scoreFont, "Shield: ", new Vector2(_position.X - 940, _position.Y - 490), Color.SkyBlue);

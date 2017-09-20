@@ -46,9 +46,9 @@ namespace Space_Scavenger
                     sa2.chosenTexture2D = MyGame.BossShotTexture;
                     MyGame.BossShots.Add(sa2);
                 }
-                if (Health > 20)
+                if (Health > 60)
                     ReloadTimer = 60;
-                else if (Health > 10)
+                else if (Health > 30)
                     ReloadTimer = 10;
                 else
                     ReloadTimer = 2;
@@ -221,8 +221,9 @@ namespace Space_Scavenger
                     return new BossEnemy
                     {
                         //vänster
+                        Timer = 3600,
                         Radius = 150,
-                        Health = 50,
+                        Health = 100,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Position = new Vector2(
@@ -236,8 +237,9 @@ namespace Space_Scavenger
                     //höger
                     return new BossEnemy
                     {
+                        Timer = 3600,
                         Radius = 150,
-                        Health = 50,
+                        Health = 100,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = -MathHelper.PiOver2,
@@ -251,8 +253,9 @@ namespace Space_Scavenger
                     //upp
                     return new BossEnemy
                     {
+                        Timer = 3600,
                         Radius = 150,
-                        Health = 50,
+                        Health = 100,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = MathHelper.Pi,
@@ -266,8 +269,9 @@ namespace Space_Scavenger
                     //ner
                     return new BossEnemy
                     {
+                        Timer = 3600,
                         Radius = 150,
-                        Health = 50,
+                        Health = 100,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = Rotation,
