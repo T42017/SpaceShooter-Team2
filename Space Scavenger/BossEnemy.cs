@@ -26,7 +26,7 @@ namespace Space_Scavenger
             {
                 var s = BossShoot(direction);
                 if (s != null)
-                    MyGame.Enemyshots.Add(s);
+                    MyGame.EnemyShots.Add(s);
                 _reloadTimer2 = 10;
             }
 

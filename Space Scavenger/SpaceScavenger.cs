@@ -80,7 +80,7 @@ namespace Space_Scavenger
         private bool spawnCompass = true;
         public SoundEffect Assault;
         public List<Shot> Shots = new List<Shot>();
-        public List<Shot> Enemyshots = new List<Shot>();
+        public List<Shot> EnemyShots = new List<Shot>();
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly List<PowerUp> _powerups = new List<PowerUp>();
         public readonly List<Shot> BossShots = new List<Shot>();
@@ -518,7 +518,7 @@ namespace Space_Scavenger
                             shot.IsDead = true;
                         }
                     }
-                    foreach (Shot shot in Enemyshots)
+                    foreach (Shot shot in EnemyShots)
                     {
                         Asteroid hitasteroid = asteroid._nrofAsteroids.FirstOrDefault(e => e.CollidesWith(shot));
 
@@ -570,7 +570,7 @@ namespace Space_Scavenger
                         s.Update(gameTime);
                     }
 
-                    Shot shotHit = Enemyshots.FirstOrDefault(e => e.CollidesWith(Player));
+                    Shot shotHit = EnemyShots.FirstOrDefault(e => e.CollidesWith(Player));
                     if (shotHit != null)
                     {
                         if (playerInvincibilityTimer <= 0)
@@ -654,7 +654,7 @@ namespace Space_Scavenger
                     Shots.RemoveAll(s => s.IsDead);
                     treasureShips.RemoveAll(treasure => treasure.IsDead);
                     BossShots.RemoveAll(bs => bs.IsDead);
-                    Enemyshots.RemoveAll(shot => shot.IsDead);
+                    EnemyShots.RemoveAll(shot => shot.IsDead);
                     _enemies.RemoveAll(enemy => enemy.IsDead);
                     _powerups.RemoveAll(powerup => powerup.IsDead);
                     asteroid._MiniStroids.RemoveAll(n => n.IsDead);
@@ -800,7 +800,7 @@ namespace Space_Scavenger
                         spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (Shot s in Enemyshots)
+                    foreach (Shot s in EnemyShots)
                     {
                         spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
@@ -859,7 +859,7 @@ namespace Space_Scavenger
                     case GameState.Shopping:
                     #region Shopping
                     GraphicsDevice.Clear(Color.CornflowerBlue);
-                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
 
                     
 
@@ -913,22 +913,22 @@ namespace Space_Scavenger
                         }
                     }
 
-                    foreach (Shot s in shots)
+                    foreach (Shot s in Shots)
                     {
                         spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (Shot s in enemyshots)
+                    foreach (Shot s in EnemyShots)
                     {
                         spriteBatch.Draw(enemyLaserTexture, s.Position, null, Color.White, s.Rotation, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (Enemy e in enemies)
+                    foreach (Enemy e in _enemies)
                     {
                         spriteBatch.Draw(enemyTexture, e.Position, null, Color.White, e.Rotation + MathHelper.PiOver2, new Vector2(enemyTexture.Width / 2, enemyTexture.Height / 2), 0.4f, SpriteEffects.None, 0f);
                     }
 
-                    foreach (PowerUp p in powerups)
+                    foreach (PowerUp p in _powerups)
                     {
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }

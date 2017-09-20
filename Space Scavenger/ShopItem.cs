@@ -46,11 +46,11 @@ namespace Space_Scavenger
                     ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 150%";
                     if (_state.IsKeyDown(Keys.Space))
                     {
-                        if (_myGame.Exp.currentEXP >= ItemCost)
+                        if (_myGame.Exp.CurrentExp >= ItemCost)
                         {
                             _myGame.Player.MaxHealth = 15;
                             _myGame.Player.Health = _myGame.Player.MaxHealth;
-                            _myGame.Exp.currentEXP -= 100;
+                            _myGame.Exp.CurrentExp -= 100;
                             _myGame._shop._rectangleItem1.Width = 0;
                             _myGame._shop._rectangleItem1.Height = 0;
 
