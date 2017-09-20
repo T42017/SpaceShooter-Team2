@@ -132,7 +132,7 @@ namespace Space_Scavenger
             Components.Add(_startMenu);
             _gameOverScreen = new GameOverScreen(this);
             Components.Add(_gameOverScreen);
-            gamestate = GameState.Menu;
+            gamestate = GameState.Playing;
             _shop = new Shop(this);
             Components.Add(_shop);
             _shopItem = new ShopItem(this);
