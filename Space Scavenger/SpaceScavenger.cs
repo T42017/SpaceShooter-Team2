@@ -58,7 +58,7 @@ namespace Space_Scavenger
         bool enemyHit = false;
         public GameObject gameObject;
         private Texture2D enemyDamage;
-        public SoundEffect enemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage;
+        public SoundEffect EnemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         public BossEnemy BossEnemy { get; private set; }
@@ -302,11 +302,13 @@ namespace Space_Scavenger
                             {
                                 if (Player.Shield <= 0)
                                 {
+                                    PlayerHitAsteoid.Play();
                                     Player.Health -= 1;
                                     shieldTime = 200;
                                 }
                                 else
                                 {
+                                    PlayerHitAsteoid.Play();
                                     Player.Shield--;
                                     shieldTime = 200;
                                 }
@@ -338,6 +340,7 @@ namespace Space_Scavenger
                         PowerUp hitPowerup = _powerups.FirstOrDefault(e => e.CollidesWith(Player));
                         if (hitPowerup != null)
                         {
+                            HealthPickup.Play();
                             Player.Health = 10;
                             hitPowerup.isDead = true;
                             Debug.WriteLine("Powerup!");
@@ -352,6 +355,7 @@ namespace Space_Scavenger
 
                         if (enemy != null)
                         {
+                            MeteorExplosion.Play();
                             enemy.Health -= 1;
                             if (enemy.Health <= 0)
                             {
