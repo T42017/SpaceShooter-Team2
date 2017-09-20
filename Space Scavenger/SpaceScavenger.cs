@@ -109,7 +109,7 @@ namespace Space_Scavenger
             //Components.Add(asteroid);
             _ui = new UserInterface(this);
             effects = new Effects(this);
-            Components.Add(ui);
+            Components.Add(_ui);
             boost = new Boost(this);
             Components.Add(boost);
             Components.Add(effects);
