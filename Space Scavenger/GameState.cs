@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Space_Scavenger
 {
-    enum GameState
+    public enum GameState
     {
         Menu,
         Playing,

@@ -18,7 +18,7 @@ namespace Space_Scavenger
     /// </summary>
     public class SpaceScavenger : Game
     {
-        private GameState gamestate;
+        public GameState gamestate;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D backgroundTexture;
@@ -27,7 +27,8 @@ namespace Space_Scavenger
         private UserInterface _ui;
         private StartMenu _startMenu;
         private GameOverScreen _gameOverScreen;
-        private Shop _shop;
+        public Shop _shop;
+        public ShopItem _shopItem { get; private set; }
         public Boost boost;
         Effects effects;
         public PowerUp Powerup { get; private set; }
@@ -43,6 +44,7 @@ namespace Space_Scavenger
         //public int boostTime = 0;
         private int shieldTime = 0;
         private int _shoptimer = 0;
+        private string _inRangeToBuyString;
 
         private int wantedEnemies = 15;
         private int wantedPowerUps = 5;
@@ -110,9 +112,10 @@ namespace Space_Scavenger
             Components.Add(_gameOverScreen);
             _shop = new Shop(this);
             Components.Add(_shop);
+            _shopItem = new ShopItem(this);
+            Components.Add(_shopItem);
             gamestate = GameState.Playing;
-             
-
+           
 
 
             gameObject = (GameObject)gameObject;
@@ -188,28 +191,46 @@ namespace Space_Scavenger
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
 
-                    if (Keyboard.GetState().IsKeyDown(Keys.L) && _shoptimer <= 0)
+                    if (Player.Position.X <= (Globals.ScreenWidth / 2f) + 400 && Player.Position.X >= (Globals.ScreenWidth / 2f) - 400)
                     {
-                        gamestate = GameState.Shopping;
-                        _shoptimer = 10;
+                        if (Player.Position.Y <= (Globals.ScreenHeight /2f) + 400 && Player.Position.Y >= (Globals.ScreenHeight/2f) - 400 )
+                        {
+                            
+                            _inRangeToBuyString = "Press E to buy";
+                            if (Keyboard.GetState().IsKeyDown(Keys.E) && _shoptimer <= 0)
+                            {
+                                gamestate = GameState.Shopping;
+                                _shoptimer = 10;
+                            }
+                            else
+                            {
+                                _shoptimer--;
+                            }
+                        }
+                        else
+                        {
+                            _inRangeToBuyString = "";
+                        }
                     }
                     else
                     {
-                        _shoptimer--;
+                        _inRangeToBuyString = "";
                     }
-                   
+                    
                     if (state.IsKeyDown(Keys.Up))
                     {
                         Player.Accelerate();
                     }
+
                     if (state.IsKeyDown(Keys.Left))
                     {
                         Player.Rotation -= 0.07f;
                     }
-                    else if (state.IsKeyDown(Keys.Right))
-                    {
-                        Player.Rotation += 0.07f;
-                    }
+                        else if (state.IsKeyDown(Keys.Right))
+                        {
+                            Player.Rotation += 0.07f;
+                        }
+
                     if (state.IsKeyDown(Keys.Space))
                     {
                         if (reloadTime < 0)
@@ -462,35 +483,21 @@ namespace Space_Scavenger
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
 
-                    if (Keyboard.GetState().IsKeyDown(Keys.L) && _shoptimer <= 0)
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && _shoptimer <= 0)
                     {
+                        
                         gamestate = GameState.Playing;
                         _shoptimer = 10;
+                        
                     }
                     else if(_shoptimer > 0)
                     {
                         _shoptimer--;
+                       
                     }
                     Player.Speed = new Vector2(0, 0);
-                    
-                    // Buy Item 1 in shop
-                    if (_shop._rectangleHover.Intersects(_shop._rectangleItem1))
-                    {
-                        if (state.IsKeyDown(Keys.Space))
-                        {
-                            if (Exp.currentEXP >= 100)
-                            {
-                                Player.MaxHealth = 15;
-                                Player.Health = Player.MaxHealth;
-                                Exp.currentEXP -= 100;
-                                _shop._rectangleItem1.Width = 0;
-                                _shop._rectangleItem1.Height = 0;
-                            }
-                        }
-                    }
-
-
-
+               
+                    //_shopItem.Update(gameTime);
                     _shop.Update(gameTime);
                       
             
@@ -588,7 +595,7 @@ namespace Space_Scavenger
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }
 
-                    spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(spaceStation, new Vector2(Globals.ScreenWidth/2, Globals.ScreenHeight/2), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
                     Player.Draw(spriteBatch);
 
@@ -600,6 +607,10 @@ namespace Space_Scavenger
                         enemyHit = false;
                     }
 
+                    if (_inRangeToBuyString.Length > 0)
+                    spriteBatch.DrawString(_ui._scoreFont, _inRangeToBuyString, new Vector2(Globals.ScreenWidth / 2f - 120, Globals.ScreenHeight / 2f - 300), Color.White);
+
+                    
 
                     spriteBatch.End();
 
@@ -612,6 +623,10 @@ namespace Space_Scavenger
                     #region Shopping
                     GraphicsDevice.Clear(Color.CornflowerBlue);
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.transformn);
+
+                    
+
+                    spriteBatch.DrawString(_ui._scoreFont, _inRangeToBuyString, new Vector2(Globals.ScreenWidth / 2f - 120, Globals.ScreenHeight / 2f - 300), Color.White);
 
                     for (int y = -10000; y < 10000; y += backgroundTexture.Width)
                     {
@@ -681,7 +696,7 @@ namespace Space_Scavenger
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }
 
-                    spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(spaceStation, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
                     Player.Draw(spriteBatch);
 
@@ -695,9 +710,10 @@ namespace Space_Scavenger
 
                     base.Draw(gameTime);
                     spriteBatch.End();
-
+                    
                     _ui.Draw(gameTime);
                     _shop.Draw(gameTime);
+                    _shopItem.Draw(gameTime);
                     #endregion Shopping
                     break;
                     case GameState.GameOver:

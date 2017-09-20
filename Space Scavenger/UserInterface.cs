@@ -11,7 +11,7 @@ namespace Space_Scavenger
     public class UserInterface : DrawableGameComponent
     {
         
-        private SpriteFont _scoreFont;
+        public SpriteFont _scoreFont { get; private set; }
         private SpriteFont _healthFont;
         private SpriteBatch _spriteBatch;
 
@@ -74,7 +74,8 @@ namespace Space_Scavenger
             _spriteBatch.DrawString(_scoreFont, "$: " + _myGame.Exp.currentEXP, new Vector2(_position.X + 620, _position.Y - 495), Color.Green);
             // Boost
             _spriteBatch.DrawString(_scoreFont, "Boost: ", new Vector2(_position.X - 940, _position.Y - 450), Color.White );
-           
+           // Shop
+           //_spriteBatch.DrawString(_scoreFont, _myGame.InRangeToBuy, new Vector2(Globals.ScreenWidth/2f - 120, Globals.ScreenHeight / 2f - 300), Color.White  );
             #endregion
 
 
