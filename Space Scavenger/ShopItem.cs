@@ -43,7 +43,7 @@ namespace Space_Scavenger
             _rectangleItemOne = new Rectangle(1120, 210, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
             _rectangleItemTwo = new Rectangle(1120 + 110, 210, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
             _rectangleItemThree = new Rectangle(1120 + 110*2, 210, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
-            _rectangleItemFour = new Rectangle(1120, 210+110*2, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
+            _rectangleItemFour = new Rectangle(1120, 210+110, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
             _rectangleItemFive = new Rectangle(1120 + 110, 210+110*2, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
             _rectangleItemSix = new Rectangle(1120 + 110*2, 210+110*2, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
             _rectangleItemSeven = new Rectangle(1120, 210+110*3, _myGame._shop._smallPanel.Width, _myGame._shop._smallPanel.Height);
@@ -61,32 +61,112 @@ namespace Space_Scavenger
 
             if (_myGame.gamestate == GameState.Shopping)
             {
-                #region shopItem1 MaxHealth++
+                #region shopItems 1-3 MaxHealth++
+                
                 if (_myGame._shop._rectangleHover.Intersects(_rectangleItemOne))
                 {
-                   
-                    ItemCost = 100;
-                    ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 150%";
-                    if (_state.IsKeyDown(Keys.Space))
+                    if (_myGame.Player.MaxHealth == 10)
                     {
-                        if (_rectangleItemOne.Width > 0 && _rectangleItemOne.Height > 0)
+                        ItemCost = 100;
+                        ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 150%";
+                        if (_state.IsKeyDown(Keys.Space))
                         {
                             if (_myGame.Exp.CurrentExp >= ItemCost)
                             {
                                 _myGame.Player.MaxHealth = 15;
                                 _myGame.Player.Health = _myGame.Player.MaxHealth;
                                 _myGame.Exp.CurrentExp -= 100;
-                                _rectangleItemOne.Width = 0;
-                                _rectangleItemOne.Height = 0;
-                                ItemDescriptionString = "You've already bought this item";
+                                
+                                
+                                
                             }
                         }
-                        else if (_rectangleItemOne.Width <= 0 && _rectangleItemOne.Height <= 0)
-                        {
-                            ItemDescriptionString = "You've already bought this item";
-                        }
-                    } 
+                    }
+                    else
+                    {
+                        ItemCost = 100;
+                        ItemDescriptionString = "You've already bought this item";
+                    }
                 }
+
+
+                if (_myGame._shop._rectangleHover.Intersects(_rectangleItemTwo))
+                {
+                    if (_myGame.Player.MaxHealth == 15 || _myGame.Player.MaxHealth == 10)
+                    {
+                        ItemCost = 200;
+                        ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 200%";
+                        if (_state.IsKeyDown(Keys.Space))
+                        {
+                            if (_myGame.Exp.CurrentExp >= ItemCost)
+                            {
+                                _myGame.Player.MaxHealth = 20;
+                                _myGame.Player.Health = _myGame.Player.MaxHealth;
+                                _myGame.Exp.CurrentExp -= 200;
+
+
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ItemCost = 200;
+                        ItemDescriptionString = "You've already bought this item";
+                    }
+                }
+
+                if (_myGame._shop._rectangleHover.Intersects(_rectangleItemThree))
+                {
+                    if (_myGame.Player.MaxHealth == 15 || _myGame.Player.MaxHealth == 10 || _myGame.Player.MaxHealth == 20)
+                    {
+                        ItemCost = 300;
+                        ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 250%";
+                        if (_state.IsKeyDown(Keys.Space))
+                        {
+                            if (_myGame.Exp.CurrentExp >= ItemCost)
+                            {
+                                _myGame.Player.MaxHealth = 25;
+                                _myGame.Player.Health = _myGame.Player.MaxHealth;
+                                _myGame.Exp.CurrentExp -= 300;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ItemCost = 300;
+                        ItemDescriptionString = "You've already bought this item";
+                    }
+                }
+                #endregion
+
+                #region shopItems BetterWeapons
+
+                if (_myGame._shop._rectangleHover.Intersects(_rectangleItemFour))
+                {
+                    ItemDescriptionString = "rectangle4";
+                    //if (_myGame.Player.MaxHealth == 10)
+                    //{
+                    //    ItemCost = 100;
+                    //    ItemDescriptionString = "Increase Maxhealth" + "\r\n" + "to 150%";
+                    //    if (_state.IsKeyDown(Keys.Space))
+                    //    {
+                    //        if (_myGame.Exp.CurrentExp >= ItemCost)
+                    //        {
+                    //            _myGame.Player.MaxHealth = 15;
+                    //            _myGame.Player.Health = _myGame.Player.MaxHealth;
+                    //            _myGame.Exp.CurrentExp -= 100;
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    ItemCost = 100;
+                    //    ItemDescriptionString = "You've already bought this item";
+                    //}
+                }
+                
+
                 #endregion
             }
 
