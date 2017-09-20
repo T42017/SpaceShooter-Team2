@@ -230,10 +230,10 @@ namespace Space_Scavenger
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                         Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
-
-                    if (Player.Position.X <= (Globals.ScreenWidth / 2f) + 400 && Player.Position.X >= (Globals.ScreenWidth / 2f) - 400)
+                    
+                    if (Player.Position.X <= new Vector2(400,0).X && Player.Position.X >= new Vector2(-400,0).X)
                     {
-                        if (Player.Position.Y <= (Globals.ScreenHeight /2f) + 400 && Player.Position.Y >= (Globals.ScreenHeight/2f) - 400 )
+                        if (Player.Position.Y <= new Vector2(0,400).Y + 400 && Player.Position.Y >= new Vector2(0,-400).Y )
                         {
                             
                             _inRangeToBuyString = "Press E to buy";
@@ -703,9 +703,9 @@ namespace Space_Scavenger
                     }
                     Player.Speed = new Vector2(0, 0);
                
-                    //_shopItem.Update(gameTime);
+                    _shopItem.Update(gameTime);
                     _shop.Update(gameTime);
-                      
+                     
             
             
                     #endregion Shopping
@@ -736,22 +736,22 @@ namespace Space_Scavenger
                     base.Draw(gameTime);
                     
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
-
+                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
+                      
                         backgrSpriteBatch.Begin();
-
+                      
                         startX = Player.Position.X % backgroundTexture.Width;
                         startY = Player.Position.Y % backgroundTexture.Height;
-
+                      
                         for (float y = -startY - backgroundTexture.Height; y < Globals.ScreenHeight; y += backgroundTexture.Width)
                         {
                             for (float x = -startX - backgroundTexture.Width; x < Globals.ScreenWidth; x += backgroundTexture.Width)
                             {
                                 backgrSpriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
-
+                      
                             }
                         }
-
+                      
                         backgrSpriteBatch.End();
 
                     foreach (Asteroid mini in asteroid._MiniStroids)
@@ -791,10 +791,6 @@ namespace Space_Scavenger
 
             }
 
-
-
-
-
                     foreach (Shot s in Shots)
                     {
                         spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
@@ -831,7 +827,7 @@ namespace Space_Scavenger
                         spriteBatch.Draw(treasureShipTexture, treasureShip.Position, null, Color.White, spaceStationRotation, new Vector2(treasureShipTexture.Width / 2f, treasureShipTexture.Height / 2f), 1f, SpriteEffects.None, 0f);
                     }
 
-                    spriteBatch.Draw(spaceStation, new Vector2(0, 0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
 
                     Player.Draw(spriteBatch);
@@ -845,7 +841,7 @@ namespace Space_Scavenger
                     }
 
                     if (_inRangeToBuyString.Length > 0)
-                    spriteBatch.DrawString(_ui._scoreFont, _inRangeToBuyString, new Vector2(Globals.ScreenWidth / 2f - 120, Globals.ScreenHeight / 2f - 300), Color.White);
+                    spriteBatch.DrawString(_ui._scoreFont, _inRangeToBuyString, new Vector2( -120,-300), Color.White);
 
                     
 
@@ -859,20 +855,28 @@ namespace Space_Scavenger
                     case GameState.Shopping:
                     #region Shopping
                     GraphicsDevice.Clear(Color.CornflowerBlue);
+                    base.Draw(gameTime);
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
 
-                    
+                    backgrSpriteBatch.Begin();
 
-                    spriteBatch.DrawString(_ui._scoreFont, _inRangeToBuyString, new Vector2(Globals.ScreenWidth / 2f - 120, Globals.ScreenHeight / 2f - 300), Color.White);
+                   startX = Player.Position.X % backgroundTexture.Width;
+                   startY = Player.Position.Y % backgroundTexture.Height;
+                   
+                   for (float y = -startY - backgroundTexture.Height; y < Globals.ScreenHeight; y += backgroundTexture.Width)
+                   {
+                       for (float x = -startX - backgroundTexture.Width; x < Globals.ScreenWidth; x += backgroundTexture.Width)
+                       {
+                           backgrSpriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                   
+                       }
+                   }
 
-                    for (int y = -10000; y < 10000; y += backgroundTexture.Width)
-                    {
-                        for (int x = -10000; x < 10000; x += backgroundTexture.Width)
-                        {
-                            spriteBatch.Draw(backgroundTexture, new Vector2(x, y), Color.White);
+                    backgrSpriteBatch.End();
 
-                        }
-                    }
+                   
+
+                   
 
                     foreach (Asteroid mini in asteroid._MiniStroids)
                     {
@@ -933,7 +937,7 @@ namespace Space_Scavenger
                         spriteBatch.Draw(_powerUpHealth, p.Position, null, Color.White, p.Rotation + MathHelper.PiOver2, new Vector2(_powerUpHealth.Width / 2, _powerUpHealth.Height / 2), 2f, SpriteEffects.None, 0f);
                     }
 
-                    spriteBatch.Draw(spaceStation, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(spaceStation, new Vector2(0,0), null, Color.White, spaceStationRotation, new Vector2(spaceStation.Width / 2f, spaceStation.Height / 2f), 1f, SpriteEffects.None, 0f);
 
                     Player.Draw(spriteBatch);
 
@@ -945,7 +949,7 @@ namespace Space_Scavenger
                         enemyHit = false;
                     }
 
-                    base.Draw(gameTime);
+                    
                     spriteBatch.End();
                     
                     _ui.Draw(gameTime);
