@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Boost.cs" />
+    <Compile Include="BossCompass.cs" />
     <Compile Include="BossEnemy.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Compass.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Player.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="PowerUp.cs" />
+    <Compile Include="Shop.cs" />
+    <Compile Include="ShopItem.cs" />
     <Compile Include="ScoreScreen.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="SpaceScavenger.cs" />
