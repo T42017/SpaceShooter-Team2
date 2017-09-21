@@ -27,7 +27,7 @@ namespace Space_Scavenger
         private UserInterface _ui;
         private StartMenu _startMenu;
         private GameOverScreen _gameOverScreen;
-        private Money Money;
+        public Money Money;
         public Shop _shop;
         public ShopItem _shopItem { get; private set; }
         public Boost boost;
@@ -52,7 +52,7 @@ namespace Space_Scavenger
         private int shieldTime = 0;
         private int _shoptimer = 0;
         private string _inRangeToBuyString = "";
-
+        private TreasureShip TreasureShip;
         private Texture2D bossTexture;
 
         public bool multiShot { get; set; }
@@ -462,16 +462,20 @@ namespace Space_Scavenger
                     {
 
                         PowerUp hitPowerup = _powerups.FirstOrDefault(p => p.CollidesWith(Player));
-                        if (hitPowerup == null) continue;
-                        HealthPickup.Play();
-                        Player.Health += 5;
+                        if (hitPowerup != null)
+                        {
+                            HealthPickup.Play();
+                            Player.Health += 1;
+                            hitPowerup.IsDead = true;
+                            break;
+                        }
                         if (Player.Health > Player.MaxHealth)
                         {
                             Debug.WriteLine("Max healthhghf");
                             Player.Health = Player.MaxHealth;
                         }
 
-                        hitPowerup.IsDead = true;
+
                     }
                     _powerups.RemoveAll(powerup => powerup.IsDead);
                     foreach (Shot bs in BossShots)
@@ -679,11 +683,6 @@ namespace Space_Scavenger
                         deathSound.Play();
                         MediaPlayer.Stop();
                         gamestate = GameState.GameOver;
-                        bosses.Clear();
-                        _enemies.Clear();
-                        treasureShips.Clear();
-                        Exp.CurrentScore = 0;
-                        Exp.CurrentExp = 0;
                     }
 
 
@@ -786,11 +785,7 @@ namespace Space_Scavenger
 
                     wantedEnemies = 5;
                     treasureShips.Clear();
-                    if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
-                    {
-                        gamestate = GameState.Menu;
-                        
-                    }
+                    BossShots.Clear();
                     break;
             }
 
@@ -1039,7 +1034,6 @@ namespace Space_Scavenger
                     break;
                     case GameState.GameOver:
                     #region GameOver
-                    GraphicsDevice.Clear(Color.Black);
                     _gameOverScreen.Draw(gameTime);
 #endregion
                     break;

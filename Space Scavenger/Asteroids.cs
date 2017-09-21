@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Space_Scavenger
 {
-    class Asteroid : GameObject
+    public class Asteroid : GameObject
     {
 
         public int hpAsteroid;

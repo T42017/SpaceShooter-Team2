@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Space_Scavenger
 {
-    internal class Money : GameObject
+    public class Money : GameObject
     {
         public List<Asteroid> Moneyroids = new List<Asteroid>();
         private readonly Random _rnd = new Random();

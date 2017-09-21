@@ -22,7 +22,6 @@ namespace Space_Scavenger
         public GameOverScreen(Game game) : base(game)
         {
             _myGame = (SpaceScavenger)Game;
-        //    expscore = (Exp) Score;
         }
 
         protected override void LoadContent()
@@ -37,15 +36,24 @@ namespace Space_Scavenger
 
         public override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && _myGame._previousKbState.IsKeyUp(Keys.Space))
+
+            if (_myGame.gamestate == GameState.GameOver)
             {
+                
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && _prevKeyboardState.IsKeyUp(Keys.Space))
+                {
+                    _myGame.Player.Position = Vector2.Zero;
+                    _myGame.Player.Speed = Vector2.Zero;
+                    _myGame.Money.Moneyroids.Clear();
+                    _myGame.Exp.CurrentScore = 0;
+                    _myGame.Exp.CurrentExp = 0;
+                    MediaPlayer.Play(_myGame.BackgroundSong);
+                    _myGame.gamestate = GameState.Menu;
 
-                _myGame.Exp.CurrentScore = 0;
-                _myGame.Exp.CurrentExp = 0;
-                MediaPlayer.Play(_myGame.BackgroundSong);
-                _myGame.gamestate = GameState.Menu;
-
+                }
+                _prevKeyboardState = Keyboard.GetState();
             }
+
             base.LoadContent();
         }
 
