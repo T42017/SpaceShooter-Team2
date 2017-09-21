@@ -33,7 +33,7 @@ namespace Space_Scavenger
             Health = 10;
             Shield = 10;
             Radius = 12;
-            MaxHealth = Health;
+            MaxHealth = 10;
             MaxShield = Shield;
 
         }
