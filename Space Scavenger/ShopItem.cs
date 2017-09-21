@@ -20,6 +20,7 @@ namespace Space_Scavenger
         public int ItemCost { get; private set; }
         private Texture2D _itemPlusMaxHealth;
         private Texture2D _itemPlusMaxShield;
+        private Texture2D _itemBetterWeapon;
         private SpriteFont _shopfont;
         private Rectangle _rectangleItemOne;
         private Rectangle _rectangleItemTwo;
@@ -56,6 +57,7 @@ namespace Space_Scavenger
             _itemPlusMaxHealth = Game.Content.Load<Texture2D>("shopicon_health");
             _shopfont = Game.Content.Load<SpriteFont>("shopfont");
             _itemPlusMaxShield = Game.Content.Load<Texture2D>("shopicon_shield");
+            _itemBetterWeapon = Game.Content.Load<Texture2D>("crossair_redOutline");
 
             _myGame._shop._rectangleHover = new Rectangle(_rectangleStartX, 205, _myGame._shop._hoverTexture.Width, _myGame._shop._hoverTexture.Height);
             _rectangleItemOne = new Rectangle(_rectangleStartX, _rectangleStartY, _rectangleWidth, _rectangleHeight);
@@ -350,6 +352,16 @@ namespace Space_Scavenger
 
             _spriteBatch.Draw(_itemPlusMaxShield, new Vector2(X + 220, Y + 110), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
             _spriteBatch.DrawString(_shopfont, "200% HP", new Vector2(X + 200, Y + 140), Color.White);
+
+            //Weapon
+            _spriteBatch.Draw(_itemBetterWeapon, new Vector2(X, Y + 215), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "Speed++", new Vector2(X - 20, Y + 252), Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
+
+            _spriteBatch.Draw(_itemBetterWeapon, new Vector2(X + 110, Y + 215), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "Multishot", new Vector2(X + 85, Y + 252), Color.White, 0f, Vector2.Zero, 0.8f,SpriteEffects.None, 0f );
+
+            _spriteBatch.Draw(_itemBetterWeapon, new Vector2(X + 220, Y + 215), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "Combo", new Vector2(X + 210, Y + 252), Color.White, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
             _spriteBatch.End();
         }
     }
