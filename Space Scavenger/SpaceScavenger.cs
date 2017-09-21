@@ -422,7 +422,7 @@ namespace Space_Scavenger
                                 break;
                         }
                     }
-                    if (Exp.CurrentEnemiesKilled > 2)
+                    if (Exp.CurrentEnemiesKilled > 10)
                     { 
                             BossEnemy be = BossEnemy.SpawnBoss(this);
                             if (be != null)
@@ -585,7 +585,7 @@ namespace Space_Scavenger
                         }
                         if (hitBoss != null)
                         {
-                            hitBoss.Health -= 20;
+                            hitBoss.Health -= 1;
                             if (hitBoss.Health <= 0)
                             {
                                 spawnBossCompass = true;
@@ -880,6 +880,7 @@ namespace Space_Scavenger
                     wantedEnemies = 5;
                     treasureShips.Clear();
                     BossShots.Clear();
+                   Shots.Clear();
                     break;
                 case GameState.Winscreen:
                     _winScreen.Update(gameTime);
