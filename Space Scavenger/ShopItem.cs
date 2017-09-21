@@ -118,7 +118,7 @@ namespace Space_Scavenger
                     else if (_myGame.Player.MaxHealth < 10)
                     {
                         ItemCost = 600;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrade first!";
                     }
                     else
                     {
@@ -146,7 +146,7 @@ namespace Space_Scavenger
                     else if (_myGame.Player.MaxHealth < 15)
                     {
                         ItemCost = 1000;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrades first!";
                     }
                     else
                     {
@@ -200,7 +200,7 @@ namespace Space_Scavenger
                     else if (_myGame.Player.Shield < 10)
                     {
                         ItemCost = 600;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrade first!";
                     }
                     else
                     {
@@ -228,7 +228,7 @@ namespace Space_Scavenger
                     else if (_myGame.Player.MaxShield < 15)
                     {
                         ItemCost = 1000;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrades first!";
                     }
                     else
                     {
@@ -279,10 +279,15 @@ namespace Space_Scavenger
                         ItemCost = 0;
                         ItemDescriptionString = "You've already " + "\r\n" + "bought this item";
                     }
+                    else if (_myGame.fasterLaser && _myGame.multiShot)
+                    {
+                        ItemCost = 0;
+                        ItemDescriptionString = "You've already " + "\r\n" + "bought this item";
+                    }
                     else
                     {
                         ItemCost = 600;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrade first!";
                     }
 
                 }
@@ -308,7 +313,7 @@ namespace Space_Scavenger
                     else
                     {
                         ItemCost = 1000;
-                        ItemDescriptionString = "Locked!";
+                        ItemDescriptionString = "Locked!" + "\r\n" + "Unlock previous upgrades first!";
                     }
                 }
                 #endregion
