@@ -56,7 +56,7 @@ namespace Space_Scavenger
         private string _inRangeToBuyString = "";
         private TreasureShip TreasureShip;
         private Texture2D bossTexture;
-
+        public bool fasterLaser { get; set; }
         public bool multiShot { get; set; }
         private int wantedEnemies = 5;
         private int wantedPowerUps = 5;
@@ -148,6 +148,8 @@ namespace Space_Scavenger
             Components.Add(_shop);
             _shopItem = new ShopItem(this);
             Components.Add(_shopItem);
+
+            fasterLaser = false;
            
 
 
@@ -226,7 +228,7 @@ namespace Space_Scavenger
             switch (gamestate)
             {
                 case GameState.Menu:
-                    #region Menu
+                #region Menu
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
 
@@ -236,11 +238,9 @@ namespace Space_Scavenger
 
                     }
                     #endregion
-
-                    break;
+                break;
                 case GameState.Playing:
-
-                    #region Playing
+                #region Playing
 
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                         Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -766,7 +766,7 @@ namespace Space_Scavenger
                     }
 
 
-                    if (Player.Shield < 10 && shieldTime <= 0)
+                    if (Player.Shield < 5 && shieldTime <= 0)
                     {
                         Player.Shield++;
                         shieldTime = 40;
@@ -809,7 +809,15 @@ namespace Space_Scavenger
                     _gameOverScreen.Update(gameTime);
                     if (reloadTime >= 0)
                     {
-                        reloadTime--;
+                        if (fasterLaser)
+                        {
+                            reloadTime -= 1.6f;
+                        }
+                        else
+                        {
+                            reloadTime--;
+                        }
+                        
                     }
                     if (playerShieldCooldown >= 0)
                     {
@@ -824,8 +832,7 @@ namespace Space_Scavenger
 
 
                     #endregion playing
-                    break;
-
+                break;
                 case GameState.Paused:
                     #region Paused
                     if (state.IsKeyDown(Keys.P) && _previousKbState.IsKeyUp(Keys.P))
@@ -835,9 +842,9 @@ namespace Space_Scavenger
                     _previousKbState = Keyboard.GetState();
 
                     #endregion Paused
-                    break;
+                break;
                 case GameState.Shopping:
-                    #region Shopping
+                #region Shopping
 
                     
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -863,7 +870,7 @@ namespace Space_Scavenger
             
             
                     #endregion Shopping
-                    break;
+                break;
                 case GameState.GameOver:
                     _gameOverScreen.Update(gameTime);
                     asteroid._nrofAsteroids.Clear();
@@ -894,12 +901,14 @@ namespace Space_Scavenger
         {
             switch (gamestate)
             {
-                    case GameState.Menu:
+                case GameState.Menu:
+                #region Menu
                     GraphicsDevice.Clear(Color.Black);
                     _startMenu.Draw(gameTime);
-                    break;
-                    case GameState.Playing:
-                    #region state playing
+                    #endregion
+                break;
+                case GameState.Playing:
+                #region Playing
                     GraphicsDevice.Clear(Color.CornflowerBlue);
                     base.Draw(gameTime);
                     
@@ -961,7 +970,7 @@ namespace Space_Scavenger
 
                     foreach (Shot s in Shots)
                     {
-                        spriteBatch.Draw(laserTexture, s.Position, null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2, laserTexture.Height / 2), 1.0f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(laserTexture, s.Position , null, Color.White, s.Rotation + MathHelper.PiOver2, new Vector2(laserTexture.Width / 2f, laserTexture.Height / 2f), 1.0f, SpriteEffects.None, 0f);
                     }
 
                     foreach (Shot s in EnemyShots)
@@ -1028,11 +1037,11 @@ namespace Space_Scavenger
 
                     _ui.Draw(gameTime);
                     #endregion state playing
-                    break;
-                    case GameState.Paused:
-                    break;
-                    case GameState.Shopping:
-                    #region Shopping
+                break;
+                case GameState.Paused:
+                break;
+                case GameState.Shopping:
+                #region Shopping
                     GraphicsDevice.Clear(Color.CornflowerBlue);
                     base.Draw(gameTime);
                     spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, _camera.transformn);
@@ -1052,10 +1061,6 @@ namespace Space_Scavenger
                    }
 
                     backgrSpriteBatch.End();
-
-                   
-
-                   
 
                     foreach (Asteroid mini in asteroid._MiniStroids)
                     {

@@ -30,10 +30,10 @@ namespace Space_Scavenger
         public Player(Game game) : base(game)
         {
             Position = new Vector2(0,0);
-            Health = 10;
-            Shield = 10;
+            Health = 5;
+            Shield = 5;
             Radius = 12;
-            MaxHealth = 10;
+            MaxHealth = Health;
             MaxShield = Shield;
             
         }

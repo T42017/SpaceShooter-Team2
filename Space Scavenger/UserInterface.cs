@@ -80,7 +80,7 @@ namespace Space_Scavenger
             // Boost
             _spriteBatch.DrawString(_scoreFont, "Boost: ", new Vector2(_position.X - 940, _position.Y - 450), Color.White );
            // Shop
-           //_spriteBatch.DrawString(_scoreFont, _myGame.InRangeToBuy, new Vector2(Globals.ScreenWidth/2f - 120, Globals.ScreenHeight / 2f - 300), Color.White  );
+           
             #endregion
 
 
@@ -92,7 +92,7 @@ namespace Space_Scavenger
             {
                 _spriteBatch.Draw(_healthBarLeft, new Vector2(_position.X - 800, _position.Y - 530), Color.White);
 
-                for (int i = 0; i < _myGame.Player.Health - 2; i++)
+                for (int i = 0; i < _myGame.Player.MaxHealth - 2; i++)
                 {
                     _spriteBatch.Draw(_healthbarMiddle, new Vector2(_position.X - 795 + (i*_healthbarMiddle.Width), _position.Y - 530), Color.White);
                 }
@@ -114,6 +114,7 @@ namespace Space_Scavenger
             if (_myGame.Player.Shield >= 1)
             {
                  _spriteBatch.Draw(_shieldBarLeft, new Vector2(_position.X - 800, _position.Y - 490), Color.White);
+
                 for (int i = 0; i < _myGame.Player.Shield - 2 ; i++)
                 {
                     _spriteBatch.Draw(_shieldBarMiddle, new Vector2(_position.X - 795 + (i*_shieldBarMiddle.Width), _position.Y - 490), Color.White);
