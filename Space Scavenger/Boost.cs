@@ -32,7 +32,7 @@ namespace Space_Scavenger
                 {
                     _myGame.Player.Speed =
                         new Vector2((float) Math.Cos(_myGame.Player.Rotation),
-                            (float) Math.Sin(_myGame.Player.Rotation)) * 20f;
+                            (float) Math.Sin(_myGame.Player.Rotation)) * 40f;
                     NrOfBoosts--;
                     BoostRegenerationCoolDown = 300;
                 }

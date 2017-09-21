@@ -22,8 +22,8 @@ namespace Space_Scavenger
         public int MaxHealth { get; set; }
         public int MaxShield { get; set; }
         public int lastShot = 1;
-
-
+        private Space_Scavenger.GameState gameState;
+        
         private Texture2D playerTexture;
         private Texture2D healthTexture; 
 
@@ -35,7 +35,7 @@ namespace Space_Scavenger
             Radius = 12;
             MaxHealth = Health;
             MaxShield = Shield;
-
+            
         }
 
         protected override void LoadContent()
@@ -51,25 +51,11 @@ namespace Space_Scavenger
 
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            Position += Speed;
-            if (Speed.LengthSquared() > 30)
-                Speed = Speed * 0.98f;
-
-            if (Speed.LengthSquared() <= 30 && !Accelerating)
-            {
-                Speed = Speed * 0.99f;
-            }
-            Accelerating = false;
-            base.Update(gameTime);
-        }
-
         
 
         public void Accelerate()
         {
-            Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.15f;
+            Speed += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * 0.30f;
             Accelerating = true;
         }
 
@@ -81,7 +67,7 @@ namespace Space_Scavenger
                 Position = Position,
                 Rotation = Rotation,
                 Timer = 200,
-                Speed = 15f * new Vector2((float) Math.Cos(Rotation), (float) Math.Sin(Rotation))
+                Speed = 20f * new Vector2((float) Math.Cos(Rotation), (float) Math.Sin(Rotation))
             };
 
         }
@@ -97,7 +83,7 @@ namespace Space_Scavenger
                     Position = Position + (Vector2.One*radius).Rotate(-MathHelper.PiOver2 + Rotation),
                     Rotation = Rotation,
                     Timer = 200,
-                    Speed = 15f * new Vector2((float) Math.Cos(Rotation), (float) Math.Sin(Rotation))
+                    Speed =  20f * new Vector2((float) Math.Cos(Rotation), (float) Math.Sin(Rotation))
                 };
             }
             else
@@ -108,7 +94,7 @@ namespace Space_Scavenger
                     Position = Position + (Vector2.One * radius).Rotate(MathHelper.PiOver2 + Rotation),
                     Rotation = Rotation,
                     Timer = 200,
-                    Speed = 15f * new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation))
+                    Speed = 20f * new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation))
                 };
             }
             

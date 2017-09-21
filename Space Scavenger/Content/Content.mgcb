@@ -416,6 +416,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tMeteorNeon.png
+
 #begin ExplosionMeteor.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -463,7 +464,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:ShieldDamage.wav
-
 
 #begin Money.png
 /importer:TextureImporter
@@ -536,4 +536,58 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:BossShotNeon2.png
+
+#begin GameOverText.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GameOverText.png
+
+#begin Transparent-filter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Transparent-filter.png
+
+#begin PressSpace.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PressSpace.png
+
+#begin Quickly.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Quickly.jpg
+
+#begin DeathSound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:DeathSound.mp3
 

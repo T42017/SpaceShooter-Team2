@@ -18,7 +18,7 @@ namespace Space_Scavenger
     /// </summary>
     public class SpaceScavenger : Game
     {
-        private GameState gamestate;
+        public GameState gamestate;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch, backgrSpriteBatch;
         Texture2D backgroundTexture;
@@ -31,8 +31,7 @@ namespace Space_Scavenger
         public Boost boost;
         Effects effects;
         public float startY, startX;
-
-        public PowerUp Powerup { get; private set; }
+        public int defeatedEnemies;
         private int soundTime = 0;
         public Exp Exp;
         private Texture2D laserTexture;
@@ -41,7 +40,7 @@ namespace Space_Scavenger
         private Texture2D moneyTexture;
         public Texture2D BossShotTexture;
         public Texture2D BossShotTexture2;
-        private Texture2D enemyLaserTexture;
+        private Texture2D enemyLaserTexture, turorialTexture2D;
         private Texture2D _powerUpHealth;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
@@ -60,12 +59,12 @@ namespace Space_Scavenger
         bool enemyHit = false;
         public GameObject gameObject;
         private Texture2D enemyDamage;
-        public SoundEffect EnemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage;
+        public SoundEffect EnemyShootEffect, PlayerHitAsteoid, PlayerDamage, ShieldDestroyed, ShieldRegenerating, ShieldUp, HealthPickup, MeteorExplosion, ShieldDamage, deathSound;
         public Player Player { get; private set; }
         public Enemy Enemy { get; private set; }
         public BossEnemy BossEnemy { get; private set; }
         public PowerUp PowerUp { get; private set; }
-        private KeyboardState _previousKbState;
+        public KeyboardState _previousKbState;
         public SoundEffect Sound, Agr;
         public Song BackgroundSong;
         private Camera _camera;
@@ -99,12 +98,12 @@ namespace Space_Scavenger
         /// </summary>
         protected override void Initialize()
         {
-            
+            Exp = new Exp();
             Player = new Player(this);
             Enemy = new Enemy();
             BossEnemy = new BossEnemy();
             PowerUp = new PowerUp();
-            Exp = new Exp();
+
             Money = new Money();
             _camera = new Camera(GraphicsDevice.Viewport);
             Components.Add(Player);
@@ -142,6 +141,7 @@ namespace Space_Scavenger
 
             backgroundTexture = Content.Load<Texture2D>("backgroundNeon");
             laserTexture = Content.Load<Texture2D>("laserBlue");
+            deathSound = Content.Load<SoundEffect>("DeathSound");
             _powerUpHealth = Content.Load<Texture2D>("powerupRedPill");
             enemyTexture = Content.Load<Texture2D>("EnemyShipNeon");
             moneyTexture = Content.Load<Texture2D>("Money");
@@ -199,6 +199,7 @@ namespace Space_Scavenger
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                     {
                         gamestate = GameState.Playing;
+
                     }
                     #endregion
                     break;
@@ -221,6 +222,16 @@ namespace Space_Scavenger
                     {
                         Player.Rotation += 0.07f;
                     }
+                    
+                    if (state.IsKeyDown(Keys.P) && _previousKbState.IsKeyUp(Keys.P))
+                    {
+                        gamestate = GameState.Paused;
+                    }
+                    if (state.IsKeyDown(Keys.K) && _previousKbState.IsKeyUp(Keys.K))
+                    {
+                        Player.Health = 0;
+                    }
+                    _previousKbState = Keyboard.GetState();
                     if (state.IsKeyDown(Keys.Space))
                     {
                         if (reloadTime <= 0)
@@ -254,6 +265,20 @@ namespace Space_Scavenger
                         multiShot = true;
                     }
 
+                    #region Playermovement
+
+                    Player.Position += Player.Speed;
+                    if (Player.Speed.LengthSquared() > 120)
+                        Player.Speed = Player.Speed * 0.97f;
+
+                    if (Player.Speed.LengthSquared() <= 120 && !Player.Accelerating)
+                    {
+                        Player.Speed = Player.Speed * 0.99f;
+                    }
+                    Player.Accelerating = false;
+                    base.Update(gameTime);
+
+                    #endregion
                     #region Collision
 
                     foreach (Enemy enemy in _enemies)
@@ -374,6 +399,7 @@ namespace Space_Scavenger
                             {
                                 MeteorExplosion.Play();
                                 enemy.IsDead = true;
+                                defeatedEnemies += 1;
                                 Exp.CurrentScore += enemy.ScoreReward;
                                 for (int i = 0; i < rand.Next(1, 5); i++)
                                 {
@@ -519,8 +545,8 @@ namespace Space_Scavenger
                         Player.Position = new Vector2(0, 0);
                         Player.Health = Player.MaxHealth;
                         Player.Shield = Player.MaxShield;
-                        Exp.CurrentScore = 0;
-                        Exp.CurrentExp = 0;
+                        deathSound.Play();
+                        MediaPlayer.Stop();
                         gamestate = GameState.GameOver;
                         bosses.Clear();
                         _enemies.Clear();
@@ -559,7 +585,7 @@ namespace Space_Scavenger
                     boost.Update(gameTime);
                     _camera.Update(gameTime, Player);
                     Money.Update(gameTime, this);
-
+                    _gameOverScreen.Update(gameTime);
                     if (reloadTime >= 0)
                     {
                         reloadTime--;
@@ -573,6 +599,12 @@ namespace Space_Scavenger
 
                 case GameState.Paused:
                     #region Paused
+                    if (state.IsKeyDown(Keys.P) && _previousKbState.IsKeyUp(Keys.P))
+                    {
+                        gamestate = GameState.Playing;
+                    }
+                    _previousKbState = Keyboard.GetState();
+
                     #endregion Paused
                     break;
                 case GameState.Shopping:
@@ -580,11 +612,12 @@ namespace Space_Scavenger
 #endregion Shopping
                     break;
                 case GameState.GameOver:
-                    if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
-                    {
-                        gamestate = GameState.Menu;
-                        
-                    }
+                    _gameOverScreen.Update(gameTime);
+                    asteroid._nrofAsteroids.Clear();
+                    asteroid._MiniStroids.Clear();
+                    _enemies.Clear();
+                    bosses.Clear();
+
                     break;
             }
 
