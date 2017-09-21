@@ -34,7 +34,6 @@ namespace Space_Scavenger
         Effects effects;
         public float startY, startX;
 
-        public PowerUp Powerup { get; private set; }
         private int soundTime = 0;
         public Exp Exp;
         private Texture2D laserTexture;
@@ -52,7 +51,7 @@ namespace Space_Scavenger
         //public int boostTime = 0;
         private int shieldTime = 0;
         private int _shoptimer = 0;
-        private string _inRangeToBuyString;
+        private string _inRangeToBuyString = "";
 
         private Texture2D bossTexture;
         public bool fasterLaser { get; set; }
@@ -132,7 +131,7 @@ namespace Space_Scavenger
             Components.Add(_startMenu);
             _gameOverScreen = new GameOverScreen(this);
             Components.Add(_gameOverScreen);
-            gamestate = GameState.Playing;
+            gamestate = GameState.Menu;
             _shop = new Shop(this);
             Components.Add(_shop);
             _shopItem = new ShopItem(this);
@@ -414,11 +413,18 @@ namespace Space_Scavenger
                         if (hitPowerup != null)
                         {
                             HealthPickup.Play();
-                            Player.Health = 10;
+                        Player.Health += 5;
+                            if (Player.Health > Player.MaxHealth)
+                            {
+                                Debug.WriteLine("Max healthhghf");
+                                Player.Health = Player.MaxHealth;
+                            }
+
                             hitPowerup.IsDead = true;
                             Debug.WriteLine("Powerup!");
                         }
                     }
+                    _powerups.RemoveAll(powerup => powerup.IsDead);
                     foreach (Shot bs in BossShots)
                     {
                         bs.Timer--;
@@ -656,7 +662,7 @@ namespace Space_Scavenger
                     BossShots.RemoveAll(bs => bs.IsDead);
                     EnemyShots.RemoveAll(shot => shot.IsDead);
                     _enemies.RemoveAll(enemy => enemy.IsDead);
-                    _powerups.RemoveAll(powerup => powerup.IsDead);
+                    
                     asteroid._MiniStroids.RemoveAll(n => n.IsDead);
                     asteroid._nrofAsteroids.RemoveAll(j => j.IsDead);
                     Money.Moneyroids.RemoveAll(money => money.IsDead);
