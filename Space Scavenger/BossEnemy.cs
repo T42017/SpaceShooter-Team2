@@ -213,7 +213,7 @@ namespace Space_Scavenger
         {
             MyGame = (SpaceScavenger) game;
 
-            var spawnside = _rnd.Next(0, 5);
+            var spawnside = _rnd.Next(1, 5);
             switch (spawnside)
             {
                 case 1:

@@ -14,7 +14,8 @@ namespace Space_Scavenger
         private Texture2D _healthbarRight;
         private Texture2D _shieldBarLeft;
         private Texture2D _shieldBarMiddle;
-        private Texture2D _ArrowTexture;
+        private Texture2D CompassT;
+        private Texture2D bossCompassT;
         private Texture2D _shieldBarRight;
         private Texture2D _boosticon;
         private Texture2D CompassTexture;
@@ -43,7 +44,8 @@ namespace Space_Scavenger
             _shieldBarMiddle = Game.Content.Load<Texture2D>("barHorizontal_blue_mid");
             _shieldBarRight = Game.Content.Load<Texture2D>("barHorizontal_blue_right");
             _boosticon = Game.Content.Load<Texture2D>("powerupBlue_bolt");
-            _ArrowTexture = Game.Content.Load<Texture2D>("Arrow");
+            CompassT = Game.Content.Load<Texture2D>("Arrow");
+            bossCompassT = Game.Content.Load<Texture2D>("bossCompassT");
 
             base.LoadContent();
         }
@@ -148,7 +150,14 @@ namespace Space_Scavenger
 
             /* _spriteBatch.Draw(CompassTexture, new Vector2(500, 500), null, Color.White, 0f, new Vector2(CompassTexture.Width / 2f, CompassTexture.Height / 2f), 1f, SpriteEffects.None, 0f);*/
 
-            _spriteBatch.Draw(_ArrowTexture, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, _myGame.compass.Rotation, new Vector2(_ArrowTexture.Width / 2f, _ArrowTexture.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+
+                        _spriteBatch.Draw(CompassT, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, _myGame.compass.Rotation, new Vector2(CompassT.Width / 2f, CompassT.Height / 2f), 1f, SpriteEffects.None, 0f);
+            if (_myGame.bosses.Count > 0)
+            {
+                _spriteBatch.Draw(bossCompassT, new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2), null, Color.White, _myGame.bosscompass.Rotation, new Vector2(bossCompassT.Width / 2f, bossCompassT.Height / 2f), 1f, SpriteEffects.None, 0f);
+            }
+
 
             _spriteBatch.End();
         }

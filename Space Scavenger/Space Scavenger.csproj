@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Boost.cs" />
+    <Compile Include="BossCompass.cs" />
     <Compile Include="BossEnemy.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Compass.cs" />
