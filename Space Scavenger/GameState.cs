@@ -13,6 +13,7 @@ namespace Space_Scavenger
         Paused,
         Shopping,
         GameOver,
-        ScoreScreen
+        ScoreScreen,
+        Winscreen
     }
 }

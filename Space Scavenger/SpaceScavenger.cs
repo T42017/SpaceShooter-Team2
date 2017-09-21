@@ -27,6 +27,7 @@ namespace Space_Scavenger
         private UserInterface _ui;
         private StartMenu _startMenu;
         private GameOverScreen _gameOverScreen;
+        private WinScreen _winScreen;
         public Money Money;
         public Shop _shop;
         public ShopItem _shopItem { get; private set; }
@@ -45,7 +46,7 @@ namespace Space_Scavenger
         private Texture2D enemyLaserTexture, turorialTexture2D;
         private Texture2D _powerUpHealth, _Shield;
         private int enemyAmountTimer = 600;
-
+        public bool BossKill = false;
         private Texture2D treasureShipTexture;
         private SoundEffect laserEffect;
         private int reloadTime = 0;
@@ -134,6 +135,8 @@ namespace Space_Scavenger
             _startMenu = new StartMenu(this);
             Components.Add(_startMenu);
             _gameOverScreen = new GameOverScreen(this);
+            _winScreen = new WinScreen(this);
+            Components.Add(_winScreen);
             Components.Add(_gameOverScreen);
             gamestate = GameState.Menu;
             _shop = new Shop(this);
@@ -188,6 +191,7 @@ namespace Space_Scavenger
             HealthPickup = Content.Load<SoundEffect>("HealthPickup");
             MeteorExplosion = Content.Load<SoundEffect>("ExplosionMeteor");
             ShieldDamage = Content.Load<SoundEffect>("ShieldDamage");
+
             //Assault = Content.Load<SoundEffect>("oblivion3");
             BackgroundSong = Content.Load<Song>("backgroundMusicNeon");
             //agr = Content.Load<SoundEffect>("AGR");
@@ -235,7 +239,10 @@ namespace Space_Scavenger
                     if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                         Keyboard.GetState().IsKeyDown(Keys.Escape))
                         Exit();
-                    
+                    if (BossKill)
+                    {
+                        gamestate = GameState.Winscreen;
+                    }
                     if (Player.Position.X <= new Vector2(400,0).X && Player.Position.X >= new Vector2(-400,0).X)
                     {
                         if (Player.Position.Y <= new Vector2(0,400).Y + 400 && Player.Position.Y >= new Vector2(0,-400).Y )
@@ -391,7 +398,7 @@ namespace Space_Scavenger
                         if (e != null)
                             _enemies.Add(e);
                     }
-                    if (Exp.CurrentEnemiesKilled > 40)
+                    if (Exp.CurrentEnemiesKilled > 2)
                     { 
                             BossEnemy be = BossEnemy.SpawnBoss(this);
                             if (be != null)
@@ -534,12 +541,13 @@ namespace Space_Scavenger
                         }
                         if (hitBoss != null)
                         {
-                            hitBoss.Health -= 1;
+                            hitBoss.Health -= 20;
                             if (hitBoss.Health <= 0)
                             {
                                 spawnBossCompass = true;
                                 MeteorExplosion.Play();
                                 hitBoss.IsDead = true;
+                                BossKill = true;
                                 Exp.CurrentScore += hitBoss.ScoreReward;
                                 for (int i = 0; i < rand.Next(100, 150); i++)
                                 {
@@ -734,7 +742,8 @@ namespace Space_Scavenger
                     }
                     if (soundEffectTimer > 0)
                         soundEffectTimer--;
-                    
+
+
                     #endregion playing
                     break;
 
@@ -783,6 +792,16 @@ namespace Space_Scavenger
                     _enemies.Clear();
                     bosses.Clear();
 
+                    wantedEnemies = 5;
+                    treasureShips.Clear();
+                    BossShots.Clear();
+                    break;
+                case GameState.Winscreen:
+                    _winScreen.Update(gameTime);
+                    asteroid._nrofAsteroids.Clear();
+                    asteroid._MiniStroids.Clear();
+                    _enemies.Clear();
+                    bosses.Clear();
                     wantedEnemies = 5;
                     treasureShips.Clear();
                     BossShots.Clear();
@@ -1036,6 +1055,9 @@ namespace Space_Scavenger
                     #region GameOver
                     _gameOverScreen.Draw(gameTime);
 #endregion
+                    break;
+                case GameState.Winscreen:
+                    _winScreen.Draw(gameTime);
                     break;
             }
 
