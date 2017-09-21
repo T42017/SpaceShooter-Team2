@@ -50,7 +50,7 @@ namespace Space_Scavenger
         public bool BossKill = false;
         private Texture2D treasureShipTexture;
         private SoundEffect laserEffect;
-        private int reloadTime = 0;
+        private float reloadTime = 0;
         private int shieldTime = 0;
         private int _shoptimer = 0;
         private string _inRangeToBuyString = "";
@@ -78,7 +78,6 @@ namespace Space_Scavenger
         public KeyboardState _previousKbState;
         public SoundEffect Sound, Agr;
         public Song BackgroundSong;
-        private TreasureShip TreasureShip;
         private Camera _camera;
         public Compass compass;
         public BombEnemy BombEnemy;
