@@ -19,6 +19,8 @@ namespace Space_Scavenger
         private KeyboardState _state;
         public int ItemCost { get; private set; }
         private Texture2D _itemPlusMaxHealth;
+        private Texture2D _itemPlusMaxShield;
+        private SpriteFont _shopfont;
         private Rectangle _rectangleItemOne;
         private Rectangle _rectangleItemTwo;
         private Rectangle _rectangleItemThree;
@@ -51,7 +53,9 @@ namespace Space_Scavenger
             _rectangleStartX = 1120;
             _rectangleStartY = 210;
             _spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            _itemPlusMaxHealth = Game.Content.Load<Texture2D>("shield_bronze");
+            _itemPlusMaxHealth = Game.Content.Load<Texture2D>("shopicon_health");
+            _shopfont = Game.Content.Load<SpriteFont>("shopfont");
+            _itemPlusMaxShield = Game.Content.Load<Texture2D>("shopicon_shield");
 
             _myGame._shop._rectangleHover = new Rectangle(_rectangleStartX, 205, _myGame._shop._hoverTexture.Width, _myGame._shop._hoverTexture.Height);
             _rectangleItemOne = new Rectangle(_rectangleStartX, _rectangleStartY, _rectangleWidth, _rectangleHeight);
@@ -326,8 +330,26 @@ namespace Space_Scavenger
             X = _rectangleItemOne.X + _myGame._shop._smallPanel.Width/ 2 + 10;
             Y = _rectangleItemOne.Y + _myGame._shop._smallPanel.Height / 2;
             _spriteBatch.Begin();
-            //_spriteBatch.Draw(_itemPlusMaxHealth, new Vector2(X,Y), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
-            //_spriteBatch.Draw(_itemPlusMaxHealth,new Vector2(X , Y), Color.White);
+
+            //Health
+            _spriteBatch.Draw(_itemPlusMaxHealth, new Vector2(X,Y), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "100% HP", new Vector2(X - 20, Y + 30), Color.White);
+
+            _spriteBatch.Draw(_itemPlusMaxHealth, new Vector2(X+110, Y), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "150% HP", new Vector2(X + 90, Y + 30), Color.White);
+
+            _spriteBatch.Draw(_itemPlusMaxHealth, new Vector2(X +220, Y), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "200% HP", new Vector2(X + 200, Y + 30), Color.White);
+
+            //Shield
+            _spriteBatch.Draw(_itemPlusMaxShield, new Vector2(X, Y + 110), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "100% HP", new Vector2(X - 20, Y + 140), Color.White);
+
+            _spriteBatch.Draw(_itemPlusMaxShield, new Vector2(X + 110, Y + 110), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "150% HP", new Vector2(X + 90, Y + 140), Color.White);
+
+            _spriteBatch.Draw(_itemPlusMaxShield, new Vector2(X + 220, Y + 110), null, Color.White, 0f, Vector2.Zero, new Vector2(1, 1), SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(_shopfont, "200% HP", new Vector2(X + 200, Y + 140), Color.White);
             _spriteBatch.End();
         }
     }
