@@ -69,6 +69,9 @@ namespace Space_Scavenger
             Vector2 TextMiddlePoint = new Vector2(textSize.X / 2, textSize.Y / 2);
             Vector2 textPosition = new Vector2((int)TextMiddlePoint.X - textSize.X, (int)TextMiddlePoint.Y - textSize.Y);
             _spriteBatch.Begin();
+<<<<<<< HEAD
+            _spriteBatch.DrawString(_menufont, "Press Enter to start!", new Vector2(textPosition.X + (Globals.ScreenWidth / 2f), textPosition.Y +(Globals.ScreenHeight / 2f)), Color.Red);
+=======
 
             startX = movingMenu.Position.X % _background.Width;
             startY = movingMenu.Position.Y % _background.Height;
@@ -85,6 +88,7 @@ namespace Space_Scavenger
 
             if (flashingTextState)
                 _spriteBatch.Draw(InsertCoinTexture, new Vector2(Globals.ScreenWidth / 2 - InsertCoinTexture.Width / 2, Globals.ScreenHeight / 2 + 300 - InsertCoinTexture.Height / 2), Color.White);
+>>>>>>> a2c3b13374efceabdd27fc3964a42ddac2fd9492
             _spriteBatch.End();
         }
 
