@@ -223,7 +223,10 @@ namespace Space_Scavenger
         protected override void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
-           
+            if (state.IsKeyDown(Keys.F11))
+            {
+                graphics.ToggleFullScreen();
+            }
             switch (gamestate)
             {
                 case GameState.Menu:
@@ -233,6 +236,36 @@ namespace Space_Scavenger
 
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                     {
+                        Player.Position = Vector2.Zero;
+                        Player.Speed = Vector2.Zero;
+                        Money.Moneyroids.Clear();
+                        Exp.CurrentScore = 0;
+                        Exp.CurrentExp = 0;
+                        BossKill = false;
+                        Player.MaxHealth = 5;
+                        Player.MaxShield = 5;
+                        Player.Health = Player.MaxHealth;
+                        Player.Shield = Player.MaxShield;
+                        defeatedEnemies = 0;
+                        bosses.Clear();
+                        bombships.Clear();
+                        _enemies.Clear();
+                        asteroid._MiniStroids.Clear();
+                        BossShots.Clear();
+                        Shots.Clear();
+                        EnemyShots.Clear();
+                        defeatedEnemies = 0;
+                        //playerShieldCooldown = 0;
+                        //shieldTime = 0;
+                        //playerShieldTimer = 0;
+                        wantedEnemies = 1;
+                        treasureShips.Clear();
+                        asteroid._nrofAsteroids.Clear();
+                        fasterLaser = false;
+                        multiShot = false;
+                        boost.NrOfBoosts = 3;
+
+
                         gamestate = GameState.Playing;
 
                     }
@@ -241,9 +274,9 @@ namespace Space_Scavenger
                 case GameState.Playing:
                 #region Playing
 
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                        Keyboard.GetState().IsKeyDown(Keys.Escape))
-                        Exit();
+                    //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                    //    Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    //    Exit();
                     if (BossKill)
                     {
                         gamestate = GameState.Winscreen;
@@ -254,14 +287,9 @@ namespace Space_Scavenger
                         {
                             
                             _inRangeToBuyString = "Press E to buy";
-                            if (Keyboard.GetState().IsKeyDown(Keys.E) && _shoptimer <= 0)
+                            if (Keyboard.GetState().IsKeyDown(Keys.E)&& _previousKbState.IsKeyUp(Keys.E))
                             {
                                 gamestate = GameState.Shopping;
-                                _shoptimer = 10;
-                            }
-                            else
-                            {
-                                _shoptimer--;
                             }
                         }
                         else
@@ -422,21 +450,28 @@ namespace Space_Scavenger
                                 break;
                         }
                     }
+
                     if (Exp.CurrentEnemiesKilled > 1)
-                    { 
+                    {
+                        if (bosses.Count < 1)
+                        {
                             BossEnemy be = BossEnemy.SpawnBoss(this);
                             if (be != null)
                                 bosses.Add(be);
+
+                        }
                         Exp.CurrentEnemiesKilled = 0;
+
                     }
                     if (treasureShips.Count < 1)
                     {
-                        if (rand.Next(0, 240) == 120)
+                        if (rand.Next(0, 140) == 120)
                         {
                             TreasureShip te = TreasureShip.SpawnTreasureShip(this);
                             if (te != null)
                                 treasureShips.Add(te);
                         }
+
 
                     }
 
@@ -766,11 +801,11 @@ namespace Space_Scavenger
                     }
 
 
-                    if (Player.Shield < 5 && shieldTime <= 0)
+                    if (Player.Shield < Player.MaxShield && shieldTime <= 0)
                     {
                         Player.Shield++;
                         shieldTime = 40;
-                        if (Player.Shield == 10)
+                        if (Player.Shield == Player.MaxShield)
                         {
                             ShieldUp.Play(0.5f, 0.0f, 0.0f);
                         }
@@ -844,33 +879,28 @@ namespace Space_Scavenger
                     #endregion Paused
                 break;
                 case GameState.Shopping:
-                #region Shopping
+                    #region Shopping
 
-                    
-                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                        Exit();
+                    //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    //    Exit();
 
-                    if (Keyboard.GetState().IsKeyDown(Keys.E) && _shoptimer <= 0)
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && _previousKbState.IsKeyUp(Keys.E))
                     {
                         
                         gamestate = GameState.Playing;
-                        _shoptimer = 10;
+
                         
-                    }
-                    else if(_shoptimer > 0)
-                    {
-                        _shoptimer--;
-                       
                     }
                     Player.Speed = new Vector2(0, 0);
                
                     _shopItem.Update(gameTime);
                     _shop.Update(gameTime);
-                     
-            
-            
+                    _previousKbState = Keyboard.GetState();
+
+
                     #endregion Shopping
-                break;
+                    break;
                 case GameState.GameOver:
                     _gameOverScreen.Update(gameTime);
                     asteroid._nrofAsteroids.Clear();

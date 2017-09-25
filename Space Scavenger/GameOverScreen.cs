@@ -43,11 +43,7 @@ namespace Space_Scavenger
                 
                 if (Keyboard.GetState().IsKeyDown(Keys.Space) && _prevKeyboardState.IsKeyUp(Keys.Space))
                 {
-                    _myGame.Player.Position = Vector2.Zero;
-                    _myGame.Player.Speed = Vector2.Zero;
-                    _myGame.Money.Moneyroids.Clear();
-                    _myGame.Exp.CurrentScore = 0;
-                    _myGame.Exp.CurrentExp = 0;
+
                     MediaPlayer.Play(_myGame.BackgroundSong);
                     _myGame.gamestate = GameState.Menu;
 

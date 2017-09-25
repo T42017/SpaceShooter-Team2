@@ -53,33 +53,31 @@ namespace Space_Scavenger
         {
             var x = _hoverTexture.Width + 10;
 
-               if ((int)gameTime.TotalGameTime.TotalMilliseconds % 20 == 0)
-               {
                 _state = Keyboard.GetState();
                    if (_state.IsKeyDown(Keys.Right) && _prevKeyboardState.IsKeyUp(Keys.Right))
                    {
 
                         if(_rectangleHover.X < 1120 + 2*x)
-                        _rectangleHover.X += x/2;
+                        _rectangleHover.X += x;
 
                    } 
                    else if (_state.IsKeyDown(Keys.Left) && _prevKeyboardState.IsKeyUp(Keys.Left))
                    {
                        if(_rectangleHover.X > 1120)
-                       _rectangleHover.X -= x/2;
+                       _rectangleHover.X -= x;
                    }
 
                    if (_state.IsKeyDown(Keys.Down) && _prevKeyboardState.IsKeyUp(Keys.Down))
                    {
                        if (_rectangleHover.Y < 205 + 2*x)
-                           _rectangleHover.Y += x / 2;
+                           _rectangleHover.Y += x;
                    }
                    else if (_state.IsKeyDown(Keys.Up) && _prevKeyboardState.IsKeyUp(Keys.Up))
                    {
                        if (_rectangleHover.Y > 205)
-                           _rectangleHover.Y -= x / 2;
+                           _rectangleHover.Y -= x;
                    }
-               }
+               
             _prevKeyboardState = Keyboard.GetState();
 
            

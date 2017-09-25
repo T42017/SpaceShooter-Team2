@@ -46,9 +46,9 @@ namespace Space_Scavenger
                     sa2.chosenTexture2D = MyGame.BossShotTexture;
                     MyGame.BossShots.Add(sa2);
                 }
-                if (Health > 60)
+                if (Health > Health/2)
                     ReloadTimer = 60;
-                else if (Health > 30)
+                else if (Health > Health/3)
                     ReloadTimer = 10;
                 else
                     ReloadTimer = 2;
@@ -223,7 +223,7 @@ namespace Space_Scavenger
                         //vänster
                         Timer = 3600,
                         Radius = 150,
-                        Health = 100,
+                        Health = 200,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Position = new Vector2(
@@ -239,7 +239,7 @@ namespace Space_Scavenger
                     {
                         Timer = 3600,
                         Radius = 150,
-                        Health = 100,
+                        Health = 200,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = -MathHelper.PiOver2,
@@ -255,7 +255,7 @@ namespace Space_Scavenger
                     {
                         Timer = 3600,
                         Radius = 150,
-                        Health = 100,
+                        Health = 200,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = MathHelper.Pi,
@@ -271,7 +271,7 @@ namespace Space_Scavenger
                     {
                         Timer = 3600,
                         Radius = 150,
-                        Health = 100,
+                        Health = 200,
                         ExpReward = 100,
                         ScoreReward = 1000,
                         Rotation = Rotation,
