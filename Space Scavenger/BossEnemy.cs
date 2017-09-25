@@ -36,19 +36,19 @@ namespace Space_Scavenger
                 if (sa1 != null)
                 {
                     sa1.Radius = 30;
-                    sa1.chosenTexture2D = MyGame.BossShotTexture;
+                    sa1.ChosenTexture2D = MyGame.BossShotTexture;
                     MyGame.BossShots.Add(sa1);
                 }
                 var sa2 = BossShootAoE(direction);
                 if (sa2 != null)
                 {
                     sa2.Radius = 30;
-                    sa2.chosenTexture2D = MyGame.BossShotTexture;
+                    sa2.ChosenTexture2D = MyGame.BossShotTexture;
                     MyGame.BossShots.Add(sa2);
                 }
-                if (Health > Health/2)
+                if (Health > Health / 2)
                     ReloadTimer = 60;
-                else if (Health > Health/3)
+                else if (Health > Health / 3)
                     ReloadTimer = 10;
                 else
                     ReloadTimer = 2;

@@ -62,7 +62,6 @@
     <Compile Include="PowerUp.cs" />
     <Compile Include="Shop.cs" />
     <Compile Include="ShopItem.cs" />
-    <Compile Include="ScoreScreen.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="SpaceScavenger.cs" />
     <Compile Include="Program.cs" />
@@ -83,7 +82,6 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
     <Content Include="playerShipNeon.ico" />
-    <Content Include="tracy-chapman-sunday-times.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

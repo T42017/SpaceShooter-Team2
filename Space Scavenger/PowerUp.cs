@@ -5,7 +5,6 @@ namespace Space_Scavenger
 {
     public class PowerUp : GameObject
     {
-
         private readonly Random _rnd = new Random();
 
 
@@ -13,7 +12,7 @@ namespace Space_Scavenger
         {
             MyGame = (SpaceScavenger) game;
 
-            int spawnside = _rnd.Next(1, 5);
+            var spawnside = _rnd.Next(1, 5);
             switch (spawnside)
             {
                 case 1:
@@ -31,7 +30,7 @@ namespace Space_Scavenger
                     };
                 case 2:
                     //höger
-                    return new PowerUp()
+                    return new PowerUp
                     {
                         Radius = 30,
                         Health = 3,
@@ -43,7 +42,7 @@ namespace Space_Scavenger
                     };
                 case 3:
                     //upp
-                    return new PowerUp()
+                    return new PowerUp
                     {
                         Radius = 30,
                         Health = 3,
@@ -55,7 +54,7 @@ namespace Space_Scavenger
                     };
                 case 4:
                     //ner
-                    return new PowerUp()
+                    return new PowerUp
                     {
                         Radius = 30,
                         Health = 3,
@@ -68,9 +67,6 @@ namespace Space_Scavenger
             }
 
             return null;
-
-
         }
-
     }
 }

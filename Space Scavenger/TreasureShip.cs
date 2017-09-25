@@ -10,8 +10,7 @@ namespace Space_Scavenger
 
         public void Update(GameTime gametime, Game game)
         {
-
-            MyGame = (SpaceScavenger)game;
+            MyGame = (SpaceScavenger) game;
 
             var direction = MyGame.Player.Position - Position;
             direction.Normalize();
@@ -22,7 +21,7 @@ namespace Space_Scavenger
                 if (sa1 != null)
                 {
                     sa1.Radius = 30;
-                    sa1.chosenTexture2D = MyGame.BossShotTexture2;
+                    sa1.ChosenTexture2D = MyGame.BossShotTexture2;
                     MyGame.BossShots.Add(sa1);
                 }
                 ReloadTimer = 5;
@@ -32,14 +31,14 @@ namespace Space_Scavenger
 
         public TreasureShip SpawnTreasureShip(Game game)
         {
-            MyGame = (SpaceScavenger)game;
+            MyGame = (SpaceScavenger) game;
 
             var spawnside = _rnd.Next(1, 5);
             switch (spawnside)
             {
                 case 1:
 
-                    return new TreasureShip()
+                    return new TreasureShip
                     {
                         //vänster
                         Timer = 7200,
@@ -56,7 +55,7 @@ namespace Space_Scavenger
                     };
                 case 2:
                     //höger
-                    return new TreasureShip()
+                    return new TreasureShip
                     {
                         Timer = 7200,
                         Radius = 50,
@@ -72,7 +71,7 @@ namespace Space_Scavenger
                     };
                 case 3:
                     //upp
-                    return new TreasureShip()
+                    return new TreasureShip
                     {
                         Timer = 7200,
                         Radius = 50,
@@ -88,7 +87,7 @@ namespace Space_Scavenger
                     };
                 case 4:
                     //ner
-                    return new TreasureShip()
+                    return new TreasureShip
                     {
                         Timer = 7200,
                         Radius = 50,
@@ -120,7 +119,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(0, 1),
+                        Rotation = (float) Math.Atan2(0, 1),
                         Speed = 5f * new Vector2(0, -1)
                     };
 
@@ -132,7 +131,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(0.5, 0.5),
+                        Rotation = (float) Math.Atan2(0.5, 0.5),
                         Speed = 4f * new Vector2(1, -1)
                     };
 
@@ -143,7 +142,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(1, 0),
+                        Rotation = (float) Math.Atan2(1, 0),
                         Speed = 5f * new Vector2(1, 0)
                     };
 
@@ -156,7 +155,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(0.5, -0.5),
+                        Rotation = (float) Math.Atan2(0.5, -0.5),
                         Speed = 4f * new Vector2(1, 1)
                     };
 
@@ -167,7 +166,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(0, -1),
+                        Rotation = (float) Math.Atan2(0, -1),
                         Speed = 5f * new Vector2(0, 1)
                     };
 
@@ -179,7 +178,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(-0.5, -0.5),
+                        Rotation = (float) Math.Atan2(-0.5, -0.5),
                         Speed = 4f * new Vector2(-1, 1)
                     };
 
@@ -190,7 +189,7 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(-1, 0),
+                        Rotation = (float) Math.Atan2(-1, 0),
                         Speed = 5f * new Vector2(-1, 0)
                     };
 
@@ -201,17 +200,14 @@ namespace Space_Scavenger
                     {
                         Timer = 120,
                         Position = Position,
-                        Rotation = (float)Math.Atan2(-0.5, 0.5),
+                        Rotation = (float) Math.Atan2(-0.5, 0.5),
                         Speed = 4f * new Vector2(-1, -1)
                     };
-
-
 
 
                 default:
                     return null;
             }
         }
-
     }
 }
