@@ -422,7 +422,7 @@ namespace Space_Scavenger
                                 break;
                         }
                     }
-                    if (Exp.CurrentEnemiesKilled > 2)
+                    if (Exp.CurrentEnemiesKilled > 1)
                     { 
                             BossEnemy be = BossEnemy.SpawnBoss(this);
                             if (be != null)
@@ -585,7 +585,7 @@ namespace Space_Scavenger
                         }
                         if (hitBoss != null)
                         {
-                            hitBoss.Health -= 20;
+                            hitBoss.Health -= 1;
                             if (hitBoss.Health <= 0)
                             {
                                 spawnBossCompass = true;
@@ -636,6 +636,7 @@ namespace Space_Scavenger
                                 }
                                 MeteorExplosion.Play(0.5f, 0.0f, 0.0f);
                                 bomb.IsDead = true;
+                                defeatedEnemies++;
                                 Exp.CurrentScore += bomb.ScoreReward;
                                 Exp.CurrentEnemiesKilled++;
                             }

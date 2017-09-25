@@ -20,7 +20,7 @@ namespace Space_Scavenger
         private SpriteFont _shopMoneyFont;
         public Rectangle _rectangleHover;
         public Texture2D _hoverTexture;
-        private KeyboardState _state;
+        private KeyboardState _state, _prevKeyboardState;
         private SpriteFont _itemDescFont;
         private string CloseShopString;
        
@@ -56,30 +56,31 @@ namespace Space_Scavenger
                if ((int)gameTime.TotalGameTime.TotalMilliseconds % 20 == 0)
                {
                 _state = Keyboard.GetState();
-                   if (_state.IsKeyDown(Keys.Right))
+                   if (_state.IsKeyDown(Keys.Right) && _prevKeyboardState.IsKeyUp(Keys.Right))
                    {
 
                         if(_rectangleHover.X < 1120 + 2*x)
                         _rectangleHover.X += x/2;
 
                    } 
-                   else if (_state.IsKeyDown(Keys.Left))
+                   else if (_state.IsKeyDown(Keys.Left) && _prevKeyboardState.IsKeyUp(Keys.Left))
                    {
                        if(_rectangleHover.X > 1120)
                        _rectangleHover.X -= x/2;
                    }
 
-                   if (_state.IsKeyDown(Keys.Down))
+                   if (_state.IsKeyDown(Keys.Down) && _prevKeyboardState.IsKeyUp(Keys.Down))
                    {
                        if (_rectangleHover.Y < 205 + 2*x)
                            _rectangleHover.Y += x / 2;
                    }
-                   else if (_state.IsKeyDown(Keys.Up))
+                   else if (_state.IsKeyDown(Keys.Up) && _prevKeyboardState.IsKeyUp(Keys.Up))
                    {
                        if (_rectangleHover.Y > 205)
                            _rectangleHover.Y -= x / 2;
                    }
                }
+            _prevKeyboardState = Keyboard.GetState();
 
            
            
