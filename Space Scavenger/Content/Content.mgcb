@@ -25,18 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:playerShip.png
 
-#begin powerupRed.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:powerupRed.png
-
 #begin EnemyShip.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -158,18 +146,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:barHorizontal_blue_right.png
-
-#begin powerupBlue_bolt.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:powerupBlue_bolt.png
 
 #begin backgroundNeon.png
 /importer:TextureImporter
@@ -503,18 +479,6 @@
 /processorParam:TextureFormat=Color
 /build:ufoBlue.png
 
-#begin BossShot.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:BossShot.png
-
 #begin BossShotNeon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -641,6 +605,7 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:shopfont.spritefont
+
 #begin GameOverText.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -688,7 +653,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:crossair_redOutline.png
-
 
 #begin bossCompassT.png
 /importer:TextureImporter
@@ -738,18 +702,6 @@
 /processorParam:TextureFormat=Color
 /build:PressSpace.png
 
-#begin Quickly.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Quickly.jpg
-
 #begin DeathSound.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -767,6 +719,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:YouWon.png
+
 #begin ufoGReen.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -778,4 +731,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ufoGReen.png
+
+#begin powerupBlue_bolt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:powerupBlue_bolt.png
 
