@@ -911,6 +911,7 @@ namespace Space_Scavenger
                     wantedEnemies = 5;
                     treasureShips.Clear();
                     BossShots.Clear();
+                   Shots.Clear();
                     break;
                 case GameState.Winscreen:
                     _winScreen.Update(gameTime);
